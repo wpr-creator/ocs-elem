@@ -1,4 +1,4 @@
-name: Publish Expectation Station
+name: Publish School Website
 on:
   push:
     branches: [main]
