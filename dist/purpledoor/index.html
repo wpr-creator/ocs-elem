@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mrs. Rogers’ Purple Door Portals</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="../school-nav.css">
+</head>
+<body>
+  <nav class="school-return" aria-label="School website"><a href="../">OCS Resources</a><span>OCS Elementary Resources</span></nav>
+  <main id="app" class="app-shell">
+
+    <!-- NAME INTRO -->
+    <section id="introScreen" class="screen intro-screen active" aria-label="Enter the Purple Door">
+      <div class="space-layer stars"></div>
+      <div class="space-layer particles"></div>
+
+      <div class="intro-card">
+        <p class="mini-kicker">THE PORTALS ARE OPENING</p>
+        <h1>MRS. ROGERS’ PURPLE DOOR PORTALS</h1>
+        <p class="portal-line">EVERY PORTAL LEADS SOMEWHERE STRANGE.</p>
+
+        <form id="nameForm" class="name-form">
+          <label for="playerName">TRAVELER, WHAT IS YOUR FIRST NAME?</label>
+          <input id="playerName" name="playerName" maxlength="14" autocomplete="off" required />
+          <button type="submit" class="portal-button">OPEN THE FIRST DOOR</button>
+        </form>
+
+        <button id="skipIntroBtn" class="small-link" type="button">I ALREADY HAVE A NAME</button>
+      </div>
+    </section>
+
+    <!-- TITLE REVEAL -->
+    <section id="revealScreen" class="screen reveal-screen" aria-label="Title unlocked">
+      <div class="space-layer stars"></div>
+      <div class="reveal-burst"></div>
+
+      <div class="reveal-card">
+        <p class="mini-kicker">TITLE UNLOCKED</p>
+        <h2 id="revealName">TRAVELER</h2>
+        <h3 id="revealTitle">THE GREAT</h3>
+        <div class="familiar-row">
+          <img id="revealFamiliar" src="assets/kenney/2D assets/Monster Builder Pack/PNG/Default/body_blueA.png" alt="" />
+          <p id="familiarText">A STRANGE ALLY HAS JOINED YOU.</p>
+        </div>
+        <button id="enterHubBtn" class="portal-button">ENTER THE PORTALS</button>
+      </div>
+    </section>
+
+    <!-- PORTAL HUB -->
+    <section id="hubScreen" class="screen hub-screen" aria-label="Purple Door Portals">
+      <div class="sky-layer sky-stars"></div>
+      <div class="sky-layer sky-glow"></div>
+      <img class="planet planet-a" src="assets/kenney/2D assets/Planets/Planets/planet04.png" alt="" />
+      <img class="planet planet-b" src="assets/kenney/2D assets/Planets/Planets/planet08.png" alt="" />
+      <img class="spark spark-a" src="assets/kenney/2D assets/Particle Pack/PNG (Transparent)/magic_01.png" alt="" />
+      <img class="spark spark-b" src="assets/kenney/2D assets/Particle Pack/PNG (Transparent)/spark_04.png" alt="" />
+
+      <header class="hub-header">
+        <p class="mini-kicker">PORTAL CHAMBER ACTIVE</p>
+        <h1>MRS. ROGERS’ PURPLE DOOR PORTALS</h1>
+        <p id="playerStatus" class="player-status">WELCOME, TRAVELER.</p>
+      </header>
+
+      <section class="portal-stage">
+        <a class="world-portal word" href="games/wordquest.html" aria-label="Enter Word Quest">
+          <div class="portal-orb"></div>
+          <div class="world-sign">
+            <h2>WORD QUEST</h2>
+            <p>THE LIBRARY WHISPERS AGAIN</p>
+          </div>
+        </a>
+
+        <div class="door-chamber" aria-hidden="true">
+          <div class="door-glow"></div>
+          <div class="purple-door">
+            <div class="door-panel"></div>
+            <div class="door-knob"></div>
+          </div>
+          <div class="rune-ring ring-one"></div>
+          <div class="rune-ring ring-two"></div>
+        </div>
+
+        <a class="world-portal math" href="games/mathquest.html" aria-label="Enter Monster Math Lab">
+          <div class="portal-orb"></div>
+          <div class="world-sign">
+            <h2>MONSTER MATH LAB</h2>
+            <p>ENERGY LEVELS RISING</p>
+          </div>
+        </a>
+
+        <a class="world-portal paths" href="games/portalpark.html" aria-label="Enter The Lost Paths">
+          <div class="portal-orb"></div>
+          <div class="world-sign">
+            <h2>THE LOST PATHS</h2>
+            <p>SOME DOORS SHOULD STAY CLOSED</p>
+          </div>
+        </a>
+      </section>
+
+      <section class="bottom-hud" aria-label="Portal log">
+        <div>
+          <strong>LEGENDS</strong>
+          <span id="hudTitle">AWAKENING</span>
+        </div>
+        <div>
+          <strong>STRANGE ALLIES</strong>
+          <span id="hudFamiliar">UNKNOWN</span>
+        </div>
+        <div>
+          <strong>PORTALS OPENED</strong>
+          <span>0 / 3</span>
+        </div>
+      </section>
+
+      <button id="resetProfileBtn" class="reset-profile" type="button">RESET NAME</button>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

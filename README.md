@@ -32,3 +32,7 @@ The Falcon Express pulls into the illustrated platform on arrival and when Call 
 - [Mission Academy](https://wpr-creator.github.io/ocs-elem/2nd/): `dist/2nd/`, imported from `wpr-creator/2nd`.
 
 Each section includes a School home link. Source commit IDs are recorded in each section’s `SOURCE.md`. These are independent copies; changes to the original repositories do not sync automatically. The imported Mission Academy teacher panel writes section settings to `dist/2nd/config.js` in this repository. Existing browser-local student progress retains its original storage keys.
+
+## Purple Door
+
+[Purple Door Portals](https://wpr-creator.github.io/ocs-elem/purpledoor/) lives in `dist/purpledoor/`. The full `wpr-creator/purpledoor` repository content, excluding Git metadata, was copied with its artwork library. The imported landing page has an OCS Resources return link. This is an independent copy; original missing portal pages and dependencies are left for future refinement. See `dist/purpledoor/SOURCE.md` for the imported commit.

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal Park</title>
+  <link rel="stylesheet" href="../css/game.css">
+</head>
+<body class="game-shell">
+  <header class="game-topbar">
+    <div class="game-title">
+      <h1>Portal Park</h1>
+      <p>Choose a stop, solve the challenge, and collect spark gems.</p>
+    </div>
+    <div class="inventory-pill">
+      <img src="../assets/kenney/ui/UI Pack - Adventure/PNG/Default/minimap_icon_jewel_yellow.png" alt="">
+      <span id="gemCount">0</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="map-stage" id="mapStage" aria-label="Portal Park map">
+      <div class="map-path"></div>
+    </section>
+
+    <section class="event-panel" id="eventPanel">
+      <h2>Welcome to the path.</h2>
+      <p>Pick a glowing stop on the map.</p>
+      <div class="choice-row">
+        <a class="back-link" href="../index.html">Return to the Purple Door</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/assetRegistry.js"></script>
+  <script src="../js/spriteEngine.js"></script>
+  <script>
+    const stage = document.querySelector('#mapStage');
+    const panel = document.querySelector('#eventPanel');
+    const gemCount = document.querySelector('#gemCount');
+    let gems = Number(localStorage.getItem('portalParkGems') || 0);
+    gemCount.textContent = gems;
+
+    const challenges = [
+      {
+        title: 'Clock Gate',
+        text: 'The gate opens at quarter past 3. Which time matches?',
+        choices: ['3:15', '3:45', '2:15'],
+        answer: '3:15'
+      },
+      {
+        title: 'Weather Bridge',
+        text: 'Dark clouds gather and thunder rumbles. What should the hikers do first?',
+        choices: ['Find a safe place indoors', 'Stand under a tall tree', 'Keep swimming'],
+        answer: 'Find a safe place indoors'
+      },
+      {
+        title: 'Map Meadow',
+        text: 'A map key shows a tree symbol for forest. Where should the class go to find trees?',
+        choices: ['Forest', 'Lake', 'Road'],
+        answer: 'Forest'
+      }
+    ];
+
+    function showChallenge(index) {
+      const challenge = challenges[index % challenges.length];
+      const choices = [...challenge.choices].sort(() => Math.random() - 0.5);
+      panel.innerHTML = `
+        <h2>${challenge.title}</h2>
+        <p>${challenge.text}</p>
+        <div class="choice-row">
+          ${choices.map(choice => `<button data-choice="${choice}">${choice}</button>`).join('')}
+        </div>
+      `;
+      panel.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', () => {
+          if (button.dataset.choice === challenge.answer) {
+            gems += 2;
+            localStorage.setItem('portalParkGems', gems);
+            gemCount.textContent = gems;
+            panel.innerHTML = `<h2>Spark gems found!</h2><p>You earned 2 spark gems. Choose another stop or return to the Purple Door.</p><div class="choice-row"><a class="back-link" href="../index.html">Return to the Purple Door</a></div>`;
+          } else {
+            panel.innerHTML = `<h2>The path shimmered.</h2><p>Try another answer or choose a different stop. The park gives second chances.</p><div class="choice-row"><button id="tryAgain">Try Again</button></div>`;
+            document.querySelector('#tryAgain').addEventListener('click', () => showChallenge(index));
+          }
+        });
+      });
+    }
+
+    const scene = [
+      { type: 'sprite', asset: 'map.treeTall', x: 10, y: 22, size: '118px' },
+      { type: 'sprite', asset: 'map.treePinesSmall', x: 22, y: 76, size: '150px' },
+      { type: 'sprite', asset: 'map.lake', x: 78, y: 28, size: '190px' },
+      { type: 'sprite', asset: 'map.castle', x: 86, y: 72, size: '145px' },
+      { type: 'sprite', asset: 'map.flag', x: 48, y: 18, size: '86px' },
+      { type: 'sprite', asset: 'map.campfire', x: 36, y: 74, size: '82px' }
+    ];
+
+    buildScene(stage, scene);
+    spawnNode(stage, { x: 20, y: 48, number: 1, label: 'Clock Gate' }, () => showChallenge(0));
+    spawnNode(stage, { x: 50, y: 42, number: 2, label: 'Weather Bridge' }, () => showChallenge(1));
+    spawnNode(stage, { x: 76, y: 55, number: 3, label: 'Map Meadow' }, () => showChallenge(2));
+  </script>
+</body>
+</html>
