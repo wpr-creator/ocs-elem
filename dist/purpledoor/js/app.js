@@ -85,7 +85,7 @@ function createPlayer(name){
 
 function updateHub(player){
   if(!player) return;
-  $("playerStatus").textContent = `${player.name} ${player.title} HAS ENTERED THE CHAMBER.`;
+  $("playerStatus").textContent = `Welcome, ${player.name}.`;
   $("hudTitle").textContent = player.title;
   $("hudFamiliar").textContent = player.familiar?.name || "UNKNOWN";
 }
@@ -94,7 +94,7 @@ function revealPlayer(player){
   $("revealName").textContent = player.name;
   $("revealTitle").textContent = player.title;
   if(player.familiar?.src) $("revealFamiliar").src = player.familiar.src;
-  $("familiarText").textContent = `${player.familiar?.name || "A STRANGE ALLY"} HAS JOINED YOU.`;
+  $("familiarText").textContent = `${player.familiar?.name || "YOUR COMPANION"} IS YOUR GAME COMPANION.`;
   showScreen("revealScreen");
 }
 

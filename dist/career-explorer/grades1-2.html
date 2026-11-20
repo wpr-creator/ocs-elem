@@ -431,7 +431,7 @@ body {
 <div class="float-bg" id="float-bg" aria-hidden="true"></div>
 
 <header class="site-header">
-  <a class="back-link" href="index.html">← HUB</a>
+  <a class="back-link" href="index.html">All grades</a>
   <div class="header-badge">Grades 1–2 · Young Explorers</div>
   <div class="header-emoji-row" aria-hidden="true">⭐ 🚀 🌈 💡 🎨 🏆</div>
   <h1>CAREER EXPLORER!</h1>
@@ -450,7 +450,7 @@ body {
     <span class="mascot" aria-hidden="true">🤩</span>
     <div class="intro-box">
       <h2>HI, EXPLORER! 👋</h2>
-      <p>This activity helps you notice <strong>what you enjoy right now</strong> and find careers you may want to explore.</p>
+      <p>Answer questions about <strong>what you like to do</strong>.</p>
       <p>There are no wrong answers. Just pick what sounds like YOU! 😊</p>
       <p>For each question, pick how you feel:</p>
       <div class="answer-preview">
@@ -471,9 +471,9 @@ body {
     <div class="results-top">
       <div class="celebrate">🎉🌟🎊</div>
       <h2>YOU DID IT!</h2>
-      <p>Your choices created these strongest interest areas. Ties stay tied! ⬇️</p>
+      <p>Here are some jobs to learn about.</p>
     </div>
-    <p class="score-explanation">Every answer counts: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Each interest area has 3 questions.</p>
+    <details class="score-notes"><summary>For teachers: scoring</summary><p class="score-explanation">Every answer counts: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Each interest area has 3 questions.</p></details>
     <div class="score-summary" id="score-summary" role="group" aria-label="All six interest scores"></div>
     <div class="result-cards-wrap" id="result-cards" aria-live="polite"></div>
 
@@ -650,7 +650,7 @@ function showResults(){
       <div class="rc-rank" style="color:${info.textColor}">${medals[result.rank]} ${CareerExplorerScoring.rankLabel(result,'INTEREST LEVEL')}</div>
       <div class="rc-type" style="color:${info.color}">${info.name}</div>
       <div class="rc-label">(${info.fullName})</div>
-      <div class="rc-label">Your answer score: ${Math.round(result.percentage)}%</div>
+      <div class="rc-label">Interest score: ${Math.round(result.percentage)}%</div>
       <div class="rc-jobs">${info.jobs.map(jobId=>{
         const job=CAREERS[jobId];
         return `<button type="button" class="job-link-btn" onclick="showCareer('${jobId}')">${job.label}</button>`;

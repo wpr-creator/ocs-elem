@@ -465,7 +465,7 @@ body::before {
 <nav class="school-return" aria-label="School website"><a href="../">OCS Resources</a><span>OCS Elementary Resources</span></nav>
 
 <header class="site-header">
-  <a class="back-link" href="index.html">← HUB</a>
+  <a class="back-link" href="index.html">All grades</a>
   <div class="header-badge">Grades 3–5 · Rising Explorers</div>
   <span class="header-emoji">🔭</span>
   <h1>Career <em>Explorer</em></h1>
@@ -487,8 +487,8 @@ body::before {
     <div class="intro-card">
       <span class="intro-mascot">🧭</span>
       <h2>WELCOME, EXPLORER!</h2>
-      <p>This exploration will help you notice which activities match your interests. There are <strong>24 questions</strong>—four for every RIASEC area. Choose the response that best describes how you actually feel.</p>
-      <p>Your strongest score levels will appear at the end, with exact ties preserved. These are interests to explore, not a prediction or a limit on what you can become.</p>
+      <p>Answer <strong>24 questions</strong> about things you like to do.</p>
+      <p>Choose how you feel about each activity. There are no right or wrong answers.</p>
       <div class="scale-grid">
         <div class="scale-item sc-yes">✅ <strong>YES!</strong> — That's totally me.</div>
         <div class="scale-item sc-kinda">🤔 <strong>Kind of</strong> — Sometimes, maybe.</div>
@@ -507,9 +507,9 @@ body::before {
     <div class="results-top">
       <span class="celebrate">🎉</span>
       <h2>YOUR RESULTS ARE IN!</h2>
-      <p>Your choices created these strongest RIASEC interest areas. Exact ties stay tied.</p>
+      <p>Here are some jobs to learn about.</p>
     </div>
-    <p class="score-explanation">Transparent scoring: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Every RIASEC area has 4 questions.</p>
+    <details class="score-notes"><summary>For teachers: scoring</summary><p class="score-explanation">Scoring: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Every RIASEC area has 4 questions.</p></details>
     <div class="score-summary" id="score-summary" role="group" aria-label="All six interest scores"></div>
     <div class="result-cards-wrap" id="result-cards" aria-live="polite"></div>
 
@@ -685,7 +685,7 @@ function showResults(){
       <div class="rc-rank">${medals[result.rank]} ${CareerExplorerScoring.rankLabel(result,'INTEREST LEVEL')}</div>
       <div class="rc-type" style="color:${info.color}">${info.name}</div>
       <div class="rc-full">${info.fullName}</div>
-      <div class="rc-match">Your answer score: ${Math.round(result.percentage)}%</div>
+      <div class="rc-match">Interest score: ${Math.round(result.percentage)}%</div>
       <div class="rc-jobs">${info.jobs.map(jobId=>{
         const job=CAREERS[jobId];
         return '<button type="button" class="job-link-btn" onclick="showCareer(\''+jobId+'\')">'+job.label+'</button>';
@@ -699,7 +699,7 @@ function showResults(){
 function showCareer(jobId){
   const c=CAREERS[jobId]; if(!c)return;
   document.getElementById('career-title').textContent=c.label;
-  document.getElementById('career-intro').textContent='This is one career connected to your interests—not a prediction or a limit.';
+  document.getElementById('career-intro').textContent='You can learn about this job or choose another one.';
   document.getElementById('career-does').textContent=c.does;
   document.getElementById('career-income').textContent=c.income;
   // Render Day in the Life as time rows

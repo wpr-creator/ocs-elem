@@ -565,7 +565,7 @@ body {
 </div>
 
 <header class="site-header">
-  <a class="back-link" href="index.html">← HUB</a>
+  <a class="back-link" href="index.html">All grades</a>
   <div class="header-badge">Grades TK – K · Tiny Explorers</div>
   <h1>CAREER EXPLORER</h1>
   <p>What Do YOU Like to Do? 🌟</p>
@@ -583,8 +583,8 @@ body {
     <span class="mascot" aria-hidden="true">🌟</span>
     <div class="intro-card">
       <h2>HELLO, EXPLORER! 👋</h2>
-      <p>We are going to play a fun game!</p>
-      <p>I will show you pictures and ask what you like to do.</p>
+      <p>Choose the activities you like.</p>
+      <p>An adult can help you read the questions.</p>
       <p>There are <strong>12 questions</strong>. Pick one answer for each one!</p>
       <div class="answer-key">
         <div class="key-item key-yes">✅ YES! I love it!</div>
@@ -592,7 +592,7 @@ body {
         <div class="key-item key-notsure">😐 Not really</div>
         <div class="key-item key-nope">❌ Nope!</div>
       </div>
-      <p>Ready? Let's go! 🚀</p>
+      
       <br>
       <button type="button" class="start-btn" onclick="startQuiz()" aria-label="Start the career interest assessment">LET'S GO! 🎉</button>
     </div>
@@ -606,9 +606,9 @@ body {
     <div class="results-top">
       <span class="celebrate">🎉</span>
       <h2>YOU DID IT!</h2>
-      <p>Your choices made these strongest interest areas. Ties stay tied! ⬇️</p>
+      <p>Here are some jobs to learn about.</p>
     </div>
-    <p class="score-explanation">Every answer counts: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Each interest area has 2 questions.</p>
+    <details class="score-notes"><summary>For teachers: scoring</summary><p class="score-explanation">Every answer counts: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Each interest area has 2 questions.</p></details>
     <div class="score-summary" id="score-summary" role="group" aria-label="All six interest scores"></div>
     <div class="result-cards-wrap" id="result-cards" aria-live="polite"></div>
     <div class="career-panel" id="career-panel">
@@ -771,7 +771,7 @@ function showResults() {
       <div class="rc-rank" style="color:${info.textColor}">${medals[result.rank]} ${CareerExplorerScoring.rankLabel(result,'INTEREST LEVEL')}</div>
       <div class="rc-type" style="color:${info.color}">${info.name}</div>
       <div class="rc-label">(${info.fullName})</div>
-      <div class="rc-label">Your answer score: ${Math.round(result.percentage)}%</div>
+      <div class="rc-label">Interest score: ${Math.round(result.percentage)}%</div>
       <div class="rc-jobs">${info.jobs.map(jobId => {
         const job = CAREERS[jobId];
         return `<button type="button" class="job-link-btn" onclick="showCareer('${jobId}')">${job.label}</button>`;
