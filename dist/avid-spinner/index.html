@@ -6,46 +6,22 @@
 <meta name="theme-color" content="#f7f8fc">
 <meta name="description" content="Spin for a whole-class organization check at OCS Elementary.">
 <title>AVID Organization Spinner · OCS Elementary</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Nunito+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=compact1">
+
+
+
+<link rel="stylesheet" href="../activity-base.css?v=audit1"><link rel="stylesheet" href="style.css?v=audit1">
 </head>
 <body>
 <a class="skip" href="#spin">Skip to spinner</a>
-<header class="site-header"><div class="wrap header-inner"><a class="brand" href="../" aria-label="OCS Elementary Resources home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">OCS Elementary</span></a><a class="home-link" href="../">All resources</a></div></header>
+<header class="activity-header"><div class="wrap header-inner"><div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">OCS Elementary</span></div></div></header>
 <main class="wrap">
 <section class="page-intro"><h1>AVID Organization <span>Spinner</span></h1><p>Spin the wheel. Then follow the steps to organize your things.</p></section>
 <div class="play">
-<section class="wheel-panel" aria-label="Organization spinner"><div class="stage"><div class="pointer" aria-hidden="true"></div><svg viewBox="0 0 540 540" role="img" aria-label="Organization wheel: desk and seat back pockets, binder, planner, backpack, and pencil box"><g id="wheel"></g><circle class="hub" cx="270" cy="270" r="55"/><text class="hub-label" x="270" y="279">OCS</text></svg></div><div class="controls"><button id="spin" type="button">🎡 Spin the wheel!</button></div></section>
-<section class="instructions" aria-live="polite" aria-atomic="true"><div class="kicker">Today’s check</div><div id="mission"><div class="ready-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="6" width="25" height="30" rx="5"/><path d="m13 16 2 2 4-5m3 3h6m-15 9 2 2 4-5m3 3h6"/></svg></div><h2>Spin to choose a check</h2><p>Get ready to organize one area together.</p></div><p class="cheer"><span aria-hidden="true">👍</span> Finished? Give a quiet thumbs-up!</p></section>
+<section class="wheel-panel" id="wheel-panel" aria-label="Organization spinner" aria-busy="false"><div class="stage"><div class="pointer" aria-hidden="true"></div><svg viewBox="0 0 540 540" role="img" aria-label="Organization wheel: desk and seat back pockets, binder, planner, backpack, and pencil box"><g id="wheel"></g><circle class="hub" cx="270" cy="270" r="55"/><text class="hub-label" x="270" y="279">OCS</text></svg></div><div class="controls"><button id="spin" type="button">Spin the wheel</button><button id="skip-spin" class="secondary" type="button" hidden>Show result</button></div></section>
+<section class="instructions" ><div class="kicker">Today’s check</div><div id="mission"><div class="ready-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="6" width="25" height="30" rx="5"/><path d="m13 16 2 2 4-5m3 3h6m-15 9 2 2 4-5m3 3h6"/></svg></div><h2>Spin to choose a check</h2></div><button type="button" class="activity-read" id="read-steps" data-read aria-pressed="false" hidden>Read steps</button><p class="cheer"><span aria-hidden="true">👍</span> Finished? Give a quiet thumbs-up!</p></section>
 </div>
-</main>
+<div id="spin-status" class="sr-only" role="status" aria-live="polite"></div></main>
 
-<script>
-const tasks=[
-{name:'Desk & seat back pockets',lines:['Desk & seat','back pockets'],icon:'🪑',color:'#bcdcd5',steps:['Check your desk and seat back pockets.','Put papers in the correct folder. Keep only what belongs here.','Recycle scraps and leave your learning space neat.']},
-{name:'Binder',lines:['Binder'],icon:'📒',color:'#d8cbed',steps:['Open your binder and look for loose papers.','Put each paper in the right folder or section.','Close the binder rings carefully.']},
-{name:'Planner',lines:['Planner'],icon:'📅',color:'#f1d5c2',steps:['Find your planner and open to this week.','Check your reminders and homework with your teacher.','Put your planner where you can find it again.']},
-{name:'Backpack',lines:['Backpack'],icon:'🎒',color:'#efdcab',steps:['Open your backpack and check each pocket.','Put school supplies and papers in their places.','Remove trash and zip up your backpack.']},
-{name:'Pencil box',lines:['Pencil box'],icon:'✏️',color:'#cfdfed',steps:['Open your pencil box and take a quick look.','Put pencils, crayons, and erasers together neatly.','Close it carefully so your tools stay safe.']}
-];
-const ns='http://www.w3.org/2000/svg',wheel=document.getElementById('wheel'),button=document.getElementById('spin');let rotation=0,spinning=false;
-function svgEl(tag,attrs,text){const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(text)e.textContent=text;return e}
-function point(a,r){const t=(a-90)*Math.PI/180;return [270+r*Math.cos(t),270+r*Math.sin(t)]}
-tasks.forEach((task,i)=>{const a=i*72,b=a+72,[x1,y1]=point(a,255),[x2,y2]=point(b,255);wheel.append(svgEl('path',{d:'M270 270 L'+x1+' '+y1+' A255 255 0 0 1 '+x2+' '+y2+' Z',fill:task.color,class:'slice'}));const [x,y]=point(a+36,167);wheel.append(svgEl('text',{x,y:y-15,class:'wheel-label emoji'},task.icon));task.lines.forEach((line,j)=>wheel.append(svgEl('text',{x,y:y+20+j*23,class:'wheel-label'},line)))});
-function choose(){const a=new Uint32Array(1);do{crypto.getRandomValues(a)}while(a[0]>=4294967295);return a[0]%5}
-
-const pointer=document.querySelector('.pointer');let audioContext=null,lastClick=-Infinity;
-for(let i=0;i<25;i++){const [x,y]=point(i*360/25,251);wheel.append(svgEl('circle',{cx:x,cy:y,r:5,class:'spoke-peg','aria-hidden':'true'}))}
-    function initAudio(){try{const Audio=window.AudioContext||window.webkitAudioContext;if(Audio&&!audioContext)audioContext=new Audio();if(audioContext&&audioContext.state==='suspended')audioContext.resume().catch(()=>{})}catch(error){audioContext=null}}
-    function tone(frequency,duration,volume,type='sine',delay=0){if(!audioContext||audioContext.state!=='running')return;try{const now=audioContext.currentTime+delay,osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.type=type;osc.frequency.setValueAtTime(frequency,now);gain.gain.setValueAtTime(volume,now);gain.gain.exponentialRampToValueAtTime(.001,now+duration);osc.connect(gain);gain.connect(audioContext.destination);osc.start(now);osc.stop(now+duration);osc.onended=()=>{osc.disconnect();gain.disconnect()}}catch(error){}}
-    function clickSpoke(now,reduced){if(!reduced)pointer.animate([{transform:'translateX(-50%) rotate(-15deg)'},{transform:'translateX(-50%) rotate(0deg)'}],{duration:85,easing:'ease-out'});if(now-lastClick>28){tone(1250,.025,.045,'triangle');lastClick=now}}
-
-function celebrate(index,icon){document.querySelector('.selected-outline')?.remove();const shape=wheel.querySelectorAll('.slice')[index];const outline=svgEl('path',{d:shape.getAttribute('d'),class:'selected-outline','aria-hidden':'true'});wheel.append(outline);if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;icon.animate([{transform:'translateY(0) rotate(0deg)'},{transform:'translateY(-14px) rotate(-8deg)',offset:.35},{transform:'translateY(0) rotate(5deg)',offset:.65},{transform:'translateY(0) rotate(0deg)'}],{duration:650,easing:'ease-out'});const burst=document.createElement('div');burst.className='confetti';burst.setAttribute('aria-hidden','true');document.querySelector('.instructions').append(burst);for(let i=0;i<12;i++){const piece=document.createElement('span');piece.textContent=i%3===0?'✏️':i%3===1?'📄':'▰';piece.style.color=['#c7b7e7','#91c5b7','#edbd9c'][i%3];piece.style.left=(20+Math.random()*60)+'%';piece.style.top='12%';burst.append(piece);piece.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:'translate('+((Math.random()-.5)*230)+'px,'+(100+Math.random()*140)+'px) rotate('+((Math.random()-.5)*300)+'deg)',opacity:0}],{duration:850+Math.random()*350,easing:'cubic-bezier(.15,.6,.4,1)',fill:'forwards'})}setTimeout(()=>burst.remove(),1250)}
-function showMission(index){const task=tasks[index],mission=document.getElementById('mission');mission.replaceChildren();const icon=document.createElement('div');icon.className='badge';icon.setAttribute('aria-hidden','true');icon.textContent=task.icon;const title=document.createElement('h2');title.textContent=task.name;const steps=document.createElement('ol');steps.className='steps';task.steps.forEach(text=>{const li=document.createElement('li');li.textContent=text;steps.append(li)});mission.append(icon,title,steps);celebrate(index,icon);spinning=false;button.disabled=false;button.textContent='🎡 Spin again!';tone(523.25,.25,.07);tone(659.25,.3,.07,'sine',.12);tone(783.99,.45,.07,'sine',.24)}
-button.addEventListener('click',()=>{if(spinning)return;document.querySelector('.selected-outline')?.remove();document.querySelector('.confetti')?.remove();spinning=true;initAudio();button.disabled=true;button.textContent='Spinning…';const index=choose(),target=(360-(index*72+36))%360,from=rotation,to=from+(20+Math.floor(Math.random()*5))*360+((target-from%360+360)%360),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,duration=reduced?200:10000,start=performance.now();let lastSpoke=Math.floor(from/14.4);
-function frame(now){const progress=Math.min(1,(now-start)/duration),value=from+(to-from)*(1-Math.pow(1-progress,4));wheel.style.transform='rotate('+value+'deg)';const spoke=Math.floor(value/14.4);if(spoke!==lastSpoke){if(!reduced)clickSpoke(now,false);lastSpoke=spoke}if(progress<1)requestAnimationFrame(frame);else{rotation=to;wheel.style.transform='rotate('+rotation+'deg)';showMission(index)}}requestAnimationFrame(frame)});
-</script>
+<script src="../activity-ui.js?v=audit1" defer></script><script src="avid.js?v=audit1" defer></script>
 </body>
 </html>

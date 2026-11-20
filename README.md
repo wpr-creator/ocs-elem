@@ -12,7 +12,7 @@ Updates pushed to `main` automatically publish the files in `dist/` through `.gi
 
 A buildless, responsive elementary PBIS website. Serve `dist/` with any static host. For a local preview: `python3 -m http.server 4173 --directory dist`.
 
-Students select one of 11 pictured destinations on a vintage railway departure board. A short train transition leads to the destination’s six exact PDF expectations. Read-aloud uses the browser speech API; availability and voices depend on the device. Reduced-motion preferences are respected, and a visible motion toggle is available.
+Students select one of 11 pictured destinations on a vintage railway departure board. A short train transition leads to the destination’s six exact PDF expectations. Read-aloud uses the browser speech API; availability and voices depend on the device. System reduced-motion preferences are respected automatically.
 
 `dist/expectation-station/data.json` contains the exact area names and expectation statements extracted from the supplied FALCON Student PBIS Matrix. The original PDF is included for reference. The site title and navigation are additional interface copy, not replacements for matrix wording.
 
@@ -20,7 +20,7 @@ Artwork: generated using the built-in image generation tool. Prompt: a consisten
 
 ## Animated station
 
-The Falcon Express pulls into the illustrated platform on arrival and when Call the train is pressed. The three-row departure board cycles through all 11 destinations and supports boarding directly. Animated train journeys include a Skip ride button. Sound is enabled by default and begins on the first browser interaction: synthesized station bells, whistle chords, steam, wheel rhythm, and split-flap clicks use Web Audio. Audio pauses when the tab is hidden. The Motion control and system reduced-motion preference disable the movement.
+The Falcon Express pulls into the illustrated platform on arrival and when Call the train is pressed. The three-row departure board cycles through all 11 destinations and supports boarding directly. Animated train journeys include a Skip ride button. Sound is enabled by default and begins on the first browser interaction: synthesized station bells, whistle chords, steam, wheel rhythm, and split-flap clicks use Web Audio. Audio pauses when the tab is hidden. The system reduced-motion preference disables the movement.
 
 ## Site structure
 
@@ -31,7 +31,7 @@ The Falcon Express pulls into the illustrated platform on arrival and when Call 
 - [Career Explorer](https://wpr-creator.github.io/ocs-elem/career-explorer/): `dist/career-explorer/`, imported from `wpr-creator/careerexplorer`.
 - [Mission Academy](https://wpr-creator.github.io/ocs-elem/2nd/): `dist/2nd/`, imported from `wpr-creator/2nd`.
 
-Each section includes a School home link. Source commit IDs are recorded in each section’s `SOURCE.md`. These are independent copies; changes to the original repositories do not sync automatically. The imported Mission Academy teacher panel writes section settings to `dist/2nd/config.js` in this repository. Existing browser-local student progress retains its original storage keys.
+Student activities omit resource-hub navigation. Source commit IDs are recorded in each section’s `SOURCE.md`. These are independent copies; changes to the original repositories do not sync automatically. The imported Mission Academy teacher panel writes section settings to `dist/2nd/config.js` in this repository. Existing browser-local student progress retains its original storage keys.
 
 ## Purple Door
 
@@ -39,16 +39,20 @@ Each section includes a School home link. Source commit IDs are recorded in each
 
 ## Elementary AVID Organization Spinner
 
-[AVID Organization Spinner](https://wpr-creator.github.io/ocs-elem/avid-spinner/) lives in `dist/avid-spinner/`. Copied from Homebase’s `ocs-elementary-organization/` page with its shared theme stylesheet, localized asset paths, and an OCS Resources return link. The original five organization checks are preserved. See `dist/avid-spinner/SOURCE.md` for source revision.
+[AVID Organization Spinner](https://wpr-creator.github.io/ocs-elem/avid-spinner/) lives in `dist/avid-spinner/`. Copied from Homebase’s `ocs-elementary-organization/` page with its shared theme stylesheet, localized asset paths. The original five organization checks are preserved. See `dist/avid-spinner/SOURCE.md` for source revision.
 
 ## Expectation Station games
 
 The 11 stations each have a themed activity, plus the school-wide Match the Station matching game. Game sentences are read from the unchanged PDF matrix in `dist/expectation-station/data.json`. New instructions and questions are interface copy; expectation statements stay verbatim. Completed games earn one of 12 passport stamps, stored only in this browser without student names. Games use buttons and support keyboard input, read-aloud, retrying, replay, and reduced motion.
 
-Station sound defaults to on. Browser audio unlocks on the first click, tap, or keyboard interaction; the header control mutes it. Audio pauses with a hidden tab and quiets during read-aloud. No audio files, AI calls, accounts, or services are needed.
+Station sound defaults to on. Browser audio unlocks on the first click, tap, or keyboard interaction; students can mute their device. Audio pauses with a hidden tab and quiets during read-aloud. No audio files, AI calls, accounts, or services are needed.
 
 Run `node --test tests/station-games.test.cjs` to check the game content and unambiguous station matching.
 
 ## Homepage visibility
 
 The homepage currently shows Expectation Station, Career Explorer, and the AVID Organization Spinner. Mission Academy (`dist/2nd/`) and Purple Door (`dist/purpledoor/`) remain in the repository and keep their existing URLs, but are omitted from homepage navigation.
+
+## Activity refinement audit
+
+See [AUDIT.md](AUDIT.md) for scoring, interaction, and verification details. Student activity pages omit grade switching, teacher notes, PDF links, printing controls, and sound/motion toggles. Grade selection is available at the Career Explorer entry page.
