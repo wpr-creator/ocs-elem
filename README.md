@@ -58,3 +58,24 @@ The homepage currently shows Expectation Station, Career Explorer, and the AVID 
 See [AUDIT.md](AUDIT.md) for scoring, interaction, and verification details. Student activity pages omit grade switching, teacher notes, PDF links, printing controls, and sound/motion toggles. Grade selection is available at the Career Explorer entry page.
 
 Library Book Pairs now uses 12 shuffled face-down cards, two-card reveals, automatic mismatch resets, and retained matching pairs. Bathroom Bubble Pop presents six FALCON-category rounds with three targets and three distractors per round, sampled from the exact school matrix. Correct pops stay collected; incorrect bubbles remain available. Both support keyboard use and read-aloud without timers or lost lives.
+
+## Falcon Central concourse and railway games
+
+The station uses a celestial green concourse, brass clock, limestone colors, arched boards, and local Barlow Condensed lettering rather than editorial serif headlines. All 11 stops and the school-wide dispatcher use the same railway design. The PDF matrix data is unchanged.
+
+| Stop | Railway interaction |
+| --- | --- |
+| Classroom | Select and punch a conductor’s ticket |
+| Hallway | Match tickets to three cars, then send the train |
+| Bathroom | Pop matching steam clouds above the locomotive |
+| Playground | Watch the green/red signal and stop the train |
+| Cafeteria | Load expectation suitcases onto the correct luggage cart |
+| Auditorium | Open carriage windows and ring the matching arrival bell |
+| Library | Recover six pairs of face-down lost-and-found tickets |
+| VAPA | Match paint tins to panels and uncover a railway mural |
+| PE | Connect two track switches and dispatch the team train |
+| STEAM | Fit expectation track pieces into a railway bridge |
+| Animation | Assemble six FALCON film frames and play the picture show |
+| All stations | Dispatch expectation tickets to the correct platform |
+
+Placement games support dragging, selecting with a tap, and keyboard buttons. No timed scoring or lost lives. System reduced motion is respected automatically. Railway-specific behavior tests: `node --test tests/railway-games.test.cjs`.
