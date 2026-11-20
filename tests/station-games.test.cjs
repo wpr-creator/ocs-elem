@@ -31,3 +31,21 @@ test('the PDF expectation data has not been duplicated into rewritten game text'
  const raw=fs.readFileSync('dist/expectation-station/game-data.js','utf8');
  for(const s of stops)for(const expectation of s.expectations)assert.ok(!raw.includes(expectation),'Games must use the canonical matrix data');
 });
+
+test('bubble pool uses exact matrix text and supplies three targets for every category',()=>{
+ const bubble=games.find(g=>g.type==='bubbles');
+ assert.equal(bubble.pool.length,66);
+ bubble.pool.forEach(item=>assert.ok(stops.some(s=>s.expectations[values.indexOf(item.answer)]===item.text)));
+ for(const category of values){assert.ok(new Set(bubble.pool.filter(i=>i.answer===category).map(i=>i.text)).size>=3)}
+});
+test('memory reveals only two cards, retains a match, and resets mismatches',()=>{
+ const vm=require('node:vm');let pending,bells=0;
+ const context={localStorage:{getItem:()=>null},setTimeout:fn=>{pending=fn;return 1},clearTimeout:()=>{},stationBell:()=>bells++,labels:values};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('dist/expectation-station/games.js','utf8')+'\nthis.Game=StationGame;',context);
+ const root={isConnected:true,querySelector:()=>({focus(){}})},g=new context.Game(root,games[6],6);
+ g.deck=[{pair:0},{pair:1},{pair:0},{pair:1}];g.drawPairs=()=>{};
+ g.flipMemory(0);assert.deepEqual([...g.flipped],[0]);g.flipMemory(1);assert.equal(g.memoryBusy,true);
+ g.flipMemory(2);assert.deepEqual([...g.flipped],[0,1]);pending();assert.equal(g.flipped.length,0);assert.equal(g.memoryBusy,false);
+ g.flipMemory(0);g.flipMemory(2);assert.equal(g.matched.has(0),true);assert.equal(g.flipped.length,0);assert.equal(bells,1);
+ g.flipMemory(0);assert.equal(g.flipped.length,0);
+});

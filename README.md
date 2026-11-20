@@ -56,3 +56,5 @@ The homepage currently shows Expectation Station, Career Explorer, and the AVID 
 ## Activity refinement audit
 
 See [AUDIT.md](AUDIT.md) for scoring, interaction, and verification details. Student activity pages omit grade switching, teacher notes, PDF links, printing controls, and sound/motion toggles. Grade selection is available at the Career Explorer entry page.
+
+Library Book Pairs now uses 12 shuffled face-down cards, two-card reveals, automatic mismatch resets, and retained matching pairs. Bathroom Bubble Pop presents six FALCON-category rounds with three targets and three distractors per round, sampled from the exact school matrix. Correct pops stay collected; incorrect bubbles remain available. Both support keyboard use and read-aloud without timers or lost lives.
