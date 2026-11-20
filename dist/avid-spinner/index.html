@@ -9,19 +9,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Nunito+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=rounded1">
+<link rel="stylesheet" href="style.css?v=compact1">
 </head>
 <body>
 <a class="skip" href="#spin">Skip to spinner</a>
-<header class="site-header"><div class="wrap header-inner"><a class="brand" href="../" aria-label="OCS Elementary Resources home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">OCS Elementary<small>Classroom resources</small></span></a><a class="home-link" href="../">All resources</a></div></header>
+<header class="site-header"><div class="wrap header-inner"><a class="brand" href="../" aria-label="OCS Elementary Resources home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">OCS Elementary</span></a><a class="home-link" href="../">All resources</a></div></header>
 <main class="wrap">
-<section class="page-intro"><span class="page-label">Classroom organization</span><h1>AVID Organization <span>Spinner</span></h1><p>Spin the wheel. Then follow the steps to organize your things.</p></section>
+<section class="page-intro"><h1>AVID Organization <span>Spinner</span></h1><p>Spin the wheel. Then follow the steps to organize your things.</p></section>
 <div class="play">
-<section class="wheel-panel" aria-label="Organization spinner"><div class="panel-top"><span>Organization wheel</span><span class="check-count">5 checks</span></div><div class="stage"><div class="pointer" aria-hidden="true"></div><svg viewBox="0 0 540 540" role="img" aria-label="Organization wheel: desk and seat back pockets, binder, planner, backpack, and pencil box"><g id="wheel"></g><circle class="hub" cx="270" cy="270" r="55"/><text class="hub-label" x="270" y="279">OCS</text></svg></div><div class="controls"><button id="spin" type="button">🎡 Spin the wheel!</button></div></section>
+<section class="wheel-panel" aria-label="Organization spinner"><div class="stage"><div class="pointer" aria-hidden="true"></div><svg viewBox="0 0 540 540" role="img" aria-label="Organization wheel: desk and seat back pockets, binder, planner, backpack, and pencil box"><g id="wheel"></g><circle class="hub" cx="270" cy="270" r="55"/><text class="hub-label" x="270" y="279">OCS</text></svg></div><div class="controls"><button id="spin" type="button">🎡 Spin the wheel!</button></div></section>
 <section class="instructions" aria-live="polite" aria-atomic="true"><div class="kicker">Today’s check</div><div id="mission"><div class="ready-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="6" width="25" height="30" rx="5"/><path d="m13 16 2 2 4-5m3 3h6m-15 9 2 2 4-5m3 3h6"/></svg></div><h2>Spin to choose a check</h2><p>Get ready to organize one area together.</p></div><p class="cheer"><span aria-hidden="true">👍</span> Finished? Give a quiet thumbs-up!</p></section>
 </div>
 </main>
-<footer><div class="wrap footer-inner"><b>OCS Elementary</b><span>Classroom resources</span></div></footer>
+
 <script>
 const tasks=[
 {name:'Desk & seat back pockets',lines:['Desk & seat','back pockets'],icon:'🪑',color:'#bcdcd5',steps:['Check your desk and seat back pockets.','Put papers in the correct folder. Keep only what belongs here.','Recycle scraps and leave your learning space neat.']},
