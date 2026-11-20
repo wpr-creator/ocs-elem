@@ -48,3 +48,7 @@ The 11 stations each have a themed activity, plus the school-wide Match the Stat
 Station sound defaults to on. Browser audio unlocks on the first click, tap, or keyboard interaction; the header control mutes it. Audio pauses with a hidden tab and quiets during read-aloud. No audio files, AI calls, accounts, or services are needed.
 
 Run `node --test tests/station-games.test.cjs` to check the game content and unambiguous station matching.
+
+## Homepage visibility
+
+The homepage currently shows Expectation Station, Career Explorer, and the AVID Organization Spinner. Mission Academy (`dist/2nd/`) and Purple Door (`dist/purpledoor/`) remain in the repository and keep their existing URLs, but are omitted from homepage navigation.
