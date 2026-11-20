@@ -35,4 +35,4 @@ Each section includes a School home link. Source commit IDs are recorded in each
 
 ## Purple Door
 
-[Purple Door Portals](https://wpr-creator.github.io/ocs-elem/purpledoor/) lives in `dist/purpledoor/`. The full `wpr-creator/purpledoor` repository content, excluding Git metadata, was copied with its artwork library. The imported landing page has an OCS Resources return link. This is an independent copy; original missing portal pages and dependencies are left for future refinement. See `dist/purpledoor/SOURCE.md` for the imported commit.
+[Purple Door Portals](https://wpr-creator.github.io/ocs-elem/purpledoor/) lives in `dist/purpledoor/`. The `wpr-creator/purpledoor` site source was copied with only the referenced artwork and its license files. Unused asset packs and development galleries were excluded. The imported landing page has an OCS Resources return link. This is an independent copy; original missing portal pages and dependencies are left for future refinement. See `dist/purpledoor/SOURCE.md` for the imported commit.
