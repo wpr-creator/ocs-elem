@@ -1,8 +1,8 @@
-# All Aboard the Expectation Station
+# OCS Elementary Resources
 
 ## Visit the website
 
-**[Open the school homepage](https://wpr-creator.github.io/ocs-elem/)**
+**[Open OCS Elementary Resources](https://wpr-creator.github.io/ocs-elem/)**
 
 [Open All Aboard the Expectation Station](https://wpr-creator.github.io/ocs-elem/expectation-station/)
 
