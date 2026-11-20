@@ -1,5 +1,11 @@
 # All Aboard the Expectation Station
 
+## Visit the website
+
+**[Open All Aboard the Expectation Station](https://falcon-expectation-station.endearingbuffalo5.chatgpt.site)**
+
+Public and available to students, families, and staff. No sign-in required.
+
 A buildless, responsive elementary PBIS website. Serve `dist/` with any static host. For a local preview: `python3 -m http.server 4173 --directory dist`.
 
 Students select one of 11 pictured destinations on a vintage railway departure board. A short train transition leads to the destination’s six exact PDF expectations. Read-aloud uses the browser speech API; availability and voices depend on the device. Reduced-motion preferences are respected, and a visible motion toggle is available.
