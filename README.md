@@ -36,3 +36,7 @@ Each section includes a School home link. Source commit IDs are recorded in each
 ## Purple Door
 
 [Purple Door Portals](https://wpr-creator.github.io/ocs-elem/purpledoor/) lives in `dist/purpledoor/`. The `wpr-creator/purpledoor` site source was copied with only the referenced artwork and its license files. Unused asset packs and development galleries were excluded. The imported landing page has an OCS Resources return link. This is an independent copy; original missing portal pages and dependencies are left for future refinement. See `dist/purpledoor/SOURCE.md` for the imported commit.
+
+## Elementary AVID Organization Spinner
+
+[AVID Organization Spinner](https://wpr-creator.github.io/ocs-elem/avid-spinner/) lives in `dist/avid-spinner/`. Copied from Homebase’s `ocs-elementary-organization/` page with its shared theme stylesheet, localized asset paths, and an OCS Resources return link. The original five organization checks are preserved. See `dist/avid-spinner/SOURCE.md` for source revision.
