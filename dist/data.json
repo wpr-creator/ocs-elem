@@ -1,0 +1,123 @@
+[
+  {
+    "name": "CLASSROOM",
+    "expectations": [
+      "I listen and follow directions.",
+      "I keep trying and cheer others on.",
+      "I participate and set a good example.",
+      "I help classmates and care for our room.",
+      "I put my supplies where they belong.",
+      "I use a safe body and solve problems with words."
+    ]
+  },
+  {
+    "name": "HALLWAY & TRANSITIONS",
+    "expectations": [
+      "I face forward and follow my line.",
+      "I am patient and use a quiet voice.",
+      "I show others how to walk safely.",
+      "I respect classes that are learning.",
+      "I stay in order and close line gaps.",
+      "I keep my hands, feet, and objects to myself."
+    ]
+  },
+  {
+    "name": "BATHROOM",
+    "expectations": [
+      "I use the bathroom and return to class.",
+      "I respect everyone’s privacy.",
+      "I tell an adult when something is wrong.",
+      "I help keep our bathroom clean.",
+      "I flush, wash my hands, and use the trash can.",
+      "I give others space and use the bathroom safely."
+    ]
+  },
+  {
+    "name": "PLAYGROUND, FIELD & BLACKTOP",
+    "expectations": [
+      "I freeze at the whistle and walk to line.",
+      "I include others and play fairly.",
+      "I help others and tell an adult about unsafe play.",
+      "I take turns and care for our play areas.",
+      "I take care of balls, equipment, and my things.",
+      "I play safely and follow game rules."
+    ]
+  },
+  {
+    "name": "CAFETERIA & LUNCH COURT",
+    "expectations": [
+      "I focus on eating and follow directions.",
+      "I use polite words and respect others’ food.",
+      "I show good table manners.",
+      "I help keep our lunch area clean.",
+      "I follow lunch routines and clean my spot.",
+      "I sit safely and keep my food to myself."
+    ]
+  },
+  {
+    "name": "AUDITORIUM",
+    "expectations": [
+      "I listen to the speaker or performance.",
+      "I clap and cheer at the right times.",
+      "I show others how to be a great audience.",
+      "I help everyone feel welcome and respected.",
+      "I stay with my group and take my things.",
+      "I walk safely and give others space."
+    ]
+  },
+  {
+    "name": "LIBRARY",
+    "expectations": [
+      "I listen and join library activities.",
+      "I use a quiet voice and enjoy reading.",
+      "I show others how to care for books.",
+      "I help make the library welcoming for everyone.",
+      "I put books and supplies where they belong.",
+      "I move calmly and handle books gently."
+    ]
+  },
+  {
+    "name": "VAPA",
+    "expectations": [
+      "I listen and work on my creative activity.",
+      "I try new things and appreciate others’ art.",
+      "I participate and encourage others.",
+      "I celebrate others’ work and care for our space.",
+      "I use supplies carefully and put them away.",
+      "I use tools safely and give others space."
+    ]
+  },
+  {
+    "name": "PE",
+    "expectations": [
+      "I listen for signals and follow directions.",
+      "I keep trying and show good sportsmanship.",
+      "I play fairly and cheer on my teammates.",
+      "I include everyone and care for our play space.",
+      "I use equipment correctly and put it away.",
+      "I play safely and respect others’ bodies."
+    ]
+  },
+  {
+    "name": "STEAM",
+    "expectations": [
+      "I follow directions and work on the challenge.",
+      "I learn from mistakes and try again.",
+      "I share ideas and help my team.",
+      "I work with others and care for shared tools.",
+      "I keep my workspace neat and put tools away.",
+      "I use tools safely and solve problems with words."
+    ]
+  },
+  {
+    "name": "ANIMATION",
+    "expectations": [
+      "I follow directions and work on my project.",
+      "I am patient and respect others’ ideas.",
+      "I use technology responsibly and help others.",
+      "I respect others’ work and care for our devices.",
+      "I keep my equipment and project organized.",
+      "I handle devices gently and use kind words."
+    ]
+  }
+]
