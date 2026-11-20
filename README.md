@@ -2,9 +2,11 @@
 
 ## Visit the website
 
-**[Open All Aboard the Expectation Station](https://falcon-expectation-station.endearingbuffalo5.chatgpt.site)**
+**[Open All Aboard the Expectation Station](https://wpr-creator.github.io/ocs-elem/)**
 
-Public and available to students, families, and staff. No sign-in required.
+Hosted on GitHub Pages. Public and available to students, families, and staff. No sign-in or ChatGPT account required.
+
+Updates pushed to `main` automatically publish the files in `dist/` through `.github/workflows/pages.yml`.
 
 A buildless, responsive elementary PBIS website. Serve `dist/` with any static host. For a local preview: `python3 -m http.server 4173 --directory dist`.
 
