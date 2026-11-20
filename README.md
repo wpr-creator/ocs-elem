@@ -25,3 +25,10 @@ The Falcon Express pulls into the illustrated platform on arrival and when Call 
 ## Site structure
 
 `dist/index.html` is the school homepage. The complete Expectation Station lives at `dist/expectation-station/`. Add other resources in sibling folders under `dist/` and link them from the homepage. All paths are relative so each section stays portable.
+
+## Imported resources
+
+- [Career Explorer](https://wpr-creator.github.io/ocs-elem/career-explorer/): `dist/career-explorer/`, imported from `wpr-creator/careerexplorer`.
+- [Mission Academy](https://wpr-creator.github.io/ocs-elem/2nd/): `dist/2nd/`, imported from `wpr-creator/2nd`.
+
+Each section includes a School home link. Source commit IDs are recorded in each section’s `SOURCE.md`. These are independent copies; changes to the original repositories do not sync automatically. The imported Mission Academy teacher panel writes section settings to `dist/2nd/config.js` in this repository. Existing browser-local student progress retains its original storage keys.

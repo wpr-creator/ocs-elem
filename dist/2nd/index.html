@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Academy — 2nd Grade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#1a1a2e; --panel:#16213e; --gold:#f5a623; --mint:#4ecdc4;
+    --rose:#e84393; --violet:#a78bfa; --orange:#fb923c;
+    --white:#f0f4ff; --soft:#a8b2d8; --success:#56cf8a; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse 600px 400px at 10% 20%,rgba(167,139,250,0.18) 0%,transparent 70%),
+      radial-gradient(ellipse 500px 350px at 85% 10%,rgba(251,191,36,0.12) 0%,transparent 70%),
+      radial-gradient(ellipse 400px 500px at 90% 80%,rgba(244,114,182,0.15) 0%,transparent 70%),
+      radial-gradient(ellipse 600px 300px at 5% 85%,rgba(52,211,153,0.12) 0%,transparent 70%),
+      radial-gradient(ellipse 300px 300px at 50% 50%,rgba(56,189,248,0.08) 0%,transparent 70%);
+  }
+
+  /* Name gate */
+  .name-gate{position:fixed;inset:0;background:rgba(10,10,20,0.92);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .name-gate.hidden{display:none;}
+  .name-box{background:var(--panel);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:48px 40px;max-width:440px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.5);}
+  .name-rocket{font-size:3.5rem;margin-bottom:16px;}
+  .name-box h2{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:8px;}
+  .name-box p{color:var(--soft);margin-bottom:28px;font-size:0.95rem;line-height:1.6;}
+  .name-input{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:16px;color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:1.1rem;text-align:center;outline:none;margin-bottom:14px;transition:border-color 0.15s;}
+  .name-input:focus{border-color:var(--gold);}
+  .name-btn{width:100%;background:var(--gold);color:var(--ink);border:none;border-radius:12px;padding:16px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;}
+  .name-error{color:#ff6b6b;font-size:0.85rem;margin-top:8px;min-height:18px;}
+
+  /* Top links */
+  .top-links{position:relative;z-index:1;display:flex;justify-content:flex-end;gap:10px;padding:12px 28px 0;}
+  .top-link{padding:8px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.1);color:var(--soft);font-family:'Space Grotesk',sans-serif;font-size:0.8rem;font-weight:600;text-decoration:none;transition:all 0.2s;}
+  .top-link:hover{color:var(--white);border-color:rgba(255,255,255,0.25);}
+
+  /* Header */
+  header{position:relative;z-index:1;text-align:center;padding:40px 20px 28px;}
+  .logo-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),#f7c948);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:16px;}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.1;margin-bottom:8px;}
+  h1 span{color:var(--gold);}
+  .tagline{color:var(--soft);font-size:1rem;}
+  .change-name-btn{background:none;border:none;color:var(--soft);font-size:0.78rem;cursor:pointer;text-decoration:underline;margin-top:10px;font-family:'DM Sans',sans-serif;}
+  .change-name-btn:hover{color:var(--white);}
+
+  /* Grid */
+  main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:20px 20px 80px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:620px){main{grid-template-columns:1fr;}}
+
+  /* Cards */
+  .mission-card{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.12);border-radius:20px;padding:32px 28px;display:flex;flex-direction:column;gap:12px;text-decoration:none;color:inherit;transition:transform 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;}
+  .mission-card::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;opacity:0.06;}
+  .mission-card.math::before{background:var(--mint);}
+  .mission-card.ela::before{background:var(--rose);}
+  .mission-card.reading::before{background:var(--violet);}
+  .mission-card.spelling::before{background:var(--orange);}
+  .mission-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3);background:rgba(255,255,255,0.13);}
+  .card-icon{font-size:2.2rem;line-height:1;}
+  .card-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;}
+  .math .card-label{color:var(--mint);}
+  .ela .card-label{color:var(--rose);}
+  .reading .card-label{color:var(--violet);}
+  .spelling .card-label{color:var(--orange);}
+  .card-title{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;line-height:1.1;}
+  .card-desc{color:var(--soft);font-size:0.88rem;line-height:1.6;}
+  .card-progress{width:100%;}
+  .card-progress-bar{height:5px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;margin-bottom:5px;}
+  .card-progress-fill{height:100%;border-radius:100px;transition:width 0.4s;}
+  .math .card-progress-fill{background:var(--mint);}
+  .ela .card-progress-fill{background:var(--rose);}
+  .reading .card-progress-fill{background:var(--violet);}
+  .spelling .card-progress-fill{background:var(--orange);}
+  .card-progress-label{font-size:0.75rem;color:var(--soft);}
+  .card-cta{margin-top:auto;padding-top:12px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.88rem;}
+  .math .card-cta{color:var(--mint);}
+  .ela .card-cta{color:var(--rose);}
+  .reading .card-cta{color:var(--violet);}
+  .spelling .card-cta{color:var(--orange);}
+
+  footer{position:relative;z-index:1;text-align:center;padding:20px;color:var(--soft);font-size:0.8rem;opacity:0.5;}
+</style>
+<link rel="stylesheet" href="../school-nav.css">
+</head>
+<body>
+<nav class="school-return" aria-label="School website"><a href="../">School home</a><span>Falcon School Resources</span></nav>
+
+<div class="name-gate" id="nameGate">
+  <div class="name-box">
+    <div class="name-rocket">🚀</div>
+    <h2>Welcome, Explorer!</h2>
+    <p>Type your first name to start your missions. Your progress will be saved!</p>
+    <input class="name-input" id="nameInput" type="text" placeholder="Your first name" maxlength="30" autocomplete="off">
+    <button class="name-btn" onclick="submitName()">Let's Go! →</button>
+    <div class="name-error" id="nameError"></div>
+  </div>
+</div>
+
+<div class="top-links">
+  <a href="trophies.html" class="top-link">🏆 My Trophies</a>
+</div>
+
+<header>
+  <div class="logo-badge">🚀 Mission Academy</div>
+  <h1>Welcome back,<br><span id="welcomeName">Explorer</span>!</h1>
+  <p class="tagline">You've got this! Choose your mission and let's go! 🚀</p>
+  <div><button class="change-name-btn" onclick="changeName()">Switch explorer</button></div>
+</header>
+
+<div class="leaderboard" id="leaderboard"></div>
+
+<main>
+  <a href="math.html" class="mission-card math">
+    <div class="card-icon">➕</div>
+    <div class="card-label">Mission Zone · 30 missions</div>
+    <div class="card-title">Math Missions</div>
+    <p class="card-desc">Addition, subtraction, place value, comparing numbers, and more.</p>
+    <div class="card-progress">
+      <div class="card-progress-bar"><div class="card-progress-fill" id="mathFill" style="width:0%"></div></div>
+      <div class="card-progress-label" id="mathLabel">0 of 30 completed</div>
+    </div>
+    <div class="card-cta">Launch Math Missions →</div>
+  </a>
+
+  <a href="ela.html" class="mission-card ela">
+    <div class="card-icon">📖</div>
+    <div class="card-label">Mission Zone · 60 missions</div>
+    <div class="card-title">ELA Missions</div>
+    <p class="card-desc">Nouns, verbs, adjectives, sentence types, synonyms, and more.</p>
+    <div class="card-progress">
+      <div class="card-progress-bar"><div class="card-progress-fill" id="elaFill" style="width:0%"></div></div>
+      <div class="card-progress-label" id="elaLabel">0 of 60 completed</div>
+    </div>
+    <div class="card-cta">Launch ELA Missions →</div>
+  </a>
+
+  <a href="reading.html" class="mission-card reading">
+    <div class="card-icon">📚</div>
+    <div class="card-label">Mission Zone · 20 passages</div>
+    <div class="card-title">Reading Missions</div>
+    <p class="card-desc">Read short stories and answer comprehension questions about each one.</p>
+    <div class="card-progress">
+      <div class="card-progress-bar"><div class="card-progress-fill" id="readFill" style="width:0%"></div></div>
+      <div class="card-progress-label" id="readLabel">0 of 20 completed</div>
+    </div>
+    <div class="card-cta">Launch Reading Missions →</div>
+  </a>
+
+  <a href="spelling.html" class="mission-card spelling">
+    <div class="card-icon">🔤</div>
+    <div class="card-label">Mission Zone · 20 missions</div>
+    <div class="card-title">Spelling Missions</div>
+    <p class="card-desc">Listen to each word and spell it correctly. 10 words per mission!</p>
+    <div class="card-progress">
+      <div class="card-progress-bar"><div class="card-progress-fill" id="spellFill" style="width:0%"></div></div>
+      <div class="card-progress-label" id="spellLabel">0 of 20 completed</div>
+    </div>
+    <div class="card-cta">Launch Spelling Missions →</div>
+  </a>
+</main>
+
+<footer>Mission Academy &bull; 2nd Grade &bull; Progress saved automatically</footer>
+
+<script src="config.js"></script>
+<script src="engine.js"></script>
+<script src="teacher-panel.js"></script>
+<script>
+const ME=window.MissionEngine;
+
+function submitName(){
+  const val=document.getElementById('nameInput').value.trim();
+  if(val.length<1){document.getElementById('nameError').textContent='Please type your name!';return;}
+  ME.setStudentName(val);
+  document.getElementById('nameGate').classList.add('hidden');
+  updatePage();
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  const lb = document.getElementById('leaderboard');
+  const all = ME.getAllStudentProgress();
+  const names = Object.keys(all);
+  if (names.length < 2) { lb.innerHTML = ''; return; }
+
+  // Score = total missions done across all zones
+  const scored = names.map(n => {
+    const d = all[n];
+    function done(p, t) { let c=0; for(let i=1;i<=t;i++) if(p[`best_${i}`]!=null) c++; return c; }
+    const total = done(d.math||{},30) + done(d.ela||{},60) + done(d.reading||{},20) + done(d.spelling||{},20);
+    const perfs = [20,20,5,10];
+    let perf=0;
+    ['math','ela','reading','spelling'].forEach((s,si)=>{
+      const p=d[s]||{}, t=[30,60,20,20][si];
+      for(let i=1;i<=t;i++) if(p[`best_${i}`]===perfs[si]) perf++;
+    });
+    return { name: n.replace(/_/g,' '), total, perf };
+  }).sort((a,b)=>b.total-a.total||b.perf-a.perf).slice(0,6);
+
+  const medals = ['🥇','🥈','🥉'];
+  const cards = scored.map((s,i)=>`
+    <div class="lb-card rank-${i+1}">
+      <div class="lb-rank">${medals[i]||`#${i+1}`}</div>
+      <div class="lb-info">
+        <div class="lb-name">${s.name}</div>
+        <div class="lb-score">${s.total} missions · ${s.perf} perfect</div>
+      </div>
+    </div>`).join('');
+
+  lb.innerHTML = `
+    <div class="leaderboard-title">🏆 Class Leaderboard</div>
+    <div class="leaderboard-grid">${cards}</div>
+  `;
+}
+function changeName(){
+  document.getElementById('nameInput').value=''; document.getElementById('nameError').textContent='';
+  document.getElementById('nameGate').classList.remove('hidden');
+  document.getElementById('nameInput').focus();
+}
+document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitName();});
+
+function countDone(subject,total){
+  const p=ME.getProgress(subject); let n=0;
+  for(let i=1;i<=total;i++) if(p[`best_${i}`]!=null) n++;
+  return n;
+}
+
+function updatePage(){
+  const name=ME.getStudentName();
+  if(!name){document.getElementById('nameGate').classList.remove('hidden');return;}
+  document.getElementById('welcomeName').textContent=name;
+
+  const mathDone=countDone('math',30);
+  document.getElementById('mathFill').style.width=`${(mathDone/30)*100}%`;
+  document.getElementById('mathLabel').textContent=`${mathDone} of 30 completed`;
+
+  const elaDone=countDone('ela',60);
+  document.getElementById('elaFill').style.width=`${(elaDone/60)*100}%`;
+  document.getElementById('elaLabel').textContent=`${elaDone} of 60 completed`;
+
+  const readDone=countDone('reading',20);
+  document.getElementById('readFill').style.width=`${(readDone/20)*100}%`;
+  document.getElementById('readLabel').textContent=`${readDone} of 20 completed`;
+
+  const spellDone=countDone('spelling',20);
+  document.getElementById('spellFill').style.width=`${(spellDone/20)*100}%`;
+  document.getElementById('spellLabel').textContent=`${spellDone} of 20 completed`;
+}
+
+// Init
+updatePage();
+renderLeaderboard();
+</script>
+</body>
+</html>

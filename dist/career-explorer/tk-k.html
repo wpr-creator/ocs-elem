@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Career Explorer — Tiny Explorers (TK–K)</title>
+<meta property="og:type"        content="website" />
+<meta property="og:title"       content="Career Explorer — Grades TK–K" />
+<meta property="og:description" content="A 12-question, equally weighted RIASEC interest exploration for TK and Kindergarten students." />
+<meta property="og:url"         content="https://wpr-creator.github.io/ocs-elem/career-explorer/tk-k.html" />
+<meta property="og:image"       content="https://wpr-creator.github.io/ocs-elem/career-explorer/og-preview.jpg" />
+<meta name="twitter:card"       content="summary_large_image" />
+<meta name="twitter:title"      content="Career Explorer — Grades TK–K" />
+<meta name="twitter:description" content="A 12-question, equally weighted RIASEC interest exploration for TK and Kindergarten students." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:focus-visible { outline: 4px solid #1D4ED8; outline-offset: 4px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+:root {
+  --sun: #FFD93D;
+  --sky: #6BCB77;
+  --cloud: #4D96FF;
+  --pink: #FF6B9D;
+  --peach: #FFF3E0;
+  --ink: #1A1A2E;
+  --card: #FFFFFF;
+  --bg: #FEF9F0;
+}
+
+body {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* floating shapes bg */
+.shapes-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.08;
+  animation: drift 8s ease-in-out infinite;
+}
+.shape:nth-child(1) { width:180px; height:180px; background:var(--sun); top:5%; left:8%; animation-delay:0s; }
+.shape:nth-child(2) { width:120px; height:120px; background:var(--sky); top:20%; right:10%; animation-delay:1.5s; }
+.shape:nth-child(3) { width:90px; height:90px; background:var(--pink); bottom:30%; left:5%; animation-delay:3s; }
+.shape:nth-child(4) { width:150px; height:150px; background:var(--cloud); bottom:10%; right:8%; animation-delay:4.5s; }
+@keyframes drift {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* HEADER */
+.site-header {
+  position: relative; z-index: 1;
+  background: linear-gradient(135deg, #FFD93D 0%, #FF6B9D 50%, #6BCB77 100%);
+  padding: 2rem 1.5rem 2.5rem;
+  text-align: center;
+  clip-path: ellipse(100% 90% at 50% 0%);
+  padding-bottom: 4rem;
+}
+.back-link {
+  position: absolute; top: 1rem; left: 1rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  background: rgba(255,255,255,0.25);
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.back-link:hover { background: rgba(255,255,255,0.4); }
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.3);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  margin-bottom: 0.8rem;
+}
+.site-header h1 {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: clamp(2.4rem, 7vw, 3.8rem);
+  font-weight: 700;
+  color: white;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+.site-header p {
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+}
+
+.main {
+  position: relative; z-index: 1;
+  max-width: 700px;
+  margin: -2.5rem auto 0;
+  padding: 0 1.2rem 5rem;
+}
+
+/* PROGRESS */
+.progress-area { margin-bottom: 1.5rem; display: none; }
+.progress-label {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #5A3D8C;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.progress-track {
+  background: #E8D5FF;
+  border-radius: 50px;
+  height: 20px;
+  border: 3px solid #A78BFA;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD93D, #FF6B9D);
+  border-radius: 50px;
+  transition: width 0.5s ease;
+}
+
+/* INTRO */
+#intro { margin-top: 1rem; }
+.mascot { font-size: 6rem; display: block; text-align: center; margin: 1rem auto; animation: bounce 1.5s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+
+.intro-card {
+  background: white;
+  border-radius: 32px;
+  padding: 2rem 1.8rem;
+  border: 4px solid #FFD93D;
+  box-shadow: 0 8px 0 #FFD93D66;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.intro-card h2 {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  color: #3D1A8E;
+  margin-bottom: 0.8rem;
+}
+.intro-card p {
+  font-size: clamp(1.05rem, 3vw, 1.25rem);
+  font-weight: 700;
+  color: #4A3A6A;
+  line-height: 1.6;
+  margin-bottom: 0.6rem;
+}
+.answer-key {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin: 1.2rem 0;
+}
+.key-item {
+  border-radius: 16px;
+  padding: 0.7rem;
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: center;
+}
+.key-yes { background: #D1FAE5; color: #065F46; border: 2px solid #34D399; }
+.key-kinda { background: #FEF3C7; color: #92400E; border: 2px solid #FBBF24; }
+.key-notsure { background: #DBEAFE; color: #1E40AF; border: 2px solid #60A5FA; }
+.key-nope { background: #FFE4E6; color: #9F1239; border: 2px solid #FB7185; }
+
+.start-btn {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 1rem 3.5rem;
+  background: linear-gradient(135deg, #FF6B9D, #FFD93D);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 7px 0 #C8411A55;
+  transition: all 0.2s;
+}
+.start-btn:hover { transform: translateY(-4px); box-shadow: 0 11px 0 #C8411A55; }
+
+/* QUESTION */
+#quiz { display: none; }
+.question-card {
+  background: white;
+  border-radius: 32px;
+  padding: 2rem 1.5rem;
+  border: 4px solid #A78BFA;
+  box-shadow: 0 8px 0 #A78BFA44;
+  animation: pop-in 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  margin-bottom: 1.5rem;
+}
+@keyframes pop-in {
+  0% { transform: scale(0.85) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.q-emoji {
+  font-size: 5.5rem;
+  display: block;
+  text-align: center;
+  margin-bottom: 0.8rem;
+  animation: wiggle 1.5s ease-in-out infinite;
+}
+@keyframes wiggle {
+  0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)}
+}
+.q-text {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: 600;
+  text-align: center;
+  color: #2D1B69;
+  line-height: 1.3;
+  margin-bottom: 1.8rem;
+}
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.answer-btn {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-weight: 900;
+  padding: 1.1rem 0.8rem;
+  border-radius: 22px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1.3;
+  text-align: center;
+}
+.answer-btn:hover { transform: scale(1.07) translateY(-3px); }
+.answer-btn.yes { background:#D1FAE5; color:#065F46; border-color:#34D399; box-shadow:0 5px 0 #34D39966; }
+.answer-btn.yes:hover { background:#A7F3D0; }
+.answer-btn.kinda { background:#FEF3C7; color:#92400E; border-color:#FBBF24; box-shadow:0 5px 0 #FBBF2466; }
+.answer-btn.kinda:hover { background:#FDE68A; }
+.answer-btn.not-really { background:#DBEAFE; color:#1E40AF; border-color:#60A5FA; box-shadow:0 5px 0 #60A5FA66; }
+.answer-btn.not-really:hover { background:#BFDBFE; }
+.answer-btn.nope { background:#FFE4E6; color:#9F1239; border-color:#FB7185; box-shadow:0 5px 0 #FB718566; }
+.answer-btn.nope:hover { background:#FECDD3; }
+.answer-btn.selected { transform: scale(1.04); filter: brightness(0.88); box-shadow: 0 2px 0 transparent !important; }
+
+.next-wrap { text-align: center; margin-top: 1.2rem; }
+.next-btn {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  padding: 0.9rem 3rem;
+  background: linear-gradient(135deg, #FF6B9D, #7C3AED);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #7C3AED99;
+  transition: all 0.2s;
+  display: none;
+}
+.next-btn:hover { transform: translateY(-3px); box-shadow: 0 9px 0 #7C3AED99; }
+.next-btn.show { display: inline-block; animation: pop-in 0.3s ease; }
+
+/* RESULTS */
+#results { display: none; }
+.results-top {
+  background: linear-gradient(135deg, #FFF0F5, #FFF8E1, #F0FFF4);
+  border-radius: 32px;
+  padding: 2rem;
+  text-align: center;
+  border: 4px solid #FFD93D;
+  box-shadow: 0 8px 0 #FFD93D55;
+  margin-bottom: 2rem;
+}
+.results-top .celebrate { font-size: 4rem; animation: bounce 1.5s ease-in-out infinite; display: block; margin-bottom: 0.5rem; }
+.results-top h2 {
+  font-family: ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 700;
+  color: #C8411A;
+  margin-bottom: 0.4rem;
+}
+.results-top p { font-size: 1.15rem; font-weight: 800; color: #5C35A0; }
+.score-explanation { text-align:center; font-size:0.9rem; font-weight:800; color:#4C1D95; margin:0 auto 0.8rem; max-width:620px; }
+.score-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:0.55rem; margin-bottom:1.4rem; }
+.score-chip { background:white; border:2px solid #C4B5FD; border-radius:14px; padding:0.65rem; text-align:center; font-weight:800; color:#3B1D8E; }
+.score-chip strong { display:block; font-size:0.75rem; }
+
+.result-cards-wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+.result-card {
+  border-radius: 28px;
+  padding: 1.6rem 1.2rem;
+  text-align: center;
+  border: 4px solid;
+  animation: pop-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.result-card:nth-child(1){animation-delay:0.1s}
+.result-card:nth-child(2){animation-delay:0.25s}
+.result-card:nth-child(3){animation-delay:0.4s}
+.rc-emoji { font-size: 3.5rem; display: block; margin-bottom: 0.5rem; }
+.rc-rank { font-family:ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif; font-size:1.05rem; margin-bottom:0.3rem; opacity:0.8; font-weight:600; }
+.rc-type { font-family:ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif; font-size:1.9rem; font-weight:700; margin-bottom:0.3rem; line-height:1; }
+.rc-label { font-size:0.9rem; font-weight:800; opacity:0.75; margin-bottom:0.8rem; }
+.rc-jobs {
+  font-size: 0.9rem; font-weight: 700; line-height: 1.8;
+  text-align: left; background: rgba(255,255,255,0.6);
+  border-radius: 14px; padding: 0.6rem 0.8rem;
+}
+.job-link-btn {
+  width:100%; display:block; text-align:left;
+  background:rgba(255,255,255,0.7); border:2px solid rgba(124,58,237,0.15);
+  border-radius:10px; padding:0.3rem 0.5rem; margin-bottom:0.3rem;
+  font-family:ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif; font-size:0.9rem; font-weight:800;
+  color:inherit; cursor:pointer; transition:all 0.15s;
+}
+.job-link-btn:hover { transform:translateY(-2px); background:white; border-color:#A78BFA; }
+
+/* Career detail panel */
+.career-panel {
+  background:white; border:4px solid #60A5FA;
+  border-radius:28px; padding:1.6rem;
+  margin-bottom:2rem; box-shadow:0 6px 0 #60A5FA44;
+  display:none; animation:pop-in 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.career-panel.show{display:block}
+.career-panel h3 {
+  font-family:ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif; font-size:1.9rem; font-weight:700;
+  color:#C8411A; text-align:center; margin-bottom:0.8rem;
+}
+.career-source { font-size:0.78rem; color:#475569; text-align:center; margin-top:0.65rem; font-weight:800; }
+.career-source a { color:#1D4ED8; }
+.career-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:0.8rem; margin-bottom:1rem;
+}
+.career-box {
+  background:#F8FAFC; border:3px solid #E2E8F0;
+  border-radius:16px; padding:0.9rem;
+  font-weight:800; color:#334155; line-height:1.4;
+}
+.career-box strong {
+  font-family:ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif; font-size:1rem;
+  color:#7C3AED; display:block; margin-bottom:0.2rem;
+}
+.career-prompt-box {
+  background:#FEF3C7; border:3px dashed #FBBF24;
+  border-radius:16px; padding:1rem;
+  font-weight:800; color:#78350F; line-height:1.5; font-size:0.95rem;
+}
+
+/* Write it down */
+
+
+
+
+
+
+
+
+.restart-btn {
+  font-family:ui-rounded, "Avenir Next", "Trebuchet MS", sans-serif; font-size:1.5rem; font-weight:600;
+  padding:0.9rem 3rem; background:linear-gradient(135deg,#6BCB77,#4D96FF);
+  color:white; border:none; border-radius:50px; cursor:pointer;
+  box-shadow:0 6px 0 #065F4699; transition:all 0.2s; display:block; margin:0 auto 1rem;
+}
+.restart-btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 #065F4699}
+
+@media(max-width:500px){
+  .answers{grid-template-columns:1fr}
+  .career-grid{grid-template-columns:1fr}
+  .answer-key{grid-template-columns:1fr}
+  .score-summary{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Day in the life */
+.career-day-box {
+  background:#F0FDF4; border:2px solid #86EFAC; border-radius:12px;
+  padding:1.2rem; margin-bottom:1rem; font-size:0.9rem; color:#14532D; line-height:1.65;
+}
+.career-day-box strong { display:block; font-size:0.72rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#15803D; margin-bottom:0.5rem; }
+.pathway-section > strong { font-size:0.72rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--purple); display:block; margin-bottom:0.8rem; margin-top:1rem; }
+.pathway-steps { display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1rem; }
+.pathway-step { display:flex; gap:0.8rem; background:#F8F9FF; border:1.5px solid #C4B5FD; border-radius:10px; padding:0.8rem; font-size:0.85rem; color:#334155; line-height:1.5; }
+.pathway-step-icon { font-size:1.3rem; flex-shrink:0; }
+.pathway-step-label { font-size:0.68rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#5B21B6; margin-bottom:0.2rem; }
+.colleges-box { background:#FFF7ED; border:2px solid #FCD34D; border-radius:12px; padding:1rem; margin-bottom:1rem; font-size:0.88rem; color:#78350F; line-height:1.65; }
+.colleges-box strong { display:block; font-size:0.72rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#B45309; margin-bottom:0.5rem; }
+
+
+@media (max-width: 768px) and (min-width: 581px) {
+  main { padding: 1.5rem; }
+  .career-grid { grid-template-columns: 1fr; }
+  .result-cards-wrap { grid-template-columns: 1fr 1fr; }
+  .pathway-steps { gap: 0.4rem; }
+  .answers { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Day in the Life time rows */
+.day-timeline { display: flex; flex-direction: column; gap: 0.5rem; }
+.day-row { display: flex; gap: 0.75rem; align-items: flex-start; }
+.day-time { font-size: 0.72rem; font-weight: 800; color: #15803D; letter-spacing: 0.05em; min-width: 4.5rem; padding-top: 0.15rem; white-space: nowrap; }
+.day-time:empty { display: none; }
+.day-task { font-size: 0.88rem; color: #14532D; line-height: 1.5; }
+
+/* ── PRINT STYLESHEET ───────────────────────────────────────── */
+@media print {
+  @page { size: letter portrait; margin: 0.75in; }
+  body { background: white !important; font-size: 11pt; }
+  body::before, .action-btns, .answer-btn, .next-btn,
+  .start-btn, .progress-area, .saved-banner,
+  #quiz, #intro, .float-bg, .header-deco,
+  .header-emoji, .header-emoji-row { display: none !important; }
+  #results { display: block !important; }
+  .results-top { text-align: center; margin-bottom: 1rem; }
+  .results-top .celebrate { display: none !important; }
+  .results-top h2 { font-size: 18pt; color: #000 !important; }
+  .results-top p  { font-size: 11pt; color: #333 !important; }
+  .result-cards-wrap {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.4in !important;
+    margin-bottom: 0.3in;
+    break-inside: avoid;
+  }
+  .result-card {
+    border: 2pt solid #ccc !important;
+    border-radius: 8pt !important;
+    padding: 0.15in !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .rc-emoji  { font-size: 20pt; }
+  .rc-rank   { font-size: 8pt; font-weight: 700; }
+  .rc-type   { font-size: 13pt; font-weight: 800; color: #000 !important; }
+  .rc-full, .rc-match { font-size: 9pt; color: #444 !important; }
+  .job-link-btn {
+    display: block;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 9pt;
+    padding: 0 !important;
+    color: #000 !important;
+    text-align: left;
+  }
+  .career-panel.show {
+    display: block !important;
+    border: 1pt solid #ccc !important;
+    box-shadow: none !important;
+    break-before: page;
+    page-break-before: always;
+  }
+  .career-panel h3  { font-size: 14pt; color: #000 !important; }
+  .career-box       { border: 1pt solid #ddd !important; box-shadow: none !important; font-size: 9pt; }
+  .career-box strong { font-size: 7pt; }
+  .career-day-box, .colleges-box { border: 1pt solid #ddd !important; font-size: 9pt; }
+  .pathway-step     { border: 1pt solid #ddd !important; font-size: 9pt; }
+  .pathway-step-label { font-size: 7pt; }
+  .day-timeline     { gap: 0.1rem; }
+  .day-time         { font-size: 7pt; min-width: 3rem; }
+  .day-task         { font-size: 9pt; }
+  header, nav, footer { display: none !important; }
+}
+
+.back-to-results {
+  display: block; width: 100%; margin-top: 1.2rem;
+  background: none; border: 2px solid #BFDBFE; border-radius: 10px;
+  padding: 0.7rem 1rem; font-size: 0.85rem; font-weight: 800;
+  color: var(--blue, #1D4ED8); cursor: pointer; text-align: center;
+  letter-spacing: 0.05em; transition: background 0.15s, color 0.15s;
+}
+.back-to-results:hover { background: #EFF6FF; }
+
+/* ── DEV MODE ────────────────────────────────────────────── */
+.dev-badge {
+  position:fixed; bottom:1rem; right:1rem; z-index:9999;
+  background:#1e293b; color:#38bdf8; font-size:0.7rem; font-weight:800;
+  letter-spacing:0.12em; text-transform:uppercase;
+  padding:0.35rem 0.7rem; border-radius:6px; border:1.5px solid #38bdf8;
+  display:none; pointer-events:none;
+}
+.dev-badge.show { display:block; }
+.dev-panel {
+  position:fixed; bottom:3rem; right:1rem; z-index:9999;
+  background:#0f172a; color:#e2e8f0; font-size:0.8rem; font-family:monospace;
+  padding:1rem 1.2rem; border-radius:10px; border:1.5px solid #38bdf8;
+  min-width:220px; display:none; box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+.dev-panel.show { display:block; }
+.dev-panel h4 { color:#38bdf8; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.6rem; }
+.dev-btn {
+  display:block; width:100%; margin-bottom:0.4rem;
+  background:#1e293b; color:#e2e8f0; border:1px solid #334155;
+  border-radius:5px; padding:0.3rem 0.6rem; font-size:0.75rem;
+  font-family:monospace; cursor:pointer; text-align:left;
+}
+.dev-btn:hover { background:#334155; color:#38bdf8; }
+.dev-storage { font-size:0.68rem; color:#64748b; margin-top:0.5rem; word-break:break-all; white-space:pre; }
+
+/* ── BROWSE CAREERS BUTTON ───────────────────────────────── */
+.browse-fab {
+  position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 1000;
+  background: var(--navy, #0F172A); color: white;
+  border: none; border-radius: 50px;
+  padding: 0.6rem 1.1rem 0.6rem 0.9rem;
+  font-family: inherit; font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.06em; cursor: pointer;
+  display: flex; align-items: center; gap: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+.browse-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.browse-fab .fab-icon { font-size: 1rem; }
+
+/* ── JUMP TO CAREERS (quiz screen) ─────────────────── */
+.quiz-jump-btn {
+  display: block; width: 100%; margin-top: 1rem;
+  background: none; border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 10px; padding: 0.55rem 1rem;
+  font-family: inherit; font-size: 0.78rem; font-weight: 800;
+  color: var(--muted, #64748B); cursor: pointer; text-align: center;
+  letter-spacing: 0.06em; text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.quiz-jump-btn:hover { border-color: var(--blue, #1D4ED8); color: var(--blue, #1D4ED8); }
+</style>
+<link rel="stylesheet" href="../school-nav.css">
+</head>
+<body>
+<nav class="school-return" aria-label="School website"><a href="../">School home</a><span>Falcon School Resources</span></nav>
+<div class="shapes-bg" aria-hidden="true">
+  <div class="shape"></div><div class="shape"></div>
+  <div class="shape"></div><div class="shape"></div>
+</div>
+
+<header class="site-header">
+  <a class="back-link" href="index.html">← HUB</a>
+  <div class="header-badge">Grades TK – K · Tiny Explorers</div>
+  <h1>CAREER EXPLORER</h1>
+  <p>What Do YOU Like to Do? 🌟</p>
+</header>
+
+<div class="main">
+  <div id="progress-area" class="progress-area">
+    <progress class="sr-only" id="progress-native" value="0" max="12" aria-label="Assessment progress">0 of 12 questions complete</progress>
+    <div class="progress-label" id="progress-label">Question 1 of 12</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <span class="mascot" aria-hidden="true">🌟</span>
+    <div class="intro-card">
+      <h2>HELLO, EXPLORER! 👋</h2>
+      <p>We are going to play a fun game!</p>
+      <p>I will show you pictures and ask what you like to do.</p>
+      <p>There are <strong>12 questions</strong>. Pick one answer for each one!</p>
+      <div class="answer-key">
+        <div class="key-item key-yes">✅ YES! I love it!</div>
+        <div class="key-item key-kinda">🤔 Kind of!</div>
+        <div class="key-item key-notsure">😐 Not really</div>
+        <div class="key-item key-nope">❌ Nope!</div>
+      </div>
+      <p>Ready? Let's go! 🚀</p>
+      <br>
+      <button type="button" class="start-btn" onclick="startQuiz()" aria-label="Start the career interest assessment">LET'S GO! 🎉</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz"></div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-top">
+      <span class="celebrate">🎉</span>
+      <h2>YOU DID IT!</h2>
+      <p>Your choices made these strongest interest areas. Ties stay tied! ⬇️</p>
+    </div>
+    <p class="score-explanation">Every answer counts: Yes = 3, Kind of = 2, Not really = 1, Nope = 0. Each interest area has 2 questions.</p>
+    <div class="score-summary" id="score-summary" role="group" aria-label="All six interest scores"></div>
+    <div class="result-cards-wrap" id="result-cards" aria-live="polite"></div>
+    <div class="career-panel" id="career-panel">
+      <h3 id="career-title">CHOOSE A CAREER TO EXPLORE</h3>
+      <div class="career-grid">
+        <div class="career-box"><strong>📖 WHAT THEY DO</strong><span id="career-does"></span></div>
+        <div class="career-box"><strong>💰 HOW MUCH THEY EARN</strong><span id="career-income"></span></div>
+      </div>
+      <div class="career-day-box" id="career-day-wrap" style="display:none"><strong>☀️ A DAY IN THE LIFE</strong><span id="career-day"></span></div>
+      <div class="pathway-section" id="career-pathway-wrap" style="display:none"><strong>🗺️ HOW CAN YOU PREPARE?</strong><div class="pathway-steps" id="career-pathway-steps"></div></div>
+      <div class="colleges-box" id="career-colleges-wrap" style="display:none"><strong>🏛️ EDUCATION &amp; TRAINING EXAMPLES</strong><span id="career-colleges"></span></div>
+      <p class="career-source" id="career-source"></p>
+    </div>
+    
+
+    <button type="button" class="restart-btn" onclick="resetQuiz()">🔄 TRY AGAIN!</button>
+  </div>
+</div>
+
+<script src="career-data.js"></script>
+<script src="scoring.js"></script>
+<script>
+const QUESTIONS = [
+  { id:1, riasec:"R", emoji:"🔨", text:"Do you like to build things with blocks or LEGOs?" },
+  { id:2, riasec:"I", emoji:"🔭", text:"Do you like to ask WHY about things?" },
+  { id:3, riasec:"A", emoji:"🎨", text:"Do you like to draw or paint?" },
+  { id:4, riasec:"S", emoji:"🤗", text:"Do you like to help a friend who is sad?" },
+  { id:5, riasec:"E", emoji:"📣", text:"Do you like telling your ideas to other kids?" },
+  { id:6, riasec:"C", emoji:"📐", text:"Do you like to sort things and keep them neat?" },
+  { id:7, riasec:"R", emoji:"🌱", text:"Do you like to play outside with plants and animals?" },
+  { id:8, riasec:"I", emoji:"🐛", text:"Do you like to look at bugs, rocks, or stars?" },
+  { id:9, riasec:"A", emoji:"🎭", text:"Do you like to make up stories or pretend games?" },
+  { id:10, riasec:"S", emoji:"🍎", text:"Do you like to show someone how to do something?" },
+  { id:11, riasec:"E", emoji:"🏅", text:"Do you like to be the one who picks what game to play?" },
+  { id:12, riasec:"C", emoji:"📝", text:"Do you like doing things one step at a time?" }
+];
+
+const SCORE_MAP = { yes:3, kinda:2, 'not-really':1, nope:0 };
+
+const RIASEC = {
+  R:{ name:"BUILDER", fullName:"Realistic", emoji:"🔨", color:"#C0392B", light:"#FFF5F5", border:"#C0392B", shadow:"#C0392B55", textColor:"#7B0D0D",
+      jobs:["builder","farmer","mechanic"] },
+  I:{ name:"THINKER", fullName:"Investigative", emoji:"🔭", color:"#6D28D9", light:"#F5F3FF", border:"#6D28D9", shadow:"#6D28D955", textColor:"#3B1380",
+      jobs:["scientist","doctor","coder"] },
+  A:{ name:"CREATOR", fullName:"Artistic", emoji:"🎨", color:"#BE185D", light:"#FFF0F7", border:"#BE185D", shadow:"#BE185D55", textColor:"#831043",
+      jobs:["artist","musician","actor"] },
+  S:{ name:"HELPER", fullName:"Social", emoji:"🤝", color:"#065F46", light:"#F0FDF4", border:"#065F46", shadow:"#065F4655", textColor:"#064E3B",
+      jobs:["teacher","nurse","counselor"] },
+  E:{ name:"LEADER", fullName:"Enterprising", emoji:"⭐", color:"#92400E", light:"#FFFBEB", border:"#FBBF24", shadow:"#FBBF2455", textColor:"#78350F",
+      jobs:["business_owner","public_leader","movie_director"] },
+  C:{ name:"ORGANIZER", fullName:"Conventional", emoji:"📋", color:"#1E40AF", light:"#EFF6FF", border:"#60A5FA", shadow:"#60A5FA55", textColor:"#1E3A8A",
+      jobs:["accountant","office_manager","banker"] }
+};
+
+const CAREERS = CareerExplorerData.careers.tkk;
+
+let currentQ = 0;
+let scores = { R:0, I:0, A:0, S:0, E:0, C:0 };
+let counts = { R:0, I:0, A:0, S:0, E:0, C:0 };
+let answered = new Array(QUESTIONS.length).fill(null);
+
+function startQuiz() {
+  currentQ = 0;
+  scores = { R:0, I:0, A:0, S:0, E:0, C:0 };
+  counts = { R:0, I:0, A:0, S:0, E:0, C:0 };
+  answered = new Array(QUESTIONS.length).fill(null);
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('progress-area').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const quiz = document.getElementById('quiz');
+  quiz.innerHTML = '';
+  const q = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+  const pct = Math.round((currentQ / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = 'Question ' + (currentQ+1) + ' of ' + total;
+  const nativeProgress = document.getElementById('progress-native');
+  nativeProgress.value = currentQ;
+  nativeProgress.textContent = currentQ + ' of ' + total + ' questions complete';
+  nativeProgress.setAttribute('aria-valuetext', currentQ + ' of ' + total + ' questions complete');
+
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.innerHTML = `
+    <span class="q-emoji" aria-hidden="true">${q.emoji}</span>
+    <h2 class="q-text" id="question-text">${q.text}</h2>
+    <div class="answers" role="radiogroup" aria-labelledby="question-text">
+      <button type="button" class="answer-btn yes" onclick="selectAnswer('yes',this)" aria-pressed="false" aria-label="Yes, that describes me">✅ YES!</button>
+      <button type="button" class="answer-btn kinda" onclick="selectAnswer('kinda',this)" aria-pressed="false" aria-label="Kind of describes me">🤔 Kind of!</button>
+      <button type="button" class="answer-btn not-really" onclick="selectAnswer('not-really',this)" aria-pressed="false" aria-label="Not really like me">😐 Not really</button>
+      <button type="button" class="answer-btn nope" onclick="selectAnswer('nope',this)" aria-pressed="false" aria-label="No, not like me at all">❌ Nope!</button>
+    </div>
+    <div class="next-wrap">
+      <button type="button" class="next-btn" id="next-btn" onclick="nextQuestion()">
+        ${currentQ < QUESTIONS.length - 1 ? 'NEXT ➡️' : 'SEE MY RESULTS! 🎉'}
+      </button>
+    </div>
+    <a class='quiz-jump-btn' href='careers.html' aria-label='Jump to full career list'>📋 Jump to Career List</a>
+  `;
+  quiz.appendChild(card);
+
+  if (answered[currentQ] !== null) {
+    const prev = card.querySelector('.answer-btn.' + answered[currentQ]);
+    if (prev) { prev.classList.add('selected'); prev.setAttribute('aria-pressed','true'); document.getElementById('next-btn').classList.add('show'); }
+  }
+}
+
+function selectAnswer(value, btn) {
+  btn.closest('.answers').querySelectorAll('.answer-btn').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('selected');
+  btn.setAttribute('aria-pressed','true');
+  answered[currentQ] = value;
+  const nativeProgress = document.getElementById('progress-native');
+  nativeProgress.value = currentQ + 1;
+  nativeProgress.textContent = (currentQ + 1) + ' of ' + QUESTIONS.length + ' questions complete';
+  nativeProgress.setAttribute('aria-valuetext', (currentQ + 1) + ' of ' + QUESTIONS.length + ' questions complete');
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  if (answered[currentQ] === null) return;
+  const q = QUESTIONS[currentQ];
+  scores[q.riasec] += SCORE_MAP[answered[currentQ]];
+  counts[q.riasec] += 1;
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) showResults();
+  else renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('progress-area').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  document.getElementById('score-summary').innerHTML = CareerExplorerScoring.calculateAllResults(scores, counts).map(result => {
+    const info = RIASEC[result.code];
+    return `<div class="score-chip"><strong>${info.fullName}</strong>${Math.round(result.percentage)}%</div>`;
+  }).join('');
+
+  const sorted = CareerExplorerScoring.calculateResults(scores, counts);
+
+  const medals = {1:'🥇',2:'🥈',3:'🥉'};
+  const container = document.getElementById('result-cards');
+  container.innerHTML = '';
+
+  sorted.forEach((result, idx) => {
+    const info = RIASEC[result.code];
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.style.background = info.light;
+    card.style.borderColor = info.border;
+    card.style.boxShadow = '0 6px 0 ' + info.shadow;
+    card.style.color = info.textColor;
+    card.innerHTML = `
+      <span class="rc-emoji">${info.emoji}</span>
+      <div class="rc-rank" style="color:${info.textColor}">${medals[result.rank]} ${CareerExplorerScoring.rankLabel(result,'INTEREST LEVEL')}</div>
+      <div class="rc-type" style="color:${info.color}">${info.name}</div>
+      <div class="rc-label">(${info.fullName})</div>
+      <div class="rc-label">Your answer score: ${Math.round(result.percentage)}%</div>
+      <div class="rc-jobs">${info.jobs.map(jobId => {
+        const job = CAREERS[jobId];
+        return `<button type="button" class="job-link-btn" onclick="showCareer('${jobId}')">${job.label}</button>`;
+      }).join('')}</div>
+    `;
+    container.appendChild(card);
+    const input = document.getElementById('write' + (idx+1));
+    if (input) input.value = info.name + ' (' + info.fullName + ')';
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showCareer(jobId) {
+  const c = CAREERS[jobId];
+  if (!c) return;
+  document.getElementById('career-title').textContent = c.label;
+  document.getElementById('career-does').textContent = c.does;
+  document.getElementById('career-income').textContent = c.income;
+  if(c.day){ document.getElementById('career-day').textContent=c.day; document.getElementById('career-day-wrap').style.display='block'; }
+  if(c.pathway){ const s=document.getElementById('career-pathway-steps'); s.innerHTML=c.pathway.map(p=>'<div class="pathway-step"><span class="pathway-step-icon">'+p.icon+'</span><div><div class="pathway-step-label">'+p.level+'</div>'+p.steps+'</div></div>').join(''); document.getElementById('career-pathway-wrap').style.display='block'; }
+  if(c.colleges){ document.getElementById('career-colleges').textContent=c.colleges; document.getElementById('career-colleges-wrap').style.display='block'; }
+  document.getElementById('career-source').innerHTML=`Reviewed ${c.source.reviewed}. Grown-ups can check current pay and training information in the <a href="${c.source.url}" target="_blank" rel="noopener">U.S. Bureau of Labor Statistics career guide</a>.`;
+  const panel = document.getElementById('career-panel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+
+function resetQuiz() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('career-panel').classList.remove('show');
+  document.getElementById('intro').style.display = 'block';
+  currentQ = 0;
+  scores = { R:0, I:0, A:0, S:0, E:0, C:0 };
+  counts = { R:0, I:0, A:0, S:0, E:0, C:0 };
+  answered = new Array(QUESTIONS.length).fill(null);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+
+
+
+// ── DEV MODE (type "wpr" on intro screen to toggle) ─────────────────────────
+let devKeyBuffer = '';
+let devMode = false;
+document.addEventListener('keydown', function(e) {
+  devKeyBuffer += e.key.toLowerCase();
+  if (devKeyBuffer.length > 3) devKeyBuffer = devKeyBuffer.slice(-3);
+  if (devKeyBuffer === 'wpr') {
+    devMode = !devMode;
+    devKeyBuffer = '';
+    document.getElementById('dev-badge').classList.toggle('show', devMode);
+    document.getElementById('dev-panel').classList.toggle('show', devMode);
+    return;
+  }
+  // Quiz keyboard nav (1-4 + Enter)
+  const quizVisible = document.getElementById('quiz') &&
+    document.getElementById('quiz').style.display !== 'none';
+  if (!quizVisible) return;
+  const map = {'1':'yes','2':'kinda','3':'not-really','4':'nope'};
+  if (map[e.key]) {
+    const btn = document.querySelector('.answer-btn.' + map[e.key].replace(/-/g,'\\-'));
+    if (btn) btn.click();
+  }
+  if (e.key === 'Enter') {
+    const nb = document.getElementById('next-btn');
+    if (nb && nb.classList.contains('show')) nb.click();
+  }
+});
+
+function devSkipToResults() {
+  const vals = ['yes','yes','kinda','kinda','not-really','nope'];
+  scores = {R:0,I:0,A:0,S:0,E:0,C:0};
+  counts = {R:0,I:0,A:0,S:0,E:0,C:0};
+  QUESTIONS.forEach(q => {
+    const v = vals[(q.id - 1) % vals.length];
+    const m = {yes:3,kinda:2,'not-really':1,nope:0};
+    scores[q.riasec] += m[v];
+    counts[q.riasec] += 1;
+  });
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('progress-area').style.display = 'none';
+  showResults(null);
+}
+
+// Show/hide browse FAB based on current view
+(function() {
+  function updateFab() {
+    const fab     = document.getElementById('browse-fab');
+    if (!fab) return;
+    const quizOn  = document.getElementById('quiz') &&
+                    document.getElementById('quiz').style.display !== 'none';
+    const resultsOn = document.getElementById('results') &&
+                    document.getElementById('results').style.display !== 'none';
+    fab.style.display = (quizOn || resultsOn) ? 'none' : '';
+  }
+  // Patch startQuiz and showResults to trigger visibility update
+  const _orig_start = window.startQuiz;
+  const _orig_show  = window.showResults;
+  window.addEventListener('DOMContentLoaded', () => {
+    updateFab();
+    // Re-check every time buttons are clicked
+    document.addEventListener('click', () => setTimeout(updateFab, 50));
+  });
+})();
+
+</script>
+
+<!-- DEV MODE — activate by typing "wpr" anywhere on the page -->
+<div class="dev-badge" id="dev-badge">⚙ DEV MODE</div>
+<div class="dev-panel" id="dev-panel">
+  <h4>⚙ Developer Tools</h4>
+  <button type="button" class="dev-btn" onclick="devSkipToResults()">⚡ Skip to Results</button>
+  <button type="button" class="dev-btn" onclick="devMode=false;document.getElementById('dev-badge').classList.remove('show');document.getElementById('dev-panel').classList.remove('show');">✕ Close Dev Mode</button>
+</div>
+<!-- Browse all careers button — visible on intro screen -->
+<a class="browse-fab" id="browse-fab" href="careers.html" aria-label="Browse all careers without taking the quiz">
+  <span class="fab-icon">📋</span> BROWSE ALL CAREERS
+</a>
+</body>
+</html>

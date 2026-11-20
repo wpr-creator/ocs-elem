@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Career Explorer — Browse All Careers</title>
+<meta name="description" content="Browse child-friendly career profiles across all six RIASEC interest areas." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Career Explorer — Browse All Careers" />
+<meta property="og:description" content="Browse child-friendly career profiles across all six RIASEC interest areas." />
+<meta property="og:url" content="https://wpr-creator.github.io/ocs-elem/career-explorer/careers.html" />
+<meta property="og:image" content="https://wpr-creator.github.io/ocs-elem/career-explorer/og-preview.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>" />
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+:focus-visible { outline:4px solid #2563EB; outline-offset:4px; }
+:root {
+  --navy:#0F172A; --blue:#1D4ED8; --paper:#F8F9FC;
+  --muted:#64748B; --border:#E2E8F0;
+}
+body { font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--paper); color:var(--navy); min-height:100vh; }
+
+/* Header */
+.site-header {
+  background:var(--navy); color:white;
+  padding:1.5rem 2rem; text-align:center;
+  border-bottom:4px solid var(--blue);
+}
+.site-header h1 { font-family:Georgia, "Times New Roman", serif; font-size:1.8rem; margin-bottom:0.3rem; }
+.site-header p  { font-size:0.85rem; color:#94A3B8; font-weight:600; }
+.back-link {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  color:#93C5FD; font-size:0.8rem; font-weight:700;
+  text-decoration:none; margin-bottom:0.8rem;
+  letter-spacing:0.06em; text-transform:uppercase;
+}
+.back-link:hover { color:white; }
+
+/* Grade tabs */
+.grade-tabs {
+  display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;
+  padding:1.2rem 1rem 0;
+}
+.grade-tab {
+  padding:0.45rem 1.1rem; border-radius:20px; font-size:0.8rem;
+  font-weight:800; cursor:pointer; border:2px solid transparent;
+  letter-spacing:0.05em; transition:all 0.15s;
+}
+.grade-tab[data-grade="tkk"]   { background:#FFF7ED; color:#92400E; border-color:#FBBF24; }
+.grade-tab[data-grade="12"]    { background:#F0FDF4; color:#065F46; border-color:#34D399; }
+.grade-tab[data-grade="35"]    { background:#EFF6FF; color:#1E40AF; border-color:#93C5FD; }
+.grade-tab.active              { filter:brightness(0.88); transform:translateY(1px); }
+
+/* Search */
+.search-wrap {
+  max-width:480px; margin:1rem auto 0; padding:0 1rem;
+}
+.search-input {
+  width:100%; padding:0.7rem 1rem; border:2px solid var(--border);
+  border-radius:12px; font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size:0.9rem;
+  background:white; color:var(--navy);
+}
+.search-input:focus { outline:none; border-color:var(--blue); }
+
+/* Main layout */
+main { max-width:900px; margin:0 auto; padding:1.5rem 1rem 3rem; }
+
+/* RIASEC section */
+.riasec-section { margin-bottom:2rem; }
+.riasec-header {
+  display:flex; align-items:center; gap:0.8rem;
+  padding:0.9rem 1.2rem; border-radius:14px 14px 0 0;
+  border:2px solid transparent; border-bottom:none;
+  cursor:pointer; user-select:none; width:100%; text-align:left;
+  font-family:inherit;
+}
+.riasec-header .r-emoji  { font-size:1.6rem; }
+.riasec-header .r-name   { font-family:Georgia, "Times New Roman", serif; font-size:1.2rem; }
+.riasec-header .r-full   { font-size:0.75rem; font-weight:700; opacity:0.7; text-transform:uppercase; letter-spacing:0.08em; }
+.riasec-header .r-chevron{ margin-left:auto; font-size:0.9rem; transition:transform 0.2s; }
+.riasec-header.open .r-chevron { transform:rotate(180deg); }
+
+.riasec-body {
+  border:2px solid transparent; border-top:none;
+  border-radius:0 0 14px 14px; padding:1rem;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:0.8rem;
+}
+.riasec-body.collapsed { display:none; }
+
+/* Career card */
+.career-card {
+  background:white; border:2px solid var(--border); border-radius:12px;
+  padding:1rem; cursor:pointer; transition:all 0.15s;
+  display:flex; align-items:center; gap:0.7rem; width:100%; text-align:left;
+  font-family:inherit;
+}
+.career-card:hover { border-color:var(--blue); transform:translateY(-1px); box-shadow:0 4px 12px rgba(29,78,216,0.1); }
+.career-card.active { border-color:var(--blue); background:#EFF6FF; }
+.career-card .cc-emoji { font-size:1.5rem; flex-shrink:0; }
+.career-card .cc-name  { font-size:0.88rem; font-weight:700; color:var(--navy); line-height:1.3; }
+.career-card .cc-type  { font-size:0.7rem; font-weight:600; color:var(--muted); }
+
+/* Detail panel */
+.detail-panel {
+  background:white; border:2px solid #BFDBFE; border-radius:16px;
+  padding:1.5rem; margin-top:1rem; display:none;
+  box-shadow:0 4px 20px rgba(29,78,216,0.08);
+  grid-column:1/-1;
+}
+.detail-panel.show { display:block; }
+.detail-panel h3 { font-family:Georgia, "Times New Roman", serif; font-size:1.4rem; color:var(--navy); margin-bottom:0.8rem; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1rem; }
+.detail-box { background:#F8FAFC; border:1.5px solid var(--border); border-radius:10px; padding:0.9rem; font-size:0.88rem; line-height:1.55; }
+.detail-box strong { display:block; font-size:0.68rem; font-weight:800; color:var(--blue); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.35rem; }
+.day-box { background:#F0FDF4; border:2px solid #86EFAC; border-radius:10px; padding:1rem; margin-bottom:0.8rem; font-size:0.88rem; color:#14532D; }
+.day-box strong { display:block; font-size:0.68rem; font-weight:800; color:#15803D; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem; }
+.day-timeline { display:flex; flex-direction:column; gap:0.4rem; }
+.day-row { display:flex; gap:0.6rem; }
+.day-time { font-size:0.7rem; font-weight:800; color:#15803D; min-width:4rem; padding-top:0.1rem; white-space:nowrap; }
+.day-time:empty { display:none; }
+.day-task { font-size:0.86rem; }
+.pathway-section strong { display:block; font-size:0.68rem; font-weight:800; color:var(--blue); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.6rem; }
+.pathway-steps { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:0.8rem; }
+.pathway-step { display:flex; gap:0.7rem; background:#F8FAFC; border:1.5px solid var(--border); border-radius:8px; padding:0.7rem; font-size:0.86rem; line-height:1.5; }
+.pathway-step-icon { font-size:1.2rem; flex-shrink:0; }
+.pathway-step-label { font-size:0.68rem; font-weight:800; color:var(--blue); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.15rem; }
+.colleges-box { background:#FFF7ED; border:2px solid #FCD34D; border-radius:10px; padding:1rem; font-size:0.88rem; color:#78350F; margin-bottom:0.5rem; }
+.colleges-box strong { display:block; font-size:0.68rem; font-weight:800; color:#B45309; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.4rem; }
+.salary-note { font-size:0.75rem; color:var(--muted); font-weight:600; text-align:center; }
+.career-source { font-size:0.72rem; color:var(--muted); font-weight:600; text-align:center; margin-top:0.45rem; }
+.career-source a { color:var(--blue); }
+
+/* Empty state */
+.no-results { text-align:center; padding:3rem 1rem; color:var(--muted); font-weight:700; }
+
+/* Responsive */
+@media(max-width:600px) {
+  .riasec-body { grid-template-columns:1fr; }
+  .detail-grid { grid-template-columns:1fr; }
+  .site-header h1 { font-size:1.4rem; }
+}
+
+@media print {
+  .grade-tabs, .search-wrap, .back-link { display:none !important; }
+  .riasec-body.collapsed { display:grid !important; }
+  .detail-panel { display:block !important; box-shadow:none !important; border:1pt solid #ccc !important; }
+}
+</style>
+<link rel="stylesheet" href="../school-nav.css">
+</head>
+<body>
+<nav class="school-return" aria-label="School website"><a href="../">School home</a><span>Falcon School Resources</span></nav>
+
+<div class="site-header">
+  <a class="back-link" href="index.html">← Back to Educator Hub</a>
+  <h1>📋 Browse All Careers</h1>
+  <p>Tap any career to see the full profile — no quiz required</p>
+</div>
+
+<div class="grade-tabs">
+  <button type="button" class="grade-tab active" data-grade="35" aria-pressed="true" onclick="setGrade('35')">Grades 3–5</button>
+  <button type="button" class="grade-tab" data-grade="12" aria-pressed="false" onclick="setGrade('12')">Grades 1–2</button>
+  <button type="button" class="grade-tab" data-grade="tkk" aria-pressed="false" onclick="setGrade('tkk')">TK–K</button>
+</div>
+
+<div class="search-wrap">
+  <input class="search-input" type="text" id="search-input"
+    aria-label="Search careers" placeholder="🔍  Search careers..." oninput="filterCareers()" autocomplete="off" />
+</div>
+
+<main id="main-content"></main>
+
+<script src="career-data.js"></script>
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+// Each grade level is self-contained so the browser page works standalone.
+// Career data is duplicated here intentionally — the browser must work
+// without the quiz files being open.
+
+const RIASEC_META = {
+  R:{ name:'Realistic',     full:'Builder / Doer',        emoji:'🔧', color:'#B45309', light:'#FFFBEB', border:'#FCD34D' },
+  I:{ name:'Investigative', full:'Thinker / Researcher',  emoji:'🔬', color:'#7C3AED', light:'#F5F3FF', border:'#C4B5FD' },
+  A:{ name:'Artistic',      full:'Creator / Performer',   emoji:'🎨', color:'#BE185D', light:'#FDF2F8', border:'#F9A8D4' },
+  S:{ name:'Social',        full:'Helper / Educator',     emoji:'🤝', color:'#065F46', light:'#ECFDF5', border:'#6EE7B7' },
+  E:{ name:'Enterprising',  full:'Leader / Persuader',    emoji:'🏆', color:'#B45309', light:'#FFF7ED', border:'#FCD34D' },
+  C:{ name:'Conventional',  full:'Organizer / Planner',   emoji:'📋', color:'#1D4ED8', light:'#EFF6FF', border:'#93C5FD' },
+};
+
+const DATA = {
+  '35': {
+    order:['R','I','A','S','E','C'],
+    map:{
+      R:['construction_worker','mechanic','farmer','firefighter','engineer'],
+      I:['scientist','doctor','paleontologist','coder','nurse'],
+      A:['artist','actor','author','musician','photographer'],
+      S:['teacher','counselor','coach','social_worker','nurse'],
+      E:['business_owner','salesperson','public_leader','movie_director','adventure_guide'],
+      C:['banker','accountant','office_manager','postal_worker','cashier']
+    },
+    careers: CareerExplorerData.careers.grades35
+  },
+  '12': {
+    order:['R','I','A','S','E','C'],
+    map:{
+      R:['construction_worker','mechanic','farmer','firefighter','engineer'],
+      I:['scientist','doctor','paleontologist','coder','nurse'],
+      A:['artist','actor','author','musician','photographer'],
+      S:['teacher','counselor','coach','social_worker','nurse'],
+      E:['business_owner','salesperson','public_leader','movie_director','adventure_guide'],
+      C:['banker','accountant','office_manager','postal_worker','cashier']
+    },
+    careers: CareerExplorerData.careers.grades12
+  },
+  'tkk': {
+    order:['R','I','A','S','E','C'],
+    map:{
+      R:['builder','farmer','mechanic'],
+      I:['scientist','doctor','coder'],
+      A:['artist','musician','actor'],
+      S:['teacher','nurse','counselor'],
+      E:['business_owner','public_leader','movie_director'],
+      C:['accountant','office_manager','banker']
+    },
+    careers: CareerExplorerData.careers.tkk
+  }
+};
+
+
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentGrade = '35';
+let activeCardId  = null;
+let activePanelId = null;
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function setGrade(grade) {
+  currentGrade = grade;
+  activeCardId  = null;
+  activePanelId = null;
+  document.querySelectorAll('.grade-tab').forEach(t =>
+    { const selected=t.dataset.grade === grade; t.classList.toggle('active', selected); t.setAttribute('aria-pressed', selected); });
+  document.getElementById('search-input').value = '';
+  renderAll();
+}
+
+function renderAll(filter='') {
+  const data   = DATA[currentGrade];
+  const main   = document.getElementById('main-content');
+  const fl     = filter.toLowerCase().trim();
+
+  let html = '';
+  for (const code of data.order) {
+    const meta   = RIASEC_META[code];
+    const jobIds = data.map[code];
+    const careers = jobIds.map(id => data.careers[id]).filter(Boolean);
+    const visible = fl
+      ? careers.filter(c => c.label.toLowerCase().includes(fl) || c.does.toLowerCase().includes(fl))
+      : careers;
+
+    if (fl && visible.length === 0) continue;
+
+    html += `
+    <div class="riasec-section" id="section-${code}">
+      <button type="button" class="riasec-header open" id="header-${code}"
+           style="background:${meta.light};border-color:${meta.border};color:${meta.color}"
+           aria-expanded="true" aria-controls="body-${code}" onclick="toggleSection('${code}')">
+        <span class="r-emoji">${meta.emoji}</span>
+        <div>
+          <div class="r-name">${meta.name}</div>
+          <div class="r-full">${meta.full}</div>
+        </div>
+        <span class="r-chevron">▼</span>
+      </button>
+      <div class="riasec-body" id="body-${code}"
+           style="background:${meta.light}22;border-color:${meta.border}">
+        ${visible.map(career => {
+          const id = jobIds.find(id => data.careers[id] === career);
+          return `<button type="button" class="career-card" id="card-${code}-${id}"
+                       onclick="toggleCareer('${code}','${id}')"
+                       aria-expanded="false" aria-controls="panel-${code}"
+                       aria-label="View ${career.label.replace(/^\S+\s/,'')} career profile"
+                       >
+            <span class="cc-emoji">${career.label.split(' ')[0]}</span>
+            <div>
+              <div class="cc-name">${career.label.replace(/^\S+\s/,'')}</div>
+              <div class="cc-type">${meta.name}</div>
+            </div>
+          </button>`;
+        }).join('')}
+        <div class="detail-panel" id="panel-${code}"></div>
+      </div>
+    </div>`;
+  }
+
+  main.innerHTML = html || '<div class="no-results">No careers match that search.</div>';
+}
+
+function toggleSection(code) {
+  const body   = document.getElementById('body-' + code);
+  const header = document.getElementById('header-' + code);
+  const collapsed = body.classList.toggle('collapsed');
+  header.classList.toggle('open', !collapsed);
+  header.setAttribute('aria-expanded', String(!collapsed));
+}
+
+function toggleCareer(code, id) {
+  const panel  = document.getElementById('panel-' + code);
+  const card   = document.getElementById(`card-${code}-${id}`);
+  const career = DATA[currentGrade].careers[id];
+  if (!career) return;
+
+  // If same card clicked again — close
+  if (activePanelId === code && activeCardId === id) {
+    panel.classList.remove('show');
+    card.classList.remove('active');
+    card.setAttribute('aria-expanded','false');
+    activeCardId  = null;
+    activePanelId = null;
+    return;
+  }
+
+  // Deactivate previous
+  if (activePanelId) {
+    document.getElementById('panel-' + activePanelId)?.classList.remove('show');
+  }
+  if (activeCardId && activePanelId) {
+    const previousCard = document.getElementById(`card-${activePanelId}-${activeCardId}`);
+    previousCard?.classList.remove('active');
+    previousCard?.setAttribute('aria-expanded','false');
+  }
+
+  activeCardId  = id;
+  activePanelId = code;
+  card.classList.add('active');
+  card.setAttribute('aria-expanded','true');
+
+  // Build day timeline
+  let dayHtml = '';
+  if (Array.isArray(career.day)) {
+    dayHtml = career.day.map(e =>
+      `<div class="day-row"><span class="day-time">${e.time}</span><span class="day-task">${e.task}</span></div>`
+    ).join('');
+  } else {
+    dayHtml = `<div class="day-row"><span class="day-task">${career.day}</span></div>`;
+  }
+
+  // Build pathway steps
+  const stepsHtml = (career.pathway || []).map(p =>
+    `<div class="pathway-step">
+      <span class="pathway-step-icon">${p.icon}</span>
+      <div><div class="pathway-step-label">${p.level}</div>${p.steps}</div>
+    </div>`
+  ).join('');
+
+  panel.innerHTML = `
+    <h3>${career.label}</h3>
+    <div class="detail-grid">
+      <div class="detail-box"><strong>📖 What They Do</strong>${career.does}</div>
+      <div class="detail-box"><strong>💰 Approximate Earnings</strong>${career.income}</div>
+    </div>
+    <div class="day-box">
+      <strong>☀️ A Day in the Life</strong>
+      <div class="day-timeline">${dayHtml}</div>
+    </div>
+    <div class="pathway-section">
+      <strong>🗺️ How Can You Prepare?</strong>
+      <div class="pathway-steps">${stepsHtml}</div>
+    </div>
+    <div class="colleges-box">
+      <strong>🏛️ Education & Training Examples</strong>
+      ${career.colleges}
+    </div>
+    <p class="salary-note">Salary ranges are national approximations and may vary by location and experience.</p>
+    <p class="career-source">Reviewed ${career.source.reviewed}. For current national pay and training data, see the <a href="${career.source.url}" target="_blank" rel="noopener">U.S. Bureau of Labor Statistics Occupational Outlook Handbook</a> (${career.source.wageDataYear} median-pay data).</p>
+  `;
+  panel.classList.add('show');
+  setTimeout(() => panel.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+}
+
+function filterCareers() {
+  const q = document.getElementById('search-input').value;
+  activeCardId  = null;
+  activePanelId = null;
+  renderAll(q);
+}
+
+// Initial render
+renderAll();
+</script>
+</body>
+</html>
