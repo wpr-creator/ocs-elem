@@ -13,3 +13,12 @@ Expectation Station retains the exact matrix data and all 11 station games. Remo
 Verification: Node tests cover all grade banks and answer values, exact ranking and ties, answer edits, incomplete and zero responses, career references, local assets, unbiased spinner selection and landing geometry, and station game content. Manual browser checks cover quiz completion and recovery, keyboard navigation, job search and profiles, and spinner completion.
 
 Run: `node --test dist/career-explorer/tests/site.test.js tests/avid-spinner.test.cjs tests/station-games.test.cjs`.
+
+## Live resource and Expectation Station follow-up
+
+- Career Explorer: completed the 12-, 18-, and 24-question activities in Chromium, including recovering a selected answer after reload, opening a result profile, and filtering the job catalog to zero matches. The existing scoring and content tests cover ties, incomplete answers, all-zero answers, and job references.
+- AVID Organization Spinner: verified repeated spins with reduced motion and the Show result control during an animated spin. Darkened the kicker text after an automated contrast check flagged it.
+- Expectation Station: opened all 11 stops, checked that each displays six expectations, and started every station game. Opened Station Dispatcher separately. The existing automated game tests exercise the game controls and verify that each dispatcher prompt has one matching station in the matrix.
+- The rotating departures now hold while a row has keyboard focus. The train ride opens a modal and focuses Skip ride. Escape skips the animation as well. Navigation during a ride clears the ride timers and sounds so the old destination cannot override the new route. Stop, destination list, and game headings receive focus when reached.
+- Improved text contrast on the train, destination cards, passport, and stop and game labels. The matrix JSON and its source PDF were retained.
+- Removed the unused Falcon artwork sheet and retired Homebase stylesheet. The WebP station scenes, font licenses, imported classroom resources, source records, and validation files were retained.
