@@ -17,14 +17,15 @@ class SignalRun extends RailwayGame {
     this.cued = false;
     this.done = false;
     const {gates, expectation, reminder} = arcadeCatalog()[stop].rounds[0];
-    this.gates = gates;
+    this.gates = this.crossing ? [62] : gates;
     this.reminder = reminder;
-    this.root.innerHTML = `<div class="yard-heading">
+    this.root.innerHTML = `${this.crossing ? '' : `<div class="yard-heading">
       <div><span class="yard-value">F · FOCUS</span><h2>${stop === 3 ? 'Playground' : 'PE'} run</h2></div>
       <span class="yard-shift">${this.round+1} / 2</span>
-    </div>
-    <div class="signal-cab" data-course="${stop}" tabindex="0" aria-label="Train controls. Press space to go or brake.">
-      <div class="signal-readout"><p role="status">Go. Brake at red.</p><span>0 / 2 stops</span></div>
+    </div>`}
+    <div class="signal-cab ${this.crossing ? 'pixel-crossing' : ''}" data-course="${stop}" tabindex="0" aria-label="Train controls. Press space to go or brake.">
+      ${this.crossing ? '<canvas width="320" height="154" aria-hidden="true"></canvas>' : ''}
+      <div class="signal-readout"><p role="status">${this.crossing ? 'Brake at the whistle.' : 'Go. Brake at red.'}</p>${this.crossing ? '<span aria-hidden="true">○</span>' : `<span>0 / ${this.gates.length} stops</span>`}</div>
       <div class="signal-line">
         ${this.gates.map((position,i)=>`<span class="signal-post" data-gate="${i}" style="--mile:${position}%" aria-hidden="true"><i></i></span>`).join('')}
         <span class="signal-finish" aria-hidden="true">⚑</span>
@@ -32,8 +33,8 @@ class SignalRun extends RailwayGame {
       </div>
       <div class="signal-controls"><button class="signal-go" type="button">▶ Go</button><button class="signal-brake" type="button">■ Brake</button></div>
     </div>
-    <div class="signal-footer"><details><summary>School expectation</summary><p>${escapeGame(expectation)}</p></details>
-      <button class="arcade-listen railway-sound" type="button" aria-pressed="${stationSound}">Sound</button></div>`;
+    ${this.crossing ? '' : `<div class="signal-footer"><details><summary>School expectation</summary><p>${escapeGame(expectation)}</p></details>
+      <button class="arcade-listen railway-sound" type="button" aria-pressed="${stationSound}">Sound</button></div>`}`;
     const cab = this.root.querySelector('.signal-cab');
     this.cab = cab;
     this.engine = cab.querySelector('.signal-engine');
@@ -48,7 +49,7 @@ class SignalRun extends RailwayGame {
       if (!event.repeat) this.drive(event.key === 'ArrowRight' || (event.key === ' ' && !this.power));
     };
     const sound = this.root.querySelector('.railway-sound');
-    sound.onclick = () => {
+    if (sound) sound.onclick = () => {
       stationSound = !stationSound;
       sound.setAttribute('aria-pressed', stationSound);
     };
@@ -68,7 +69,7 @@ class SignalRun extends RailwayGame {
     if (this.done || this.power === power) return;
     this.power = power;
     if (power) {
-      this.status.textContent = this.cued && !this.clear ? 'Brake at red.' : 'Watch the next signal.';
+      this.status.textContent = this.cued && !this.clear ? 'Brake at red.' : (this.crossing ? 'Listen…' : 'Watch the next signal.');
       boardClack();
     } else hiss(.25, .035);
   }
@@ -93,7 +94,11 @@ class SignalRun extends RailwayGame {
         this.position = gate-22;
         this.speed = 0;
         this.power = false;
-        this.status.textContent = 'Try again. Go, then brake at red.';
+        if (this.crossing) {
+          this.cued = false;
+          this.posts[this.gate].classList.remove('calling');
+        }
+        this.status.textContent = this.crossing ? 'Too late. Try again.' : 'Try again. Go, then brake at red.';
         this.drawTrain();
         return;
       }
@@ -106,8 +111,8 @@ class SignalRun extends RailwayGame {
     if (gate !== undefined && this.cued && !this.clear && !this.power && this.speed === 0) {
       this.clear = true;
       this.posts[this.gate].classList.add('cleared');
-      this.status.textContent = `${this.reminder} ${playground ? 'Go to the line.' : 'Coach says go!'}`;
-      this.counter.textContent = `${this.gate+1} / 2 stops`;
+      this.status.textContent = `${this.reminder} ${this.crossing ? 'Go.' : playground ? 'Go to the line.' : 'Coach says go!'}`;
+      this.counter.textContent = this.crossing ? '✓' : `${this.gate+1} / ${this.gates.length} stops`;
       stationBell();
     }
     if (this.position >= 96) {
