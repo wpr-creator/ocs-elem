@@ -312,3 +312,11 @@
 .dispatch-pencil { width:6px;background:#f3c278;transform:rotate(30deg); }
 .dispatch-crayons { background:#d18866; }
 .dispatch-status { margin:0;padding:9px 12px;color:#fff2c1;background:#182620;min-height:44px;font-weight:800;font-size:14px; }
+.dispatch-destinations button {
+  display:flex;justify-content:flex-start;align-items:center;gap:5px;
+  background:#294337;box-shadow:2px 2px #342d22;border-radius:2px;
+}
+.dispatch-destinations button span {
+  flex:none;min-width:1.3em;color:#f6d389;background:#1d2a22;border:1px solid #c5a165;font-size:.8em;text-align:center;
+}
+.dispatch-destinations .dispatch-route-active { background:#f2ca72;color:#2d301e; }
