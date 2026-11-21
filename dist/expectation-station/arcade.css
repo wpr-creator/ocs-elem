@@ -1,15 +1,15 @@
-/* Game screens share a high-contrast cabinet and use each stop's illustration. */
+/* Limestone, brass and enamel carry the concourse through the game platforms. */
 .arcade-callout, .arcade {
-  --arcade-ink: #13142f;
-  --arcade-blue: #25265a;
-  --arcade-yellow: #ffde70;
-  --arcade-lilac: #eeebff;
+  --arcade-ink: #1d322d;
+  --arcade-enamel: #2c4940;
+  --arcade-brass: #f2d790;
+  --arcade-stone: #f4e9cd;
   font-family: 'DM Sans', system-ui, sans-serif;
 }
 .arcade-callout {
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  padding: 18px 24px; margin: 22px 0; border-radius: 20px;
-  background: var(--arcade-blue); color: white;
+  padding: 18px 24px; margin: 22px 0; border: 5px ridge #c4ac78; border-radius: 23px 23px 4px 4px;
+  background: var(--arcade-enamel); color: white;
 }
 .arcade-callout > span { font-size: 32px; }
 .arcade-callout h2, .arcade-callout p { margin: 0; color: white; }
@@ -18,56 +18,56 @@
 .arcade-callout a { margin-left: auto; }
 .arcade-button {
   display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px;
-  background: var(--arcade-yellow); color: #211939; border-radius: 12px; padding: 10px 17px;
-  font-weight: 800; text-decoration: none; box-shadow: 0 4px 0 #a16a26;
+  background: var(--arcade-brass); color: #232d24; border-radius: 12px; padding: 10px 17px;
+  font-weight: 800; text-decoration: none; box-shadow: 0 4px 0 #82632f;
 }
 .arcade {
-  --game-accent: #a9a4ff;
+  --game-accent: #bf9c5e;
   max-width: 980px; margin: 24px auto; padding: clamp(14px, 3vw, 30px);
-  background: radial-gradient(ellipse at 95% 0%, #4e3a81, transparent 54%), var(--arcade-ink);
-  color: white; border: 3px solid #524780; border-radius: 26px; box-shadow: 0 8px 0 #c5b99e;
+  background: radial-gradient(ellipse at 95% 0%, #41675b, transparent 54%), var(--arcade-ink);
+  color: white; border: 7px ridge #c4ac78; border-radius: 52px 52px 4px 4px; box-shadow: 0 8px 0 #c5b99e;
 }
 .arcade [tabindex="-1"]:focus { outline: none; }
 .arcade :is(a, button):focus-visible, .arcade-callout a:focus-visible {
-  outline: 3px solid #1265d1; outline-offset: 4px;
+  outline: 3px solid #00948a; outline-offset: 4px;
 }
 .arcade-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 15px; }
 .arcade-nav a { color: white; display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
-.arcade-nav a:focus-visible { outline-color: #ffde70; }
+.arcade-nav a:focus-visible { outline-color: #f2d790; }
 .arcade-nav span { color: #ffecac; font-weight: 700; }
-.arcade h1 { color: white; font: 900 clamp(27px, 5vw, 46px)/1.1 'DM Sans', system-ui, sans-serif; margin: 8px 0 18px; text-transform: none; letter-spacing: 0; }
+.arcade h1 { color: white; font: 400 clamp(25px, 5vw, 45px)/1.1 'Terminal Roman', Georgia, serif; margin: 0; text-transform: none; letter-spacing: 0; }
 .arcade-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .arcade-card {
-  display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 15px;
-  background: var(--arcade-lilac); color: var(--arcade-ink); text-decoration: none;
-  box-shadow: 0 4px 0 #8d7cc9;
+  display: flex; flex-direction: column; gap: 4px; padding: 10px; border: 3px double #a88e5b; border-radius: 16px 16px 4px 4px;
+  background: var(--arcade-stone); color: var(--arcade-ink); text-decoration: none;
+  box-shadow: 0 4px 0 #a88e5b;
 }
 .arcade-card:hover { background: #fff5cb; }
 .arcade-card-art {
-  display: grid; place-items: center; border-radius: 9px; min-height: 84px;
+  display: grid; place-items: center; border: 2px solid #8e7344; border-radius: 42% 42% 3px 3px / 20px 20px 3px 3px; min-height: 100px;
   background: var(--scene) center 48%/cover, #5d4a91;
   margin-bottom: 3px;
 }
 .arcade-card strong { font-size: clamp(14px, 2.2vw, 20px); line-height: 1.2; }
-.arcade-card > span:last-child { font-size: 11px; font-weight: 700; color: #494165; line-height: 1.3; }
+.arcade-card > span:last-child { font-size: 11px; font-weight: 700; color: #3c483e; line-height: 1.3; }
 
 .arcade-stage { border: 3px solid var(--game-accent); border-radius: 20px; overflow: hidden; background: #fff; color: var(--arcade-ink); }
 .arcade-scene {
   position: relative; isolation: isolate; min-height: clamp(124px, 21vw, 214px);
   display: grid; place-items: center; overflow: hidden;
-  background: var(--scene) center 49%/cover, #524780;
+  background: var(--scene) center 49%/cover, #927847;
 }
 .arcade-meter {
   position: absolute; top: 8px; left: 8px; display: inline-flex; gap: 5px;
-  padding: 5px 10px; border-radius: 12px; background: #151533;
+  padding: 5px 10px; border-radius: 12px; background: #21342d;
   color: white; font-size: clamp(18px, 4vw, 27px); line-height: 1;
 }
-.arcade-meter .filled { color: #ffde70; }
+.arcade-meter .filled { color: #f2d790; }
 .arcade-console { padding: clamp(12px, 3vw, 24px); }
 .play-instruction h2, .arcade-win h2 { font: 900 clamp(21px, 3vw, 31px)/1.2 'DM Sans', system-ui, sans-serif; color: var(--arcade-ink); margin: 0 0 12px; scroll-margin-top: 12px; text-transform: none; letter-spacing: 0; }
 .arcade-tools { display: flex; align-items: center; justify-content: space-between; gap: 5px; flex-wrap: wrap; margin-top: 8px; min-height: 44px; }
 .arcade-feedback { color: #245438; font-weight: 800; font-size: 15px; margin: 0; }
-.arcade-listen { color: #2c235b; background: #f0edff; border: 1px solid #8a7db6; min-height: 44px; border-radius: 10px; font: 800 14px 'DM Sans', system-ui, sans-serif; padding: 6px 10px; cursor: pointer; }
+.arcade-listen { color: #25392f; background: #f5ecd5; border: 1px solid #a89465; min-height: 44px; border-radius: 10px; font: 800 14px 'DM Sans', system-ui, sans-serif; padding: 6px 10px; cursor: pointer; }
 .arcade-win { text-align: center; padding: 28px 12px; background: #fff7d8; }
 .arcade-win > span { font-size: 64px; display: block; }
 .arcade-win-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
@@ -83,37 +83,37 @@
 
 .play-instruction { padding: 14px 16px; }
 .play-instruction h2 { margin: 0; }
-.play-instruction p { margin: 3px 0 0; font-size: 14px; color: #48415f; }
+.play-instruction p { margin: 3px 0 0; font-size: 14px; color: #414e44; }
 .playfield {
   display: flex; align-items: end; min-height: clamp(250px, 46vw, 440px);
-  background: linear-gradient(transparent 18%, #15142e37 45%, #14122ce6 100%), var(--scene) center / cover, #524780;
+  background: linear-gradient(transparent 18%, #18382c35 45%, #192821ed 100%), var(--scene) center / cover, #927847;
 }
 .falcon-value {
-  position: absolute; top: 8px; right: 8px; background: #171527; color: #ffea9d;
+  position: absolute; top: 8px; right: 8px; background: #23362d; color: #ffedbf;
   border-radius: 20px; padding: 4px 10px; font-size: clamp(10px, 2vw, 15px); font-weight: 900;
 }
 .falcon-value b {
   display: inline-grid; place-items: center; min-width: 25px; min-height: 25px;
-  border-radius: 100%; margin-right: 3px; background: #ffde70; color: #211939;
+  border-radius: 100%; margin-right: 3px; background: #f2d790; color: #232d24;
 }
 .playfield-objects {
   width: 100%; padding: 8px 12px 14px; display: grid; justify-items: center; gap: 10px;
 }
 .play-targets { display: flex; justify-content: center; gap: 8px; width: 100%; }
 .play-target, .play-piece {
-  background: #faf2ff; color: #25163a; border: 2px solid #8075ae; border-radius: 16px;
+  background: #f6eed9; color: #29382e; border: 2px solid #a6894e; border-radius: 16px;
   min-width: 0; width: min(33%, 145px); min-height: 75px; display: grid; justify-items: center;
   align-content: center; gap: 3px; padding: 6px 5px; text-align: center;
   font: 800 clamp(12px, 2vw, 16px)/1.25 'DM Sans', system-ui, sans-serif;
-  box-shadow: 0 4px 0 #59477e;
+  box-shadow: 0 4px 0 #715d36;
 }
 .play-target { cursor: pointer; }
 .play-target span, .play-piece span { font-size: clamp(28px, 6vw, 48px); line-height: 1; }
-.playfield-move .play-target { border: 2px dashed #f3d993; background: #241d46; color: white; }
-.playfield-signal .play-target { border-color: #d99635; background: #ffde70; min-width: 106px; }
+.playfield-move .play-target { border: 2px dashed #f3d993; background: #263e34; color: white; }
+.playfield-signal .play-target { border-color: #d99635; background: #f2d790; min-width: 106px; }
 .play-piece {
-  position: relative; z-index: 1; color: #2a1b30; background: #ffde70;
-  border-color: #e7a843; box-shadow: 0 4px 0 #a16a26; cursor: grab;
+  position: relative; z-index: 1; color: #29382e; background: #f2d790;
+  border-color: #c09a53; box-shadow: 0 4px 0 #82632f; cursor: grab;
   touch-action: none; user-select: none;
 }
 .play-piece:active { cursor: grabbing; }
@@ -125,7 +125,7 @@
 .play-target.is-done::after { content: '✓'; font-size: 16px; }
 .play-signal {
   display: flex; align-items: center; gap: 8px; min-height: 39px;
-  padding: 6px 12px; border-radius: 18px; background: #211932; color: white; font-size: 15px;
+  padding: 6px 12px; border-radius: 18px; background: #22362e; color: white; font-size: 15px;
 }
 .play-signal i { width: 16px; height: 16px; border-radius: 50%; background: #fc7d72; }
 .play-signal.is-ready i { background: #7bea9c; box-shadow: 0 0 12px #7bea9c; }
@@ -133,3 +133,60 @@
 .play-console .arcade-tools { margin-top: 0; }
 @keyframes play-success { 40% { transform: translateY(-6px) scale(1.055); } }
 @media (prefers-reduced-motion: reduce) { .play-target.is-done { animation: none; } }
+
+.terminal-game-title {
+  display: flex; align-items: center; gap: 14px; margin: 5px 0 16px;
+  padding: 10px 3px 12px; border-block: 3px double #c4ac78;
+}
+.terminal-platform { margin: 0 0 4px; color: #ffedbf; font-size: 12px; font-weight: 800; }
+.terminal-clock {
+  width: 42px; height: 42px; flex: none; position: relative; border-radius: 50%;
+  border: 4px double #775429; background: #f4e9cd; box-shadow: 0 0 0 2px #d0af70;
+}
+.terminal-clock::before, .terminal-clock::after {
+  content: ''; position: absolute; left: 50%; bottom: 50%; width: 2px; height: 37%; border-radius: 2px;
+  transform-origin: center bottom; background: #292c23; transform: rotate(40deg);
+}
+.terminal-clock::after { transform: rotate(-74deg); height: 28%; }
+.arcade-card .platform-number {
+  display: inline-block; color: #fff0c2; background: #29392f;
+  padding: 2px 4px; border-radius: 3px; margin-right: 3px; font: 700 11px/1 'DM Sans', sans-serif;
+}
+.arcade-meter {
+  align-items: end; gap: 3px; padding: 5px 6px 7px; border-radius: 5px;
+  border-bottom: 3px double #e7c88c;
+}
+.arcade-meter span, .progress-engine {
+  position: relative; display: grid; place-items: center; width: 17px; height: 12px;
+  border: 1px solid #e7c88c; border-radius: 2px; background: #46594c;
+  font: 800 11px/1 'DM Sans', sans-serif;
+}
+.arcade-meter span::after, .progress-engine::after {
+  content: ''; position: absolute; inset: auto 2px -4px; height: 3px;
+  background: radial-gradient(circle at 2px center,#e7c88c 1px,transparent 1.5px),
+    radial-gradient(circle at right 2px center,#e7c88c 1px,transparent 1.5px);
+}
+.arcade-meter .filled, .progress-engine { background: #f2d790; color: #23362d; }
+.progress-engine { border-radius: 8px 2px 2px 2px; }
+.progress-engine::before {
+  content: ''; position: absolute; top: -5px; left: 4px; width: 3px; height: 4px; background: #f2d790;
+}
+.railway-audio { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.railway-sound[aria-pressed="false"] { text-decoration: line-through; }
+.railway-effect {
+  position: absolute; z-index: 2; top: 22%; left: 0; right: 0; pointer-events: none; text-align: center;
+  font-size: clamp(48px, 12vw, 100px); line-height: 1; color: #ffe69d; text-shadow: 0 3px 6px #252924;
+}
+.railway-effect-punch { animation: reward-punch .7s both; }
+.railway-effect-roll { animation: reward-roll .9s both; }
+.railway-effect-float { animation: reward-float .95s both; }
+.railway-effect-signal { animation: reward-signal .95s both; }
+.railway-effect-swing { animation: reward-swing .95s both; }
+.railway-effect-slide { animation: reward-roll .95s both reverse; }
+.railway-effect-splash { animation: reward-punch .95s both; }
+@keyframes reward-punch { 0% { transform: scale(.55); opacity: 0; } 30% { transform: scale(1.18); } 85% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes reward-roll { 0% { transform: translateX(-45%); opacity: 0; } 37%, 70% { opacity: 1; } 100% { transform: translateX(48%); opacity: 0; } }
+@keyframes reward-float { 0% { transform: translateY(22px); opacity: 0; } 35%, 70% { opacity: 1; } 100% { transform: translateY(-44px); opacity: 0; } }
+@keyframes reward-signal { 0%, 100% { opacity: 0; } 26%, 74% { opacity: 1; filter: drop-shadow(0 0 14px #ffdc75); } }
+@keyframes reward-swing { 0% { transform: rotate(-18deg); opacity: 0; } 30% { transform: rotate(12deg); opacity: 1; } 60% { transform: rotate(-8deg); opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .railway-effect { animation: none; } }

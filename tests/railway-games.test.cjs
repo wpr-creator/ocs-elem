@@ -5,9 +5,10 @@ const vm=require('node:vm');
 
 function setup(scene){
  const callbacks=[];
+ let soundCount=0;
  const target={classList:{add(){}},outerHTML:''};
  const root={isConnected:true,querySelector:()=>target};
- const context={setTimeout:fn=>callbacks.push(fn),stationBell(){},stationNarrating:false,window:{}};
+ const context={setTimeout:fn=>callbacks.push(fn),stationBell(){},stationNarrating:false,window:{},railwayStops:[{effect:"✦",motion:"punch",sound(){soundCount++}}]};
  vm.createContext(context);
  vm.runInContext(fs.readFileSync('dist/expectation-station/railway-games.js','utf8')+'\nthis.Game=RailwayGame;',context);
  const game=new context.Game(root,{},0);
@@ -15,11 +16,11 @@ function setup(scene){
  const act=id=>game.act({
   dataset:{target:id},classList:{add(){},contains(){return false}},setAttribute(){},querySelector:()=>target
  });
- return {game,callbacks,act,root};
+ return {game,callbacks,act,root,sounds:()=>soundCount};
 }
 
 test('ordered actions reject skipped steps and skip the continue click after completion',()=>{
- const {game,callbacks,act}=setup({mode:'order',spots:[{},{}],value:'FOCUS'});
+ const {game,callbacks,act,sounds}=setup({mode:'order',spots:[{},{}],value:'FOCUS'});
  act(1);
  assert.equal(game.step,0);
  act(0);
@@ -27,6 +28,7 @@ test('ordered actions reject skipped steps and skip the continue click after com
  act(1);
  act(1);
  assert.equal(callbacks.length,1);
+ assert.equal(sounds(),1);
  callbacks[0]();
  assert.equal(game.round,1);
 });

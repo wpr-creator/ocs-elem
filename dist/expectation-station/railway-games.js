@@ -13,8 +13,8 @@ class RailwayGame {
   }
 
   meter(count) {
-    return `<div class="arcade-meter" role="img" aria-label="${count} of 3 complete">${[0,1,2].map(i =>
-      `<span aria-hidden="true" class="${i < count ? 'filled' : ''}">${i < count ? '★' : '☆'}</span>`).join('')}</div>`;
+    return `<div class="arcade-meter" role="img" aria-label="${count} of 3 complete"><i class="progress-engine" aria-hidden="true"></i>${[0,1,2].map(i =>
+      `<span aria-hidden="true" class="${i < count ? 'filled' : ''}">${i < count ? '✓' : ''}</span>`).join('')}</div>`;
   }
 
   draw() {
@@ -30,6 +30,7 @@ class RailwayGame {
     <div class="arcade-scene playfield playfield-${scene.mode}" style="--scene:url('${arcadeArt(this.index)}')">
       ${this.meter(this.round)}
       <div class="falcon-value"><b aria-hidden="true">${scene.value[0]}</b> ${scene.value}</div>
+      <div class="railway-effect" aria-hidden="true"></div>
       <div class="playfield-objects">
         ${scene.piece ? `<div class="play-piece" aria-hidden="true"><span>${scene.piece.icon}</span>${escapeGame(scene.piece.label)}</div>` : ''}
         ${scene.mode === 'signal' ? '<div class="play-signal"><i></i><strong>Wait…</strong></div>' : ''}
@@ -40,11 +41,18 @@ class RailwayGame {
     </div>
     <div class="arcade-console play-console">
       <div class="arcade-tools"><p class="arcade-feedback" role="status"></p>
-        <button class="arcade-listen" type="button">🔊 Read aloud</button></div>
+        <div class="railway-audio"><button class="arcade-listen" type="button">Read aloud</button>
+        <button class="arcade-listen railway-sound" type="button" aria-pressed="${stationSound}">Sound</button></div></div>
     </div>`;
     this.root.querySelectorAll('[data-target]').forEach(button => {
       button.onclick = () => this.act(button);
     });
+    const sound = this.root.querySelector('.railway-sound');
+    sound.onclick = () => {
+      stationSound = !stationSound;
+      sound.setAttribute('aria-pressed', stationSound);
+      if (stationSound) railwayStops[this.index].sound();
+    };
     this.root.querySelector('.arcade-listen').onclick = () => this.read();
     this.root.querySelector('.arcade-listen').hidden = !('speechSynthesis' in window);
     if (scene.mode === 'move') this.bindDrag();
@@ -115,7 +123,7 @@ class RailwayGame {
     this.finished = true;
     this.root.querySelector('.arcade-meter').outerHTML = this.meter(this.round + 1);
     this.feedback(`★ ${this.scene.value}`);
-    stationBell();
+    this.reward();
     this.after(1300, () => {
       window.speechSynthesis?.cancel();
       stationNarrating = false;
@@ -123,6 +131,14 @@ class RailwayGame {
       if (this.round === 3) this.finish();
       else this.draw();
     });
+  }
+
+  reward() {
+    const {effect, motion, sound} = railwayStops[this.index];
+    const overlay = this.root.querySelector('.railway-effect');
+    overlay.textContent = effect;
+    overlay.classList.add('railway-effect-' + motion);
+    sound();
   }
 
   after(delay, callback) {
@@ -156,7 +172,7 @@ class RailwayGame {
 
   finish() {
     earnStamp(this.config.id);
-    this.root.innerHTML = `<div class="arcade-win"><span aria-hidden="true">🏆</span>
+    this.root.innerHTML = `<div class="arcade-win"><span aria-hidden="true">✦</span>
       <h2 tabindex="-1">You earned a stamp!</h2>
       <p>${passportCount()} of 12 passport stamps</p>
       <div class="arcade-win-actions"><a class="arcade-button" href="#games">Pick another game</a>
