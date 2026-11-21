@@ -292,3 +292,23 @@
 .arcade-feedback.action-reminder {
   padding: 4px 12px; min-height: 30px; margin: 0; background: #efe6c9; color: #254637;
 }
+
+.dispatch-game { background:#242923;color:#fae9ab;border:4px ridge #ab8a4d;font-family:'DM Sans',sans-serif; }
+.dispatch-call { padding:10px 12px;border-bottom:3px solid #aa8a51;background:#182620;display:flex;justify-content:space-between;align-items:center;gap:8px; }
+.dispatch-call span { color:#f6d98c;font-size:12px;font-weight:900;letter-spacing:.05em; }
+.dispatch-call h2 { margin:4px 0 0;color:#fff2c1;font:800 clamp(17px,3vw,28px)/1.2 'DM Sans',sans-serif;text-transform:none;letter-spacing:0; }
+.dispatch-world { position:relative;max-width:750px;margin:auto; }
+.dispatch-world canvas { display:block;width:100%;height:auto;image-rendering:pixelated; }
+.dispatch-destinations { position:absolute;inset:0;pointer-events:none; }
+.dispatch-destinations button { position:absolute;right:2%;width:26%;min-width:56px;min-height:30px;transform:translateY(-50%);pointer-events:auto; }
+.dispatch-destinations button:nth-child(1) { top:22.5%; }
+.dispatch-destinations button:nth-child(2) { top:48.5%; }
+.dispatch-destinations button:nth-child(3) { top:74.5%; }
+.dispatch-game button { border:2px solid #342c1f;border-top-color:#ead193;border-left-color:#ddbd7c;background:#3b513d;color:#fff4ca;font:900 clamp(11px,2vw,17px) 'DM Sans',sans-serif;cursor:pointer; }
+.dispatch-game button:hover,.dispatch-game button[aria-pressed="true"] { background:#f2ca72;color:#2d301e; }
+.dispatch-supplies { position:absolute;left:2%;right:2%;bottom:3%;display:flex;gap:4px;justify-content:center; }
+.dispatch-supplies button { min-height:35px;padding:3px 7px;display:inline-flex;align-items:center;gap:4px; }
+.dispatch-icon { display:block;width:9px;height:12px;border:1px solid #1b3029;background:#74bcc9;box-shadow:2px 1px #1b3029; }
+.dispatch-pencil { width:6px;background:#f3c278;transform:rotate(30deg); }
+.dispatch-crayons { background:#d18866; }
+.dispatch-status { margin:0;padding:9px 12px;color:#fff2c1;background:#182620;min-height:44px;font-weight:800;font-size:14px; }

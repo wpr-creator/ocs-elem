@@ -1,6 +1,6 @@
 'use strict';
 
-class FirstRideClassroom extends ClassroomYard {
+class FirstRideClassroom extends ClassroomDispatch {
   finish() {
     this.root.innerHTML = `<div class="arcade-win ride-arrival">
       <h2 tabindex="-1">Classroom reached!</h2>
@@ -41,13 +41,10 @@ function showFirstRide() {
     if (!stage.isConnected || location.hash !== '#ride' || !stage.contains(skip)) return;
     clearTimeout(timer);
     main.querySelector('h1').textContent = 'Classroom control board';
-    const game = arcadeCatalog()[0];
-    new FirstRideClassroom(stage, {...game, rounds:game.rounds.slice(0,1)}, 0).start();
+    new FirstRideClassroom(stage, arcadeCatalog()[0], 0).start();
   };
-  const timer = setTimeout(openBoard, reduced ? 0 : 4700);
+  const timer = setTimeout(openBoard, 4700);
   skip.onclick = openBoard;
-  if (!reduced) {
-    skip.focus({preventScroll:true});
-    whistle();
-  }
+  skip.focus({preventScroll:true});
+  whistle();
 }

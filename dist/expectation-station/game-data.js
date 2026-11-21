@@ -16,26 +16,10 @@ function buildGames(stops) {
   });
   const scenes = [
     [
-  {
-    map:['.+++.','.+.+.','+++++','+...+','+++++'],
-    mode:'yard',category:0,start:10, finish:14, cue:'Collect the supplies in order.',
-    cargo:[{name:'Book',icon:'📘',at:2},{name:'Pencil',icon:'✏️',at:22}]
-  },
-  {
-    map:['+++++','+.+.+','+++++','..+.+','+++++'],
-    mode:'yard',category:0,start:20, finish:4, cue:'Follow all three directions.',
-    cargo:[{name:'Ruler',icon:'📏',at:0},{name:'Folder',icon:'📁',at:12},{name:'Crayons',icon:'🖍️',at:24}]
-  },
-  {
-    map:['+++++','+.+.+','+++++','+.+.+','+++++'],
-    mode:'yard',category:4,sorting:true,start:12, finish:22, cue:'Pick up and put away each supply.',
-    cargo:[
-      {name:'Book',icon:'📘',at:10, dock:0, place:'Bookshelf', mark:'📚'},
-      {name:'Pencil',icon:'✏️',at:2, dock:24, place:'Pencil cup', mark:'🫙'},
-      {name:'Crayons',icon:'🖍️',at:14, dock:20, place:'Art bin', mark:'🎨'}
-    ]
-  }
-],
+      {mode:'dispatch',category:0,cue:'Reading group is starting.',cargo:0,stop:0},
+      {mode:'dispatch',category:0,cue:'Change of plans. Time to draw.',cargo:2,stop:2},
+      {mode:'dispatch',category:0,cue:'Art is over. Get ready to write.',cargo:1,stop:1}
+    ],
     [
       route(0,'Remember who goes first.',prop('Falcon','🐦'),prop('Owl','🦉'),prop('Duck','🦆')),
       load(4,'Fill the gaps in line.',[['A line','Ⓐ'],['B line','Ⓑ'],['C line','Ⓒ']],
@@ -104,7 +88,7 @@ function buildGames(stops) {
     ]
   ];
   const reminders = [
-    ['You followed the teacher’s order.', 'You followed each direction.', 'You put supplies where they belong.'],
+    ['You listened and got ready to read.', 'You listened when the plan changed.', 'You switched to the new direction.'],
     ['You followed the line.', 'You closed the gaps.', 'You gave others space.'],
     ['You helped keep the bathroom clean.'],
     ['You froze at the whistle.'],

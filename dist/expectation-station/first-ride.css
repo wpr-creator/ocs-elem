@@ -55,9 +55,5 @@
 @keyframes ride-columns { to { transform: translateX(-12%); } }
 @keyframes ride-track { to { background-position: -38px 0; } }
 @keyframes ride-wheel { to { rotate: 360deg; } }
-@media (prefers-reduced-motion: reduce) {
-  .ride-locomotive,.ride-colonnade,.ride-track,.ride-wheelset i { animation: none; }
-  .ride-locomotive { transform: rotateY(-19deg) rotateZ(-2deg); }
-}
 .departure-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
 .departure-games { color: #fff0c9; display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 800; }

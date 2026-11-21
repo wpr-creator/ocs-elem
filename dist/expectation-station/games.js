@@ -91,6 +91,6 @@ function showArcadeGame(index) {
     </div></div>
     <div class="arcade-stage" id="game-zone"></div>
   </section>`;
-  const Player = index === 0 ? ClassroomYard : (combined?.Player || RailwayGame);
+  const Player = index === 0 ? ClassroomDispatch : (combined?.Player || RailwayGame);
   new Player(main.querySelector('#game-zone'), game, index).start();
 }

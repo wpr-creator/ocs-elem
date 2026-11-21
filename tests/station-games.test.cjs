@@ -24,11 +24,9 @@ test('every stop has three short playable scenes linked to exact FALCON matrix r
    }else if(scene.mode==='drive'){
     assert.equal(scene.gates.length,2);
     assert.ok(scene.gates[0]>22 && scene.gates[1]-scene.gates[0]>22 && scene.gates[1]<96);
-   }else if(scene.mode==='yard'){
-    const cells=scene.map.join('');
-    for(const cell of [scene.start,scene.finish,...scene.cargo.flatMap(item=>scene.sorting?[item.at,item.dock]:[item.at])]){
-     assert.equal(cells[cell],'+');
-    }
+   }else if(scene.mode==='dispatch'){
+    assert.ok([0,1,2].includes(scene.cargo));
+    assert.ok([0,1,2].includes(scene.stop));
    }else if(scene.mode==='move'){
     assert.ok(scene.spots.length>=2);
     assert.ok(scene.cargo.length>=2);
