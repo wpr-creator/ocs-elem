@@ -34,7 +34,8 @@ function showFirstRide() {
   const leg = {
     '#ride': {stop:'Classroom', from:'Falcon Central · Platform 01', platform:'01', title:'Classroom control board', Player:FirstRideClassroom, index:0},
     '#ride/playground': {stop:'Playground', from:'Classroom → Playground', platform:'04', title:'Playground crossing', Player:RidePlayground, index:3},
-    '#ride/lunch': {stop:'Lunch car', from:'Playground → Lunch car', platform:'05', title:'Lunch car', Player:RideLunch, index:4}
+    '#ride/lunch': {stop:'Lunch car', from:'Playground → Lunch car', platform:'05', title:'Lunch car', Player:RideLunch, index:4},
+    '#ride/transfer': {stop:'Transfer station', from:'Lunch car → Transfer station', platform:'↔', title:'Transfer station', Player:RideTransfer, index:11}
   }[route];
   main.innerHTML = `<section class="arcade first-ride">
     <div class="arcade-nav"><a href="#destinations">← Departures</a></div>

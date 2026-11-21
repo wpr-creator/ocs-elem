@@ -137,3 +137,43 @@
   background: #b5a984; color: #2e3024; border: 4px solid #574838; box-shadow: inset 0 0 0 2px #e9d19a,0 3px #957149;
 }
 .lunch-tray .lunch-tool span { display: none; }
+
+.transfer-pixel { background: #23342b; color: #fff0c2; border: 4px ridge #c2a068; }
+.transfer-desk { padding: 14px 8px; display: grid; justify-items: center; gap: 12px; background: repeating-linear-gradient(0deg,#bf9a60 0 2px,#dabe84 2px 24px,#ccb178 24px 26px); }
+.transfer-ticket {
+  position: relative; width: min(175px,75%); padding: 0; border: 3px solid #5e4930;
+  background: #ecd4a0; box-shadow: 0 4px #89663d; cursor: grab; touch-action: none;
+}
+.transfer-ticket.being-dragged { z-index: 4; }
+.transfer-ticket canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.transfer-platforms { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; }
+.transfer-platforms button {
+  min-height: 44px; padding: 3px 6px; color: #fff0bd; background: #365645;
+  border: 2px solid #e0be80; box-shadow: 0 2px #5d482c; font: 800 clamp(12px,2vw,16px) 'DM Sans',sans-serif; cursor: pointer;
+}
+.transfer-platforms button span { margin-right: 4px; color: #ebc77d; }
+.transfer-platforms button.transfer-hit { background: #f5d483; color: #293a2d; }
+.transfer-platforms button.transfer-hit span { color: inherit; }
+.transfer-line {
+  position: relative; display: flex; flex-direction: row-reverse; justify-content: flex-start; gap: 5px;
+  align-items: end; width: min(94%,350px); min-height: 55px; margin: 5px auto 0; padding: 0 7px 7px;
+  border-bottom: 6px double #d2ad6b; background: #293a30;
+}
+.transfer-engine,.transfer-cars i {
+  position: relative; height: 22px; width: 42px; flex: none;
+  border: 2px solid #e0b872; background: #487567; box-shadow: inset 0 -5px #38483a;
+}
+.transfer-engine i { position: absolute; width: 9px; height: 10px; top: -8px; right: 5px; background: #d6b277; }
+.transfer-engine::after,.transfer-cars i::after {
+  content:''; position:absolute; left:4px; right:4px; height:7px; bottom:-5px;
+  background: radial-gradient(circle at 4px 3px,#dfbb76 2px,#302922 3px 4px,transparent 4px),
+    radial-gradient(circle at right 4px top 3px,#dfbb76 2px,#302922 3px 4px,transparent 4px);
+}
+.transfer-cars { display: flex; flex-direction: row-reverse; gap: 5px; }
+.transfer-cars i { display: block; background: var(--car-color); animation: transfer-couple .3s ease-out; }
+.transfer-cars i::before {
+  content:''; position:absolute; left:5px; right:5px; top:4px; height:7px;
+  background: repeating-linear-gradient(90deg,#f0d393 0 6px,#433d2a 6px 9px);
+}
+@keyframes transfer-couple { from { transform: translateX(-14px); opacity: 0; } }
+.transfer-exit { margin: 0 11px 11px; }

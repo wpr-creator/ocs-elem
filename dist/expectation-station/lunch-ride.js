@@ -78,7 +78,7 @@ class RideLunch extends CleanupRun {
       railwayStops[4].sound();
       this.root.innerHTML = `<div class="arcade-win ride-arrival">
         <h2 tabindex="-1">Lunch car clean!</h2>
-        <a class="timetable-games" href="#destinations">Falcon Central</a>
+        <a class="timetable-games" href="#ride/transfer">Transfer station →</a>
       </div>`;
       this.root.querySelector('h2').focus({preventScroll:true});
     });
