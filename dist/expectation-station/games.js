@@ -8,7 +8,7 @@ try {
 } catch {}
 
 const gameIcons = ['🎟️', '🚃', '🫧', '🚦', '🧳', '🔔', '📚', '🎨', '🚂', '🛠️', '🎬', '🗺️'];
-const gameNames = ['Punch a Ticket', 'Load the Train', 'Pop the Clouds', 'Stop the Train', 'Sort the Suitcases', 'Ring the Bell', 'Find Ticket Pairs', 'Paint the Mural', 'Build Team Tracks', 'Fix the Bridge', 'Make a Movie', 'Station Dispatcher'];
+const gameNames = ['Punch a Ticket', 'Fill the Line', 'Bathroom Cleanup', 'Stop the Train', 'Lunch Cleanup', 'Curtain Call', 'Library Helpers', 'Art Studio', 'Team Practice', 'Fix the Bridge', 'Make a Movie', 'Station Dispatcher'];
 
 function escapeGame(text) {
   return String(text).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -64,7 +64,7 @@ function showGameMenu() {
 
 function showArcadeGame(index) {
   const game = arcadeCatalog()[index];
-  main.innerHTML = `<section class="arcade arcade-play" data-game="${game.type}">
+  main.innerHTML = `<section class="arcade arcade-play">
     <div class="arcade-nav"><a href="#games">← All games</a>${index < stops.length ? `<a href="#stop/${index + 1}">Read expectations</a>` : ''}</div>
     <h1><span aria-hidden="true">${gameIcons[index]}</span> ${gameNames[index]}</h1>
     <div class="arcade-stage" id="game-zone"></div>

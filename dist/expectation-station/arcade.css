@@ -51,23 +51,12 @@
 .arcade-card strong { font-size: clamp(14px, 2.2vw, 20px); line-height: 1.2; }
 .arcade-card > span:last-child { font-size: 11px; font-weight: 700; color: #494165; line-height: 1.3; }
 
-.arcade-play[data-game="bubbles"] { --game-accent: #a7e5ff; }
-.arcade-play[data-game="sort-station"], .arcade-play[data-game="sequence"] { --game-accent: #ffc6dc; }
-.arcade-play[data-game="bridge"], .arcade-play[data-game="line"] { --game-accent: #c1f2b4; }
-.arcade-play[data-game="whistle"], .arcade-play[data-game="spotlight"] { --game-accent: #ffde70; }
 .arcade-stage { border: 3px solid var(--game-accent); border-radius: 20px; overflow: hidden; background: #fff; color: var(--arcade-ink); }
 .arcade-scene {
   position: relative; isolation: isolate; min-height: clamp(124px, 21vw, 214px);
   display: grid; place-items: center; overflow: hidden;
   background: var(--scene) center 49%/cover, #524780;
 }
-.arcade-piece {
-  position: absolute; right: 10px; bottom: 10px; display: grid; place-items: center; min-width: 1.65em; min-height: 1.65em; border: 2px solid white;
-  border-radius: 22%; background: #171533; font-size: clamp(26px, 5vw, 46px);
-  box-shadow: 0 5px 0 #0d0b1a, 0 0 25px #ffffff6b; color: white;
-}
-.arcade-pop { animation: arcade-pop .65s ease-out both; }
-@keyframes arcade-pop { 30% { transform: translateY(-10%) scale(1.2) rotate(-9deg); background: #534383; } 65% { transform: scale(.98) rotate(8deg); } }
 .arcade-meter {
   position: absolute; top: 8px; left: 8px; display: inline-flex; gap: 5px;
   padding: 5px 10px; border-radius: 12px; background: #151533;
@@ -75,27 +64,7 @@
 }
 .arcade-meter .filled { color: #ffde70; }
 .arcade-console { padding: clamp(12px, 3vw, 24px); }
-.arcade-console h2, .arcade-win h2 { font: 900 clamp(21px, 3vw, 31px)/1.2 'DM Sans', system-ui, sans-serif; color: var(--arcade-ink); margin: 0 0 12px; scroll-margin-top: 12px; text-transform: none; letter-spacing: 0; }
-.arcade-ticket { background: #f2efff; color: var(--arcade-ink); padding: 11px 14px; font-size: 16px; border-radius: 9px; margin: 0 0 12px; border-left: 5px solid #7e63bd; }
-.arcade-choices { display: grid; gap: 9px; }
-.arcade-choice {
-  display: flex; align-items: center; gap: 9px; color: var(--arcade-ink); text-align: left;
-  padding: 10px 13px; min-height: 52px; font: 800 16px/1.35 'DM Sans', system-ui, sans-serif;
-  background: #f0edff; border: 2px solid #8a7db6; border-radius: 12px; box-shadow: 0 2px 0 #8a7db6; cursor: pointer;
-}
-.arcade-choice span { font-size: 21px; flex: none; }
-.arcade-choice:hover { background: var(--game-accent); }
-[data-game="bubbles"] .arcade-choice { border-color: #3d7896; background: #e1f7ff; border-radius: 32px; }
-[data-game="sort-station"] .arcade-choice, [data-game="sequence"] .arcade-choice { border-style: double; border-width: 4px; }
-[data-game="palette"] .arcade-choice:nth-child(3n+1) { background: #ffedc6; }
-[data-game="palette"] .arcade-choice:nth-child(3n+2) { background: #e6ffe5; }
-[data-game="palette"] .arcade-choice:nth-child(3n+3) { background: #f6e8ff; }
-.arcade-choice.is-right { background: #d6f6da; border-color: #318650; color: #183e25; }
-.arcade-choice.try-again { border-style: dashed; }
-.arcade-memory { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.arcade-memory .memory-tile { min-height: 86px; justify-content: center; text-align: center; padding: 6px; overflow-wrap: anywhere; font-size: 13px; }
-.memory-tile:not(.is-open) { background: #3c2e77; border-color: #8875c8; }
-.memory-tile:not(.is-open) span { font-size: 30px; }
+.play-instruction h2, .arcade-win h2 { font: 900 clamp(21px, 3vw, 31px)/1.2 'DM Sans', system-ui, sans-serif; color: var(--arcade-ink); margin: 0 0 12px; scroll-margin-top: 12px; text-transform: none; letter-spacing: 0; }
 .arcade-tools { display: flex; align-items: center; justify-content: space-between; gap: 5px; flex-wrap: wrap; margin-top: 8px; min-height: 44px; }
 .arcade-feedback { color: #245438; font-weight: 800; font-size: 15px; margin: 0; }
 .arcade-listen { color: #2c235b; background: #f0edff; border: 1px solid #8a7db6; min-height: 44px; border-radius: 10px; font: 800 14px 'DM Sans', system-ui, sans-serif; padding: 6px 10px; cursor: pointer; }
@@ -110,4 +79,57 @@
   .arcade-card-art { min-height: 74px; }
   .arcade-stage { border-width: 2px; }
 }
-@media (prefers-reduced-motion: reduce) { .arcade-pop { animation: none; } }
+
+
+.play-instruction { padding: 14px 16px; }
+.play-instruction h2 { margin: 0; }
+.play-instruction p { margin: 3px 0 0; font-size: 14px; color: #48415f; }
+.playfield {
+  display: flex; align-items: end; min-height: clamp(250px, 46vw, 440px);
+  background: linear-gradient(transparent 18%, #15142e37 45%, #14122ce6 100%), var(--scene) center / cover, #524780;
+}
+.falcon-value {
+  position: absolute; top: 8px; right: 8px; background: #171527; color: #ffea9d;
+  border-radius: 20px; padding: 4px 10px; font-size: clamp(10px, 2vw, 15px); font-weight: 900;
+}
+.falcon-value b {
+  display: inline-grid; place-items: center; min-width: 25px; min-height: 25px;
+  border-radius: 100%; margin-right: 3px; background: #ffde70; color: #211939;
+}
+.playfield-objects {
+  width: 100%; padding: 8px 12px 14px; display: grid; justify-items: center; gap: 10px;
+}
+.play-targets { display: flex; justify-content: center; gap: 8px; width: 100%; }
+.play-target, .play-piece {
+  background: #faf2ff; color: #25163a; border: 2px solid #8075ae; border-radius: 16px;
+  min-width: 0; width: min(33%, 145px); min-height: 75px; display: grid; justify-items: center;
+  align-content: center; gap: 3px; padding: 6px 5px; text-align: center;
+  font: 800 clamp(12px, 2vw, 16px)/1.25 'DM Sans', system-ui, sans-serif;
+  box-shadow: 0 4px 0 #59477e;
+}
+.play-target { cursor: pointer; }
+.play-target span, .play-piece span { font-size: clamp(28px, 6vw, 48px); line-height: 1; }
+.playfield-move .play-target { border: 2px dashed #f3d993; background: #241d46; color: white; }
+.playfield-signal .play-target { border-color: #d99635; background: #ffde70; min-width: 106px; }
+.play-piece {
+  position: relative; z-index: 1; color: #2a1b30; background: #ffde70;
+  border-color: #e7a843; box-shadow: 0 4px 0 #a16a26; cursor: grab;
+  touch-action: none; user-select: none;
+}
+.play-piece:active { cursor: grabbing; }
+.play-piece.delivered { visibility: hidden; }
+.play-target.is-done {
+  border-color: #227444; background: #cef5d8; color: #193b28;
+  animation: play-success .38s ease-out;
+}
+.play-target.is-done::after { content: '✓'; font-size: 16px; }
+.play-signal {
+  display: flex; align-items: center; gap: 8px; min-height: 39px;
+  padding: 6px 12px; border-radius: 18px; background: #211932; color: white; font-size: 15px;
+}
+.play-signal i { width: 16px; height: 16px; border-radius: 50%; background: #fc7d72; }
+.play-signal.is-ready i { background: #7bea9c; box-shadow: 0 0 12px #7bea9c; }
+.play-console { padding-top: 3px; padding-bottom: 4px; }
+.play-console .arcade-tools { margin-top: 0; }
+@keyframes play-success { 40% { transform: translateY(-6px) scale(1.055); } }
+@media (prefers-reduced-motion: reduce) { .play-target.is-done { animation: none; } }

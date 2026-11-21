@@ -1,27 +1,87 @@
 (function(root){
 'use strict';
 const values=['FOCUS','ATTITUDE','LEADERSHIP','CITIZENSHIP','ORGANIZATION','NON-VIOLENCE'];
-function buildGames(stops){
- const e=(s,n)=>stops[s].expectations[n];
- const choice=(s,n,prompt,other=[(n+1)%6,(n+3)%6])=>({prompt,answer:e(s,n),options:[e(s,n),...other.map(k=>e(s,k))]});
- const games=[
- {id:'classroom',type:'quiz',rounds:[choice(0,0,'Your teacher gives directions. What do you do?'),choice(0,1,'A classmate is trying something difficult. Which expectation helps?'),choice(0,4,'It is time to put materials away. Which expectation helps?')]},
- {id:'hallway',type:'line',rounds:[choice(1,0,'Help the leader face the right way.'),choice(1,4,'Help the next Falcon close the gap.'),choice(1,5,'Help the last Falcon keep a safe body.')]},
- {id:'bathroom',type:'bubbles',pool:stops.flatMap(s=>s.expectations.map((text,i)=>({text,answer:values[i]}))),items:stops[2].expectations.map((text,i)=>({text,answer:values[i]}))},
- {id:'playground',type:'whistle',rounds:[choice(3,0,'You hear the whistle. What do you do?'),choice(3,1,'Someone wants to join the game. Which expectation helps?'),choice(3,5,'A game is starting. Which expectation helps everyone stay safe?')]},
- {id:'cafeteria',type:'sort-station',items:[{text:e(4,0),answer:true},{text:e(6,2),answer:false,station:stops[6].name},{text:e(4,2),answer:true},{text:e(2,4),answer:false,station:stops[2].name},{text:e(4,4),answer:true},{text:e(10,4),answer:false,station:stops[10].name}]},
- {id:'auditorium',type:'spotlight',rounds:[choice(5,0,'The performance begins. What is your expectation?'),choice(5,1,'It is time for applause. What is your expectation?'),choice(5,3,'A new class joins the audience. What is your expectation?')]},
- {id:'library',type:'pairs',items:stops[6].expectations.map((text,i)=>({text,answer:values[i]}))},
- {id:'vapa',type:'palette',items:stops[7].expectations.map((text,i)=>({text,answer:values[i]}))},
- {id:'pe',type:'team',rounds:[{prompt:'Pick two ways to play fair and include others.',answers:[e(8,2),e(8,3)],options:[e(8,2),e(8,3),e(8,4),e(8,0)]},{prompt:'Pick two ways to follow directions and care for gear.',answers:[e(8,0),e(8,4)],options:[e(8,0),e(8,4),e(8,1),e(8,5)]},{prompt:'Pick two ways to keep trying and play safely.',answers:[e(8,1),e(8,5)],options:[e(8,1),e(8,5),e(8,2),e(8,3)]}]},
- {id:'steam',type:'bridge',rounds:[choice(9,1,'Your design did not work. Which expectation helps you try again?'),choice(9,2,'Your team needs everyone’s ideas. Which expectation helps?'),choice(9,4,'You have finished building. Which expectation helps you clean up?')]},
- {id:'animation',type:'sequence',items:stops[10].expectations.map((text,i)=>({text,answer:values[i]}))}
- ];
- // Each sentence below is distinctive to its printed station; do not turn shared
- // expectations into questions with more than one defensible station answer.
- const sourceIndices=[4,0,4,0,4,0,2,0,4,0,2];
- const match={id:'station-match',type:'destinations',rounds:stops.map((s,i)=>({prompt:e(i,sourceIndices[i]),answer:i,options:[i,(i+3)%stops.length,(i+7)%stops.length]}))};
- return {games,match,values};
+
+// A scene pairs a short playable action with its exact matrix row.
+function buildGames(stops) {
+  const spot = (label, icon) => ({label, icon});
+  const move = (category, cue, label, icon, target, decoy) =>
+    ({mode:'move', category, cue, piece:spot(label, icon), spots:[target, decoy]});
+  const order = (category, cue, ...spots) => ({mode:'order', category, cue, spots});
+  const signal = (category, cue, ready, label, icon) =>
+    ({mode:'signal', category, cue, ready, spots:[spot(label, icon)]});
+  const scenes = [
+    [
+      signal(0, 'Listen for “Go!”', 'Go!', 'Punch ticket', '🎟️'),
+      move(1, 'Cheer on your classmate.', 'You can do it!', '💬', spot('Classmate', '🐥'), spot('Empty desk', '🪑')),
+      move(4, 'Put the pencil away.', 'Pencil', '✏️', spot('Pencil cup', '✏️'), spot('Floor', '⬜'))
+    ],
+    [
+      order(0, 'Follow the line. Start at 1.', spot('1', '🐥'), spot('2', '🐥'), spot('3', '🐥')),
+      move(4, 'Close the gap in line.', 'Falcon', '🐥', spot('Gap', '⬚'), spot('Beside the line', '↗️')),
+      move(5, 'Keep your hands to yourself.', 'Falcon', '🐥', spot('My space', '⭕'), spot('Their space', '🐤'))
+    ],
+    [
+      order(4, 'Flush, wash, then toss.', spot('Flush', '🚽'), spot('Wash', '🧼'), spot('Toss towel', '🗑️')),
+      move(3, 'Pick up the dropped towel.', 'Towel', '🧻', spot('Trash can', '🗑️'), spot('Sink', '🚰')),
+      move(2, 'Tell an adult about the spill.', 'Tell an adult', '💬', spot('Staff member', '🧑'), spot('Empty stall', '🚪'))
+    ],
+    [
+      signal(0, 'Wait for the whistle.', 'Whistle!', 'Freeze', '✋'),
+      move(1, 'Invite the new player.', 'Ball', '⚽', spot('New player', '🐥'), spot('Ball bin', '🧺')),
+      move(3, 'Give the next player a turn.', 'Ball', '🏀', spot('Next player', '🐤'), spot('My spot', '⭕'))
+    ],
+    [
+      move(3, 'Clear the lunch table.', 'Wrapper', '📦', spot('Trash can', '🗑️'), spot('Seat', '🪑')),
+      order(4, 'Sort your tray. Stack it last.', spot('Scrape scraps', '🍎'), spot('Stack tray', '🍽️')),
+      move(5, 'Keep your food on your tray.', 'Lunch', '🥪', spot('My tray', '🍽️'), spot('Their tray', '🍴'))
+    ],
+    [
+      signal(0, 'Watch for the curtain.', 'Curtain up!', 'Listen', '👂'),
+      signal(1, 'Clap after the show.', 'Show is over!', 'Clap', '👏'),
+      move(3, 'Welcome someone new.', 'Welcome!', '💬', spot('New guest', '🐥'), spot('Empty row', '🪑'))
+    ],
+    [
+      move(4, 'Return the book.', 'Book', '📘', spot('Book cart', '🛒'), spot('Floor', '⬜')),
+      order(5, 'Carry the book gently.', spot('Hold with two hands', '🙌'), spot('Walk to the shelf', '🚶')),
+      signal(1, 'Try your library voice.', 'Reader is ready.', 'Read quietly', '📖')
+    ],
+    [
+      move(2, 'Cheer on another artist.', 'Nice work!', '💬', spot('Artist', '🧑‍🎨'), spot('Supply bin', '🧺')),
+      order(4, 'Rinse, then put the brush away.', spot('Rinse brush', '💧'), spot('Put away', '🖌️')),
+      move(5, 'Carry tools safely.', 'Scissors', '✂️', spot('Closed tool tray', '🧰'), spot('Edge of table', '↘️'))
+    ],
+    [
+      signal(0, 'Wait for the coach’s signal.', 'Go!', 'Start moving', '👟'),
+      move(3, 'Pass to someone left out.', 'Ball', '🏀', spot('New teammate', '🐥'), spot('Ball rack', '🧺')),
+      move(4, 'Put the ball back.', 'Ball', '🏀', spot('Ball rack', '🧺'), spot('Middle of court', '⭕'))
+    ],
+    [
+      order(1, 'The bridge broke. Try again!', spot('Check the gap', '🔍'), spot('Fit a new piece', '🛠️')),
+      move(2, 'Share your idea with the team.', 'Idea', '💡', spot('Team table', '🐥'), spot('Toolbox', '🧰')),
+      move(4, 'Put the tool away.', 'Wrench', '🔧', spot('Toolbox', '🧰'), spot('Floor', '⬜'))
+    ],
+    [
+      order(0, 'Make a clip. Film, then play.', spot('Film scene', '🎥'), spot('Play clip', '▶️')),
+      move(1, 'Give a partner a turn.', 'Camera', '📷', spot('Partner', '🐥'), spot('My spot', '⭕')),
+      move(4, 'Save the clip in its folder.', 'Clip', '🎞️', spot('Project folder', '📁'), spot('Trash', '🗑️'))
+    ],
+    [
+      {...move(4, 'Send “wash hands” to its stop.', 'Wash hands', '🧼', spot('Bathroom', '🚰'), spot('Classroom', '🪑')), source:2},
+      {...move(0, 'Send “freeze at the whistle” to its stop.', 'Freeze', '✋', spot('Playground', '🛝'), spot('Library', '📚')), source:3},
+      {...move(2, 'Send “share ideas” to its stop.', 'Share ideas', '💡', spot('STEAM', '🛠️'), spot('Cafeteria', '🍽️')), source:9}
+    ]
+  ];
+  const games = scenes.map((rounds, i) => ({
+    id: ['classroom','hallway','bathroom','playground','cafeteria','auditorium','library','vapa','pe','steam','animation','station-match'][i],
+    rounds: rounds.map(round => ({
+      ...round,
+      value: values[round.category],
+      expectation: stops[round.source ?? i].expectations[round.category]
+    }))
+  }));
+  return {games:games.slice(0,11), match:games[11], values};
 }
-root.FalconGames={buildGames};if(typeof module!=='undefined')module.exports={buildGames};
+root.FalconGames={buildGames};
+if(typeof module!=='undefined')module.exports={buildGames};
 })(typeof window!=='undefined'?window:globalThis);

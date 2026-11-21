@@ -8,180 +8,127 @@ class RailwayGame {
   }
 
   start() {
-    clearTimeout(this.timer);
     this.round = 0;
-    this.locked = false;
-    this.chosen = new Set();
-    this.matched = new Set();
-    this.flipped = [];
-    const {type, rounds, items, pool} = this.config;
-    if (type === 'pairs') {
-      this.deck = shuffleGame(shuffleGame(items).slice(0, 3).flatMap((item, pair) => [
-        {pair, text: item.answer}, {pair, text: item.text}
-      ]));
-      this.memory();
-      return;
-    }
-
-    if (rounds) {
-      this.rounds = (type === 'destinations' ? shuffleGame(rounds).slice(0, 3) : rounds)
-        .map(round => ({
-          prompt: type === 'destinations' ? 'Where does this ticket go?' : round.prompt,
-          detail: type === 'destinations' ? round.prompt : '',
-          answers: round.answers || [round.answer],
-          options: shuffleGame(round.options)
-        }));
-    } else {
-      this.rounds = shuffleGame(items).slice(0, 3).map(item => this.itemRound(item, type, pool));
-    }
     this.draw();
   }
 
-  itemRound(item, type, pool) {
-    if (type === 'bubbles') {
-      const targets = new Set(pool.filter(entry => entry.answer === item.answer).map(entry => entry.text));
-      const other = [...new Set(pool.map(entry => entry.text).filter(text => !targets.has(text)))];
-      return {
-        prompt: `Pop a ${item.answer.toLowerCase()} cloud!`,
-        answers: [item.text],
-        options: shuffleGame([item.text, ...shuffleGame(other).slice(0, 2)])
-      };
-    }
-    if (type === 'sort-station') {
-      return {
-        prompt: 'Which cart gets this suitcase?',
-        detail: item.text,
-        answers: [item.answer ? 'Lunch cart' : 'Other stops'],
-        options: ['Lunch cart', 'Other stops']
-      };
-    }
-    return {
-      prompt: type === 'palette' ? 'Pick a color to paint the panel.' : 'Pick the matching film frame.',
-      detail: item.text,
-      answers: [item.answer],
-      options: shuffleGame([item.answer, ...shuffleGame(labels.filter(label => label !== item.answer)).slice(0, 2)])
-    };
-  }
-
-  status(count, total) {
-    return `<div class="arcade-meter" role="img" aria-label="${count} of ${total} complete">${Array.from({length: total}, (_, i) =>
+  meter(count) {
+    return `<div class="arcade-meter" role="img" aria-label="${count} of 3 complete">${[0,1,2].map(i =>
       `<span aria-hidden="true" class="${i < count ? 'filled' : ''}">${i < count ? '★' : '☆'}</span>`).join('')}</div>`;
   }
 
-  stage(prompt, detail, count, total, board) {
-    return `<div class="arcade-scene" style="--scene:url('${arcadeArt(this.index)}')">
-      ${this.status(count, total)}
-      <span class="arcade-piece" aria-hidden="true">${gameIcons[this.index]}</span>
-    </div>
-    <div class="arcade-console">
-      <h2 tabindex="-1">${escapeGame(prompt)}</h2>
-      ${detail ? `<p class="arcade-ticket">${escapeGame(detail)}</p>` : ''}
-      ${board}
-      <div class="arcade-tools"><p class="arcade-feedback" role="status"></p><button class="arcade-listen" type="button">🔊 Read aloud</button></div>
-    </div>`;
-  }
-
   draw() {
-    const current = this.rounds[this.round];
-    const choices = current.options.map(option => typeof option === 'number' ? stops[option].name : option);
-    this.root.innerHTML = this.stage(current.prompt, current.detail, this.round, this.rounds.length,
-      `<div class="arcade-choices">${choices.map((choice, i) => `<button type="button" class="arcade-choice" data-choice="${i}">
-        <span aria-hidden="true">${current.options[i] === 'Other stops' ? '🚉' : gameIcons[this.index]}</span>
-        ${escapeGame(choice)}
-      </button>`).join('')}</div>`);
-    this.root.querySelectorAll('[data-choice]').forEach(button => {
-      button.onclick = () => this.pick(button, current);
+    const scene = this.config.rounds[this.round];
+    this.scene = scene;
+    this.step = 0;
+    this.finished = false;
+    this.ready = false;
+    const spots = scene.spots.map((spot, i) => ({...spot, i}));
+    const layout = scene.mode === 'signal' ? spots : shuffleGame(spots);
+    this.root.innerHTML = `<div class="play-instruction"><h2 tabindex="-1">${escapeGame(scene.cue)}</h2>
+      ${scene.mode === 'move' ? '<p>Drag or tap a spot.</p>' : ''}</div>
+    <div class="arcade-scene playfield playfield-${scene.mode}" style="--scene:url('${arcadeArt(this.index)}')">
+      ${this.meter(this.round)}
+      <div class="falcon-value"><b aria-hidden="true">${scene.value[0]}</b> ${scene.value}</div>
+      <div class="playfield-objects">
+        ${scene.piece ? `<div class="play-piece" aria-hidden="true"><span>${scene.piece.icon}</span>${escapeGame(scene.piece.label)}</div>` : ''}
+        ${scene.mode === 'signal' ? '<div class="play-signal"><i></i><strong>Wait…</strong></div>' : ''}
+        <div class="play-targets">${layout.map(spot => `<button type="button" class="play-target" data-target="${spot.i}">
+          <span aria-hidden="true">${spot.icon}</span><strong>${escapeGame(spot.label)}</strong>
+        </button>`).join('')}</div>
+      </div>
+    </div>
+    <div class="arcade-console play-console">
+      <div class="arcade-tools"><p class="arcade-feedback" role="status"></p>
+        <button class="arcade-listen" type="button">🔊 Read aloud</button></div>
+    </div>`;
+    this.root.querySelectorAll('[data-target]').forEach(button => {
+      button.onclick = () => this.act(button);
     });
-    this.listen([current.prompt, current.detail, ...choices]);
+    this.root.querySelector('.arcade-listen').onclick = () => this.read();
+    this.root.querySelector('.arcade-listen').hidden = !('speechSynthesis' in window);
+    if (scene.mode === 'move') this.bindDrag();
+    if (scene.mode === 'signal') this.after(1400, () => this.showSignal());
     this.focus();
   }
 
-  pick(button, current) {
-    const option = current.options[Number(button.dataset.choice)];
-    if (this.locked || this.chosen.has(option)) return;
-    if (!current.answers.includes(option)) {
-      button.classList.add('try-again');
-      this.feedback('Try another one!');
+  bindDrag() {
+    const piece = this.root.querySelector('.play-piece');
+    piece.addEventListener('pointerdown', event => {
+      if (this.finished || !event.isPrimary || event.button !== 0) return;
+      piece.setPointerCapture(event.pointerId);
+      const x = event.clientX;
+      const y = event.clientY;
+      const onMove = move => {
+        piece.style.transform = `translate(${move.clientX-x}px,${move.clientY-y}px)`;
+      };
+      const stopDrag = end => {
+        piece.removeEventListener('pointermove', onMove);
+        piece.removeEventListener('lostpointercapture', stopDrag);
+        piece.removeEventListener('pointerup', stopDrag);
+        piece.style.transform = '';
+        if (end.type !== 'pointerup') return;
+        const target = document.elementsFromPoint(end.clientX, end.clientY)
+          .map(element => element.closest('[data-target]')).find(element => element && this.root.contains(element));
+        if (target) this.act(target);
+      };
+      piece.addEventListener('pointermove', onMove);
+      piece.addEventListener('lostpointercapture', stopDrag);
+      piece.addEventListener('pointerup', stopDrag);
+    });
+  }
+
+  showSignal() {
+    this.ready = true;
+    const signal = this.root.querySelector('.play-signal');
+    signal.classList.add('is-ready');
+    signal.querySelector('strong').textContent = this.scene.ready;
+    this.feedback(this.scene.ready);
+    if (this.index === 3 && this.round === 0) whistle();
+    else stationBell();
+  }
+
+  act(button) {
+    if (this.finished || button.classList.contains('is-done')) return;
+    const {mode, spots} = this.scene;
+    if (mode === 'signal' && !this.ready) {
+      this.feedback('Wait for the signal.');
       return;
     }
-    this.chosen.add(option);
-    button.classList.add('is-right');
+    if (Number(button.dataset.target) !== this.step) {
+      this.feedback(mode === 'order' ? 'Try a different step first.' : 'Try the other spot.');
+      return;
+    }
+
+    button.classList.add('is-done');
     button.setAttribute('aria-disabled', 'true');
-    stationBell();
-    if (this.chosen.size < current.answers.length) {
-      this.feedback('Nice! Find one more.');
+    this.step++;
+    if (mode === 'order' && this.step < spots.length) {
+      this.feedback('✓ Next step!');
       return;
     }
-
-    this.locked = true;
-    this.root.querySelector('.arcade-meter').outerHTML = this.status(this.round + 1, this.rounds.length);
-    const piece = this.root.querySelector('.arcade-piece');
-    const rewards = ['✓', '🚂', '💥', '🛑', '🛒', '🎵', '⭐', '🖼️', '🛤️', '🌉', '🎞️', '🚉'];
-    const messages = ['Ticket punched!', 'Car loaded!', 'Pop!', 'Safe stop!', 'Suitcase loaded!', 'Bell rung!', 'A pair!', 'Panel painted!', 'Tracks connected!', 'Bridge fixed!', 'Frame filled!', 'Ticket delivered!'];
-    piece.textContent = rewards[this.index];
-    piece.classList.add('arcade-pop');
-    this.feedback('★ ' + messages[this.index]);
-    this.wait(() => {
-      this.round++;
-      if (this.round === this.rounds.length) {
-        this.finish();
-        return;
-      }
-      this.chosen.clear();
-      this.draw();
-    });
-  }
-
-  memory() {
-    this.root.innerHTML = this.stage('Flip two tickets to find a pair.', 'Match a FALCON word to what it looks like in the library.', this.matched.size, 3,
-      `<div class="arcade-memory">${this.deck.map((card, i) => {
-        const matched = this.matched.has(card.pair);
-        const open = matched || this.flipped.includes(i);
-        return `<button type="button" class="arcade-choice memory-tile ${open ? 'is-open' : ''} ${matched ? 'is-right' : ''}" data-card="${i}" ${matched ? 'disabled' : ''}
-          aria-label="${open ? escapeGame(card.text) : 'Flip ticket ' + (i + 1)}">
-          ${open ? escapeGame(card.text) : '<span aria-hidden="true">🎟️</span>'}
-        </button>`;
-      }).join('')}</div>`);
-    this.root.querySelectorAll('[data-card]').forEach(button => {
-      button.onclick = () => this.flip(Number(button.dataset.card));
-    });
-    this.listen(['Flip two tickets to find a pair. Match a FALCON word to a library expectation.',
-      ...this.deck.filter((_, i) => this.flipped.includes(i)).map(card => card.text)]);
-    if (!this.flipped.length && !this.matched.size) this.focus();
-  }
-
-  flip(index) {
-    if (this.locked || this.flipped.includes(index) || this.matched.has(this.deck[index].pair)) return;
-    this.flipped.push(index);
-    this.memory();
-    this.root.querySelector(`[data-card="${index}"]`).focus({preventScroll:true});
-    if (this.flipped.length < 2) return;
-
-    this.locked = true;
-    const [first, second] = this.flipped.map(i => this.deck[i]);
-    const match = first.pair === second.pair;
-    this.feedback(match ? '★ A pair!' : 'Try two more.');
-    if (match) stationBell();
-    this.wait(() => {
-      if (match) this.matched.add(first.pair);
-      if (this.matched.size === 3) {
-        this.finish();
-        return;
-      }
-      this.flipped = [];
-      this.memory();
-      this.root.querySelector('[data-card]:not(:disabled)').focus({preventScroll:true});
-    });
-  }
-
-  wait(action) {
-    this.timer = setTimeout(() => {
-      if (!this.root.isConnected) return;
-      this.locked = false;
+    if (mode === 'move') {
+      const piece = this.root.querySelector('.play-piece');
+      piece.classList.add('delivered');
+      button.querySelector('span').textContent = this.scene.piece.icon;
+    }
+    this.finished = true;
+    this.root.querySelector('.arcade-meter').outerHTML = this.meter(this.round + 1);
+    this.feedback(`★ ${this.scene.value}`);
+    stationBell();
+    this.after(1300, () => {
       window.speechSynthesis?.cancel();
       stationNarrating = false;
-      action();
-    }, 1250);
+      this.round++;
+      if (this.round === 3) this.finish();
+      else this.draw();
+    });
+  }
+
+  after(delay, callback) {
+    setTimeout(() => {
+      if (this.root.isConnected) callback();
+    }, delay);
   }
 
   feedback(text) {
@@ -191,23 +138,20 @@ class RailwayGame {
   focus() {
     const heading = this.root.querySelector('h2');
     heading.focus({preventScroll:true});
-    if (heading.getBoundingClientRect().top < 0) heading.scrollIntoView({block:'start'});
+    if (heading.getBoundingClientRect().bottom > window.innerHeight) {
+      this.root.scrollIntoView({block:'nearest', behavior:'instant'});
+    }
   }
 
-  listen(lines) {
-    const button = this.root.querySelector('.arcade-listen');
-    if (!('speechSynthesis' in window)) {
-      button.hidden = true;
-      return;
-    }
-    button.onclick = () => {
-      speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(lines.filter(Boolean).join('. '));
-      utterance.rate = .8;
-      stationNarrating = true;
-      utterance.onend = utterance.onerror = () => { stationNarrating = false; };
-      speechSynthesis.speak(utterance);
-    };
+  read() {
+    speechSynthesis.cancel();
+    const {value, cue, spots, expectation} = this.scene;
+    const lines = [value, cue, ...spots.map(spot => spot.label), expectation];
+    const utterance = new SpeechSynthesisUtterance(lines.join('. '));
+    utterance.rate = .8;
+    stationNarrating = true;
+    utterance.onend = utterance.onerror = () => { stationNarrating = false; };
+    speechSynthesis.speak(utterance);
   }
 
   finish() {
