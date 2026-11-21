@@ -14,7 +14,12 @@ test('every stop has three short playable scenes linked to exact FALCON matrix r
    assert.equal(scene.value,values[scene.category]);
    assert.equal(scene.expectation,stops[scene.source??index].expectations[scene.category]);
    assert.ok(scene.cue.split(/\s+/).length<=10,scene.cue);
-   if(scene.mode==='move'){
+   if(scene.mode==='yard'){
+    const cells=scene.map.join('');
+    for(const cell of [scene.start,scene.finish,...scene.cargo.flatMap(item=>scene.sorting?[item.at,item.dock]:[item.at])]){
+     assert.equal(cells[cell],'+');
+    }
+   }else if(scene.mode==='move'){
     assert.ok(scene.spots.length>=2);
     assert.ok(scene.cargo.length>=2);
     for(const cargo of scene.cargo){

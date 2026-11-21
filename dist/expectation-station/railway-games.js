@@ -26,7 +26,6 @@ class RailwayGame {
     this.track = scene.track?.map(tile => tile && {...tile});
     this.cargo = scene.cargo ? shuffleGame(scene.cargo) : [];
     this.sequence = scene.spots.map((_, i) => i);
-    if (this.index === 0 && scene.mode === 'order') this.sequence = shuffleGame(this.sequence);
     const spots = scene.spots.map((spot, i) => ({...spot, i}));
     const layout = scene.mode === 'signal' ? spots : shuffleGame(spots);
     this.orderOpen = scene.mode === 'order';
@@ -238,8 +237,7 @@ class RailwayGame {
     this.finished = true;
     this.root.querySelector('.round-steps').classList.add('is-departing');
     this.root.querySelector('.arcade-meter').outerHTML = this.meter(this.round + 1);
-    const lesson = this.index === 0 ? (this.round === 2 ? ' · Supplies put away' : ' · Directions followed')
-      : this.scene.mode === 'track' ? ' · You tried again' : '';
+    const lesson = this.scene.mode === 'track' ? ' · You tried again' : '';
     this.feedback(`★ ${this.scene.value}${lesson}`);
     this.reward();
     this.after(1300, () => {

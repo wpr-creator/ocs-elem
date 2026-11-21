@@ -16,11 +16,26 @@ function buildGames(stops) {
   });
   const scenes = [
     [
-      route(0,'Remember the teacher’s order.',prop('Pencil','✏️'),prop('Book','📘')),
-      route(0,'Next train, three supplies.',prop('Ruler','📏'),prop('Folder','📁'),prop('Crayons','🖍️')),
-      load(4,'Put the supplies away.',[['Pencil cup','🫙'],['Book shelf','📚'],['Art bin','🎨']],
-        ['Pencil','✏️',0],['Storybook','📘',1],['Crayons','🖍️',2],['Marker','🖊️',2])
-    ],
+  {
+    map:['.+++.','.+.+.','+++++','+...+','+++++'],
+    mode:'yard',category:0,start:10, finish:14, cue:'Collect the supplies in order.',
+    cargo:[{name:'Book',icon:'📘',at:2},{name:'Pencil',icon:'✏️',at:22}]
+  },
+  {
+    map:['+++++','+.+.+','+++++','..+.+','+++++'],
+    mode:'yard',category:0,start:20, finish:4, cue:'Follow all three directions.',
+    cargo:[{name:'Ruler',icon:'📏',at:0},{name:'Folder',icon:'📁',at:12},{name:'Crayons',icon:'🖍️',at:24}]
+  },
+  {
+    map:['+++++','+.+.+','+++++','+.+.+','+++++'],
+    mode:'yard',category:4,sorting:true,start:12, finish:22, cue:'Pick up and put away each supply.',
+    cargo:[
+      {name:'Book',icon:'📘',at:10, dock:0, place:'Bookshelf', mark:'📚'},
+      {name:'Pencil',icon:'✏️',at:2, dock:24, place:'Pencil cup', mark:'🫙'},
+      {name:'Crayons',icon:'🖍️',at:14, dock:20, place:'Art bin', mark:'🎨'}
+    ]
+  }
+],
     [
       route(0,'Remember who goes first.',prop('Falcon','🐦'),prop('Owl','🦉'),prop('Duck','🦆')),
       load(4,'Fill the gaps in line.',[['A line','Ⓐ'],['B line','Ⓑ'],['C line','Ⓒ']],

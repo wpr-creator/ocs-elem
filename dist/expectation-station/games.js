@@ -9,7 +9,7 @@ try {
 
 // Each stop has a visual reward and a short, distinct sound.
 const railwayStops = [
-  {name:'Punch a Ticket', effect:'✦', motion:'punch', sound:() => {boardClack(); tone(988, .28, 'triangle', .035, .09)}},
+  {name:'Classroom Express', effect:'✦', motion:'punch', sound:() => {boardClack(); tone(988, .28, 'triangle', .035, .09)}},
   {name:'Line-Up Express', effect:'🚃', motion:'roll', sound:() => {boardClack(); tone(196, .38, 'triangle', .05)}},
   {name:'Washroom Steam Stop', effect:'🫧', motion:'float', sound:() => {hiss(.26); tone(480, .11, 'sine', .045); tone(820, .18, 'sine', .04, .1)}},
   {name:'Stop the Train', effect:'🚦', motion:'signal', sound:() => {hiss(.32, .04); tone(330, .22, 'triangle', .04)}},
@@ -77,5 +77,6 @@ function showArcadeGame(index) {
     </div></div>
     <div class="arcade-stage" id="game-zone"></div>
   </section>`;
-  new RailwayGame(main.querySelector('#game-zone'), game, index).start();
+  const Player = index === 0 ? ClassroomYard : RailwayGame;
+  new Player(main.querySelector('#game-zone'), game, index).start();
 }
