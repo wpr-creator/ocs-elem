@@ -1,0 +1,63 @@
+/* Hard-edged cel colors over a dimensional brass-and-enamel locomotive. */
+.ride-scene {
+  --outline: #212a24;
+  --trim: #dfb76a;
+  position: relative; isolation: isolate; overflow: hidden;
+  height: clamp(235px,46vw,430px);
+  background: linear-gradient(#6e9e94 0 65%,#c6ae77 65% 68%,#dfc893 68%);
+}
+.ride-vault {
+  position: absolute; inset: 6% 6% 28%; border: 7px double #e8cd8a; border-bottom: 0;
+  border-radius: 48% 48% 0 0 / 48% 48% 0 0;
+  background: repeating-linear-gradient(82deg,transparent 0 15%,#567d72 15% 16%,transparent 16% 30%),#88ac9a;
+}
+.ride-colonnade { position: absolute; display: flex; justify-content: space-around; inset: 25% -15% 29%; animation: ride-columns 4.7s linear both; }
+.ride-colonnade i { width: 8%; border: 3px solid #856b40; border-radius: 4px; background: linear-gradient(90deg,#e7d2a2 0 59%,#b69a65 59% 85%,#886d45 85%); }
+.ride-track {
+  position: absolute; left: -8%; right: -8%; bottom: 10%; height: 18%; transform: skewX(-28deg);
+  border-block: 6px solid #5d4d37; background: repeating-linear-gradient(90deg,#8d6841 0 13px,#bd9c68 13px 38px);
+  animation: ride-track 1s linear infinite;
+}
+.ride-perspective {
+  position: absolute; inset: 21% 3% 16%; display: grid; place-items: center;
+  perspective: 720px;
+}
+.ride-locomotive {
+  position: relative; width: min(90%,540px); height: 72%; transform-style: preserve-3d;
+  animation: ride-locomotive 4.7s ease-in-out both;
+}
+.ride-coach,.ride-cab,.ride-boiler {
+  position: absolute; bottom: 16%; border: 4px solid var(--outline); border-radius: 9px;
+  box-shadow: inset 0 0 0 2px var(--trim); transform: translateZ(25px);
+}
+.ride-coach { left: 0; width: 47%; height: 69%; background: linear-gradient(#a56a3e 0 62%,#744524 62%); display: flex; align-items: center; justify-content: space-evenly; }
+.ride-coach i { width: 16%; height: 42%; border: 3px solid var(--outline); border-radius: 7px 7px 2px 2px; background: linear-gradient(145deg,#f7de94 0 50%,#bb9457 50%); }
+.ride-cab { left: 48%; width: 23%; height: 89%; background: linear-gradient(#2f685a 0 68%,#204739 68%); }
+.ride-window { position: absolute; width: 72%; height: 60%; left: 14%; top: 8%; border: 3px solid var(--outline); border-radius: 7px 7px 3px 3px; background: #f4d690; overflow: hidden; }
+.ride-window img { width: 100%; height: 100%; object-fit: cover; object-position: 35% 35%; filter: saturate(.7) contrast(1.18); }
+.ride-boiler { display: grid; place-items: center; left: 69%; width: 27%; height: 54%; background: linear-gradient(#387264 0 55%,#204739 55%); }
+.ride-boiler::after,.ride-coach::after {
+  content: ''; position: absolute; inset: 0 -1px 0 auto; width: 40px; transform-origin: right center;
+  transform: rotateY(-90deg); border: 4px solid var(--outline); background: #26483b;
+}
+.ride-boiler i { position: absolute; right: 13%; bottom: 100%; width: 25%; height: 38%; border: 3px solid var(--outline); border-top: 6px solid var(--trim); background: #26483b; }
+.ride-boiler b { color: #f5d489; font: 800 clamp(12px,3vw,24px)/1 'Terminal Roman',Georgia,serif; }
+.ride-wheelset { position: absolute; inset: auto 6% 0 8%; display: flex; justify-content: space-between; transform: translateZ(28px); }
+.ride-wheelset-far { transform: translateZ(-20px); }
+.ride-wheelset i { width: 13%; aspect-ratio: 1; border: 4px solid var(--outline); border-radius: 50%; background: repeating-conic-gradient(#dfb76a 0 9deg,#304b3d 9deg 52deg); animation: ride-wheel .8s linear infinite; }
+.ride-caption { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 9px 14px; background: #f1e4bf; }
+.ride-caption p { margin: 0; font-weight: 800; color: #25392e; }
+@keyframes ride-locomotive {
+  0% { transform: translateX(-115%) rotateY(-29deg) rotateZ(-3deg) scale(.84); }
+  30%,65% { transform: translateX(0) rotateY(-19deg) rotateZ(-2deg); }
+  100% { transform: translateX(118%) rotateY(-12deg) rotateZ(0); }
+}
+@keyframes ride-columns { to { transform: translateX(-12%); } }
+@keyframes ride-track { to { background-position: -38px 0; } }
+@keyframes ride-wheel { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .ride-locomotive,.ride-colonnade,.ride-track,.ride-wheelset i { animation: none; }
+  .ride-locomotive { transform: rotateY(-19deg) rotateZ(-2deg); }
+}
+.departure-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
+.departure-games { color: #fff0c9; display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 800; }

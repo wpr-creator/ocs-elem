@@ -12,7 +12,7 @@ function home() {
   <section class="school-timetable" id="destinations" aria-labelledby="timetable-title">
     <div class="timetable-heading">
       <h2 id="timetable-title">Departures</h2>
-      <a class="timetable-games" href="#games">Play games <span aria-hidden="true">→</span></a>
+      <div class="departure-actions"><a class="timetable-games" href="#ride">Ride with the Falcon</a><a class="departure-games" href="#games">Play games</a></div>
     </div>
     <div class="timetable-labels" aria-hidden="true"><span>Platform</span><span>School stop</span></div>
     <ul class="timetable-rows">${stops.map((stop, i) => `<li>
@@ -143,6 +143,11 @@ function render() {
   const route = location.hash.match(/^#(stop|play)\/(\d+)$/);
   const stopNumber = Number(route?.[2]);
   const validStop = stopNumber > 0 && stopNumber <= stops.length;
+  if (location.hash === '#ride') {
+    window.scrollTo(0, 0);
+    showFirstRide();
+    return;
+  }
   if (location.hash === '#games') {
       showGameMenu();
     window.scrollTo(0, 0);
