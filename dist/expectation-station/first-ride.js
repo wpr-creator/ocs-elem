@@ -23,7 +23,7 @@ class RidePlayground extends SignalRun {
   finish() {
     this.root.innerHTML = `<div class="arcade-win ride-arrival">
       <h2 tabindex="-1">Crossing clear!</h2>
-      <a class="timetable-games" href="#destinations">Falcon Central</a>
+      <a class="timetable-games" href="#ride/lunch">Lunch car →</a>
     </div>`;
     this.root.querySelector('h2').focus({preventScroll:true});
   }
@@ -31,12 +31,15 @@ class RidePlayground extends SignalRun {
 
 function showFirstRide() {
   const route = location.hash;
-  const playground = route === '#ride/playground';
-  const stop = playground ? 'Playground' : 'Classroom';
+  const leg = {
+    '#ride': {stop:'Classroom', from:'Falcon Central · Platform 01', platform:'01', title:'Classroom control board', Player:FirstRideClassroom, index:0},
+    '#ride/playground': {stop:'Playground', from:'Classroom → Playground', platform:'04', title:'Playground crossing', Player:RidePlayground, index:3},
+    '#ride/lunch': {stop:'Lunch car', from:'Playground → Lunch car', platform:'05', title:'Lunch car', Player:RideLunch, index:4}
+  }[route];
   main.innerHTML = `<section class="arcade first-ride">
     <div class="arcade-nav"><a href="#destinations">← Departures</a></div>
     <div class="terminal-game-title"><span class="terminal-clock" aria-hidden="true"></span>
-      <div><p class="terminal-platform">${playground ? 'Classroom → Playground' : 'Falcon Central · Platform 01'}</p><h1>Ride with the Falcon</h1></div>
+      <div><p class="terminal-platform">${leg.from}</p><h1>Ride with the Falcon</h1></div>
     </div>
     <div class="arcade-stage" id="ride-stage">
       <div class="ride-scene" aria-hidden="true">
@@ -47,13 +50,13 @@ function showFirstRide() {
           <div class="ride-locomotive">
             <div class="ride-coach"><i></i><i></i><i></i><i></i></div>
             <div class="ride-cab"><div class="ride-window"><img src="assets/conductor.webp" alt=""></div></div>
-            <div class="ride-boiler"><i></i><b>${playground ? '04' : '01'}</b></div>
+            <div class="ride-boiler"><i></i><b>${leg.platform}</b></div>
             <div class="ride-wheelset"><i></i><i></i><i></i></div>
             <div class="ride-wheelset ride-wheelset-far"><i></i><i></i><i></i></div>
           </div>
         </div>
       </div>
-      <div class="ride-caption"><p role="status">Next stop · ${stop}</p><button type="button" class="secondary ride-skip">Skip ride</button></div>
+      <div class="ride-caption"><p role="status">Next stop · ${leg.stop}</p><button type="button" class="secondary ride-skip">Skip ride</button></div>
     </div>
   </section>`;
   const stage = main.querySelector('#ride-stage');
@@ -61,10 +64,8 @@ function showFirstRide() {
   const openBoard = () => {
     if (!stage.isConnected || location.hash !== route || !stage.contains(skip)) return;
     clearTimeout(timer);
-    main.querySelector('h1').textContent = playground ? 'Playground crossing' : 'Classroom control board';
-    const Player = playground ? RidePlayground : FirstRideClassroom;
-    const index = playground ? 3 : 0;
-    new Player(stage, arcadeCatalog()[index], index).start();
+    main.querySelector('h1').textContent = leg.title;
+    new leg.Player(stage, arcadeCatalog()[leg.index], leg.index).start();
   };
   const timer = setTimeout(openBoard, 4700);
   skip.onclick = openBoard;

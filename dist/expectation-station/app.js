@@ -143,7 +143,7 @@ function render() {
   const route = location.hash.match(/^#(stop|play)\/(\d+)$/);
   const stopNumber = Number(route?.[2]);
   const validStop = stopNumber > 0 && stopNumber <= stops.length;
-  if (location.hash === '#ride' || location.hash === '#ride/playground') {
+  if (['#ride','#ride/playground','#ride/lunch'].includes(location.hash)) {
     window.scrollTo(0, 0);
     showFirstRide();
     return;

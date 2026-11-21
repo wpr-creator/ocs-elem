@@ -78,6 +78,10 @@ class CleanupRun extends RailwayGame {
     return true;
   }
 
+  sweeps(id) {
+    return id === 'sponge';
+  }
+
   bindCleanupDrag(button) {
     button.onpointerdown = event => {
       if (!event.isPrimary || event.button !== 0 || !this.pick(button.dataset.piece, false)) return;
@@ -94,7 +98,7 @@ class CleanupRun extends RailwayGame {
         button.style.transform = `translate(${x}px,${y}px)`;
         button.classList.add('being-dragged');
         const target = seek(pointer);
-        if (id === 'sponge' && target?.dataset.patch !== undefined) this.drop(id, target);
+        if (this.sweeps(id) && target?.dataset.patch !== undefined) this.drop(id, target);
       };
       const end = pointer => {
         button.removeEventListener('pointermove',move);
@@ -103,7 +107,7 @@ class CleanupRun extends RailwayGame {
         button.style.transform = '';
         button.classList.remove('being-dragged');
         const target = pointer.type === 'pointerup' && moved ? seek(pointer) : null;
-        if (target) this.drop(id,target);
+        if (target && button.isConnected) this.drop(id,target);
       };
       button.setPointerCapture(event.pointerId);
       button.addEventListener('pointermove',move);
