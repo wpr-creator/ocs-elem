@@ -57,26 +57,27 @@ function arcadeArt(index) {
 function showGameMenu() {
   main.innerHTML = `<section class="arcade arcade-menu">
     <div class="terminal-game-title menu-title"><h1>Station Games</h1><span class="passport-total">${passportCount()} of 12 stamps</span></div>
-    <div class="arcade-grid">${arcadeCatalog().map((game, i) => `
+    <div class="arcade-grid">${arcadeCatalog().map((game, i) => i === 8 ? '' : `
       <a class="arcade-card" href="${i === 11 ? '#game/stations' : '#play/' + (i + 1)}">
         <span class="arcade-card-art" aria-hidden="true" style="--scene:url('${arcadeArt(i)}')"></span>
-        <strong>${railwayStops[i].name}</strong>
-        <span><b class="platform-number">${i === 11 ? '↔' : String(i + 1).padStart(2, '0')}</b> ${escapeGame(stops[i]?.name || 'All stations')}${passportStamps.has(game.id) ? ' · ⭐ Stamp earned' : ''}</span>
+        <strong>${i === 3 ? "Signal Express" : railwayStops[i].name}</strong>
+        <span><b class="platform-number">${i === 11 ? '↔' : String(i + 1).padStart(2, '0')}</b> ${i === 3 ? 'Playground &amp; PE' : escapeGame(stops[i]?.name || 'All stations')}${i !== 3 && passportStamps.has(game.id) ? ' · ⭐ Stamp earned' : ''}</span>
       </a>`).join('')}</div>
   </section>`;
 }
 
 function showArcadeGame(index) {
   const game = arcadeCatalog()[index];
+  const sharedSignal = index === 3 || index === 8;
   const stop = stops[index];
-  const platform = stop ? `Platform ${String(index + 1).padStart(2, '0')} · ${escapeGame(stop.name)}` : 'All school stops';
+  const platform = sharedSignal ? 'Playground &amp; PE' : stop ? `Platform ${String(index + 1).padStart(2, '0')} · ${escapeGame(stop.name)}` : 'All school stops';
   main.innerHTML = `<section class="arcade arcade-play">
     <div class="arcade-nav"><a href="#games">← All games</a>${index < stops.length ? `<a href="#stop/${index + 1}">Read expectations</a>` : ''}</div>
     <div class="terminal-game-title"><span class="terminal-clock" aria-hidden="true"></span><div>
-      <p class="terminal-platform">${platform}</p><h1>${railwayStops[index].name}</h1>
+      <p class="terminal-platform">${platform}</p><h1>${sharedSignal ? "Signal Express" : railwayStops[index].name}</h1>
     </div></div>
     <div class="arcade-stage" id="game-zone"></div>
   </section>`;
-  const Player = index === 0 ? ClassroomYard : RailwayGame;
+  const Player = index === 0 ? ClassroomYard : sharedSignal ? SignalRun : RailwayGame;
   new Player(main.querySelector('#game-zone'), game, index).start();
 }

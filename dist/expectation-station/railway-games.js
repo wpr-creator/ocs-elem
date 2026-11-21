@@ -289,10 +289,10 @@ class RailwayGame {
     speechSynthesis.speak(utterance);
   }
 
-  finish() {
+  finish(title = 'You earned a stamp!') {
     earnStamp(this.config.id);
     this.root.innerHTML = `<div class="arcade-win"><span aria-hidden="true">✦</span>
-      <h2 tabindex="-1">You earned a stamp!</h2>
+      <h2 tabindex="-1">${escapeGame(title)}</h2>
       <p>${passportCount()} of 12 passport stamps</p>
       <div class="arcade-win-actions"><button class="arcade-listen replay" type="button">Play again</button></div>
     </div>`;

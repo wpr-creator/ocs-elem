@@ -50,13 +50,7 @@ function buildGames(stops) {
       load(2,'Which problems need an adult?', [['Tell staff','🧑'],['Tidy it myself','🧽']],
         ['Water flooding the floor','💦',0],['My towel fell','🧻',1],['Broken sink','🚰',0])
     ],
-    [
-      signals(0,'Play until the whistle.',[['Play','⚽'],['Freeze','✋']],
-        ['No whistle',0],['Whistle!',1],['Play again',0],['Whistle!',1]),
-      load(1,'Give everyone a turn.',[['Falcon · played','🐦'],['Duck · waiting','🦆'],['Owl · waiting','🦉']],
-        ['Soccer ball','⚽',[1,2]],['Basketball','🏀',[1,2]]),
-      route(3,'Remember the turn order.',prop('Duck','🦆'),prop('Owl','🦉'),prop('Falcon','🐦'))
-    ],
+    [{mode:'drive',category:0,cue:'Brake when you hear the whistle.',gates:[38,72]}],
     [
       load(3,'Clear the lunch table.',[['Scraps','🍎'],['Trash','🗑️'],['Tray stack','🍽️']],
         ['Banana peel','🍌',0],['Wrapper','📦',1],['Empty tray','🍽️',2],['Apple core','🍏',0]),
@@ -86,14 +80,7 @@ function buildGames(stops) {
       load(5,'Put tools in safe spots.',[['Closed tool tray','🧰'],['Drying rack','🗄️'],['Craft bin','🧺']],
         ['Scissors','✂️',0],['Wet painting','🖼️',1],['Yarn','🧶',2])
     ],
-    [
-      signals(0,'Follow the coach’s calls.',[['Move','👟'],['Stop','✋']],
-        ['Go!',0],['Stop!',1],['Go!',0],['Stop!',1]),
-      load(3,'Pass to everyone who hasn’t played.',[['Falcon · played','🐦'],['Duck · waiting','🦆'],['Owl · waiting','🦉']],
-        ['Basketball','🏀',[1,2]],['Soccer ball','⚽',[1,2]]),
-      load(4,'Return the equipment.',[['Ball rack','🧺'],['Cone stack','🚧'],['Rope hooks','🪝']],
-        ['Jump rope','🪢',2],['Basketball','🏀',0],['Cone','🔶',1])
-    ],
+    [{mode:'drive',category:0,cue:'Brake when the coach calls stop.',gates:[31,64]}],
     [
       {mode:'track',category:1,cue:'Turn the tracks to fix the bridge.',spots:[],track:[
         null, {ports:[1,2],turn:2}, {ports:[1,3],turn:1},

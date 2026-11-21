@@ -235,3 +235,31 @@
 .yard-locomotive.heading-right { transform: scaleX(-1); }
 .yard-load:not(:empty) { position: absolute; right: 3%; top: 2%; font-size: .42em; background: #fff1c8; border: 1px solid #83663a; border-radius: 50%; padding: 3px; }
 .yard-dock-label:not(:empty) { position: absolute; bottom: 1px; z-index: 1; color: #263d32; background: #fff4d0; border-radius: 3px; padding: 1px; font: 800 clamp(8px,2.5vw,11px)/1 'DM Sans', sans-serif; text-align: center; pointer-events: none; }
+
+.signal-cab { display: grid; align-content: space-between; gap: 20px; min-height: clamp(265px,44vw,390px); padding: 12px; overflow: hidden; background: linear-gradient(#192c2569,#24372e55 43%,#32483c),var(--signal-scene) center/cover,#294537; }
+.signal-cab[data-course="3"] { --signal-scene: url('assets/games/playground.webp'); }
+.signal-cab[data-course="8"] { --signal-scene: url('assets/games/pe.webp'); }
+.signal-cab:focus-visible { outline: 3px solid #f2d790; outline-offset: -4px; }
+.signal-readout { display: flex; gap: 10px; align-items: center; justify-content: space-between; color: #fff2cf; border: 3px double #c7ae72; background: #22352c; border-radius: 6px; padding: 8px 10px; }
+.signal-readout p { margin: 0; font-weight: 800; font-size: clamp(14px,2.8vw,19px); }
+.signal-readout span { flex: none; font-size: 12px; font-weight: 800; }
+.signal-line { position: relative; height: 18px; margin: 42px 13px 0; border-block: 4px solid #e4c689; background: repeating-linear-gradient(90deg,#49372d 0 9px,#ac9365 9px 13px); box-shadow: 0 4px 8px #132220; }
+.signal-engine { position: absolute; z-index: 2; bottom: 9px; left: var(--mile); width: 36px; height: 24px; transform: translateX(-50%); border-radius: 6px 9px 3px 3px; border: 2px solid #f7d889; background: #24575d; }
+.signal-engine span { position: absolute; inset: 3px auto auto 4px; width: 10px; height: 9px; background: #ffdda0; border-radius: 2px; }
+.signal-engine i { position: absolute; right: 4px; top: -7px; width: 7px; height: 8px; background: #24484c; border-top: 2px solid #f2d790; }
+.signal-engine b { position: absolute; left: 2px; right: 2px; bottom: -6px; height: 9px; background: radial-gradient(circle at 5px 4px,#e9c97b 2px,#202b24 3px 4px,transparent 4.5px),radial-gradient(circle at right 5px top 4px,#e9c97b 2px,#202b24 3px 4px,transparent 4.5px); }
+.signal-engine.rolling i::after { content: ''; display: block; width: 8px; height: 8px; background: #f2e5bc; border-radius: 50%; animation: engine-puff .7s infinite; }
+@keyframes engine-puff { to { transform: translate(-10px,-14px) scale(1.5); opacity: 0; } }
+@media(prefers-reduced-motion:reduce) { .signal-engine.rolling i::after { animation: none; display: none; } }
+.signal-post { position: absolute; bottom: 13px; left: var(--mile); width: 5px; height: 42px; background: #f2d790; transform: translateX(-50%); }
+.signal-post i { position: absolute; left: -8px; top: -5px; width: 21px; height: 23px; border-radius: 7px; background: #7b7254; border: 3px solid #202b24; }
+.signal-post.calling i { background: #ff6d60; box-shadow: 0 0 10px #ff6d60; }
+.signal-post.cleared i { background: #64dc91; box-shadow: 0 0 10px #64dc91; }
+.signal-finish { position: absolute; right: 0; bottom: 13px; font-size: 31px; color: #fff0ba; text-shadow: 0 1px 2px #2b211b; }
+.signal-controls { display: flex; justify-content: center; gap: 10px; }
+.signal-controls button { min-height: 50px; min-width: min(125px,43%); border-radius: 7px; border: 2px solid #d0ad68; box-shadow: 0 3px 0 #19281e; font: 900 17px 'DM Sans',sans-serif; cursor: pointer; }
+.signal-go { color: #203a2b; background: #d5efc4; }
+.signal-brake { color: #54271e; background: #ffddc6; }
+.signal-footer { padding: 6px 12px; display: flex; align-items: center; gap: 8px; justify-content: space-between; font-size: 14px; }
+.signal-footer summary { cursor: pointer; font-weight: 800; }
+.signal-footer p { margin: 0; }
