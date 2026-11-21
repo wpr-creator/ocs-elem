@@ -9,12 +9,17 @@ test('every stop has three short playable scenes linked to exact FALCON matrix r
  assert.equal(games.length,11);
  assert.equal(new Set([...games,match].map(game=>game.id)).size,12);
  [...games,match].forEach((game,index)=>{
-  assert.equal(game.rounds.length,[3,8].includes(index)?1:3);
+  assert.equal(game.rounds.length,[2,3,4,8].includes(index)?1:3);
   for(const scene of game.rounds){
    assert.equal(scene.value,values[scene.category]);
    assert.equal(scene.expectation,stops[scene.source??index].expectations[scene.category]);
    assert.ok(scene.cue.split(/\s+/).length<=10,scene.cue);
-   if(scene.mode==='drive'){
+   if(scene.mode==='cleanup'){
+    assert.ok(scene.pieces.length>=2);
+    const ids=new Set(scene.pieces.map(piece=>piece.id));
+    assert.equal(ids.size,scene.pieces.length);
+    for(const piece of scene.pieces) if(piece.after) assert.ok(ids.has(piece.after) && piece.after!==piece.id);
+   }else if(scene.mode==='drive'){
     assert.equal(scene.gates.length,2);
     assert.ok(scene.gates[0]>22 && scene.gates[1]-scene.gates[0]>22 && scene.gates[1]<96);
    }else if(scene.mode==='yard'){

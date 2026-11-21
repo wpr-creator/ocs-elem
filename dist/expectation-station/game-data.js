@@ -43,21 +43,17 @@ function buildGames(stops) {
       signals(5,'Keep space as the line moves.',[['Step','👟'],['Hold','✋']],
         ['Line stopped',1],['Space ahead',0],['Space ahead',0],['Line stopped',1])
     ],
-    [
-      route(4,'Remember the bathroom routine.',prop('Flush','🚽'),prop('Wash','🧼'),prop('Dry','🧻'),prop('Toss towel','🗑️')),
-      load(3,'Leave the bathroom clean.',[['Trash','🗑️'],['Sink','🚰'],['Hook','🪝']],
-        ['Used towel','🧻',0],['Soapy hands','🫧',1],['Backpack','🎒',2]),
-      load(2,'Which problems need an adult?', [['Tell staff','🧑'],['Tidy it myself','🧽']],
-        ['Water flooding the floor','💦',0],['My towel fell','🧻',1],['Broken sink','🚰',0])
-    ],
+    [{mode:'cleanup',category:3,cue:'Clean the washroom car.',pieces:[
+      {id:'towel-a',label:'Paper towel',icon:'🧻',bin:'trash',col:1,row:1},
+      {id:'towel-b',label:'Used towel',icon:'🧻',bin:'trash',col:4,row:2}
+    ],spill:'Water'}],
     [{mode:'drive',category:0,cue:'Brake when you hear the whistle.',gates:[38,72]}],
-    [
-      load(3,'Clear the lunch table.',[['Scraps','🍎'],['Trash','🗑️'],['Tray stack','🍽️']],
-        ['Banana peel','🍌',0],['Wrapper','📦',1],['Empty tray','🍽️',2],['Apple core','🍏',0]),
-      route(4,'Remember the lunch cleanup.',prop('Scrape scraps','🍎'),prop('Stack tray','🍽️'),prop('Wipe spot','🧽')),
-      load(5,'Match each lunch to its owner.',[['Falcon tray','🐦'],['Duck tray','🦆'],['Owl tray','🦉']],
-        ['Owl’s sandwich','🥪',2],['Falcon’s apple','🍎',0],['Duck’s carrots','🥕',1])
-    ],
+    [{mode:'cleanup',category:3,cue:'Clean the lunch car.',pieces:[
+      {id:'peel',label:'Banana peel',icon:'🍌',bin:'scraps',col:1,row:1},
+      {id:'wrapper',label:'Wrapper',icon:'📦',bin:'trash',col:4,row:2},
+      {id:'apple',label:'Apple core on tray',icon:'🍎',bin:'scraps',col:2,row:2},
+      {id:'tray',label:'Tray',icon:'🍽️',bin:'stack',col:2,row:2,after:'apple'}
+    ],spill:'Juice'}],
     [
       signals(0,'Watch what’s happening on stage.',[['Listen','👂'],['Applaud','👏']],
         ['Speaker is talking',0],['Song is playing',0],['Show ends',1]),

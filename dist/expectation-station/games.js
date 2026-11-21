@@ -54,30 +54,43 @@ function arcadeArt(index) {
   return `assets/games/${sceneAssets[index] || 'dispatcher'}.webp`;
 }
 
+function combinedGame(index) {
+  if (index === 2 || index === 4) return {name:'Cleanup Express', schools:'Bathroom &amp; Cafeteria', stops:[2,4], Player:CleanupRun};
+  if (index === 3 || index === 8) return {name:'Signal Express', schools:'Playground &amp; PE', stops:[3,8], Player:SignalRun};
+  return null;
+}
+
 function showGameMenu() {
+  const catalog = arcadeCatalog();
   main.innerHTML = `<section class="arcade arcade-menu">
     <div class="terminal-game-title menu-title"><h1>Station Games</h1><span class="passport-total">${passportCount()} of 12 stamps</span></div>
-    <div class="arcade-grid">${arcadeCatalog().map((game, i) => i === 8 ? '' : `
-      <a class="arcade-card" href="${i === 11 ? '#game/stations' : '#play/' + (i + 1)}">
+    <div class="arcade-grid">${catalog.map((game, i) => {
+      const combined = combinedGame(i);
+      if (combined && i !== combined.stops[0]) return '';
+      const count = combined
+        ? combined.stops.filter(stop => passportStamps.has(catalog[stop].id)).length : 0;
+      const stamps = combined ? ` · ${count}/2 stamps` : passportStamps.has(game.id) ? ' · ⭐ Stamp earned' : '';
+      return `<a class="arcade-card" href="${i === 11 ? '#game/stations' : '#play/' + (i + 1)}">
         <span class="arcade-card-art" aria-hidden="true" style="--scene:url('${arcadeArt(i)}')"></span>
-        <strong>${i === 3 ? "Signal Express" : railwayStops[i].name}</strong>
-        <span><b class="platform-number">${i === 11 ? '↔' : String(i + 1).padStart(2, '0')}</b> ${i === 3 ? 'Playground &amp; PE' : escapeGame(stops[i]?.name || 'All stations')}${i !== 3 && passportStamps.has(game.id) ? ' · ⭐ Stamp earned' : ''}</span>
-      </a>`).join('')}</div>
+        <strong>${combined?.name || railwayStops[i].name}</strong>
+        <span><b class="platform-number">${i === 11 ? '↔' : String(i + 1).padStart(2, '0')}</b> ${combined?.schools || escapeGame(stops[i]?.name || 'All stations')}${stamps}</span>
+      </a>`;
+    }).join('')}</div>
   </section>`;
 }
 
 function showArcadeGame(index) {
   const game = arcadeCatalog()[index];
-  const sharedSignal = index === 3 || index === 8;
+  const combined = combinedGame(index);
   const stop = stops[index];
-  const platform = sharedSignal ? 'Playground &amp; PE' : stop ? `Platform ${String(index + 1).padStart(2, '0')} · ${escapeGame(stop.name)}` : 'All school stops';
+  const platform = combined?.schools || (stop ? `Platform ${String(index + 1).padStart(2, '0')} · ${escapeGame(stop.name)}` : 'All school stops');
   main.innerHTML = `<section class="arcade arcade-play">
     <div class="arcade-nav"><a href="#games">← All games</a>${index < stops.length ? `<a href="#stop/${index + 1}">Read expectations</a>` : ''}</div>
     <div class="terminal-game-title"><span class="terminal-clock" aria-hidden="true"></span><div>
-      <p class="terminal-platform">${platform}</p><h1>${sharedSignal ? "Signal Express" : railwayStops[index].name}</h1>
+      <p class="terminal-platform">${platform}</p><h1>${combined?.name || railwayStops[index].name}</h1>
     </div></div>
     <div class="arcade-stage" id="game-zone"></div>
   </section>`;
-  const Player = index === 0 ? ClassroomYard : sharedSignal ? SignalRun : RailwayGame;
+  const Player = index === 0 ? ClassroomYard : (combined?.Player || RailwayGame);
   new Player(main.querySelector('#game-zone'), game, index).start();
 }

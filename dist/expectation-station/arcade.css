@@ -263,3 +263,28 @@
 .signal-footer { padding: 6px 12px; display: flex; align-items: center; gap: 8px; justify-content: space-between; font-size: 14px; }
 .signal-footer summary { cursor: pointer; font-weight: 800; }
 .signal-footer p { margin: 0; }
+
+.cleanup-car { background: #e4d1a5; border-block: 5px double #815638; }
+.cleanup-windows { display: flex; gap: 12px; padding: 9px; background: #784c34; }
+.cleanup-windows i { flex: 1; height: 38px; border-radius: 8px 8px 3px 3px; border: 3px solid #e3bd7c; background: linear-gradient(#83aca5 0 65%,#446f50 65%); }
+.cleanup-depart .cleanup-windows i { animation: cleanup-rolling .7s 2 linear; }
+@keyframes cleanup-rolling { to { background-position: 58px 0; } }
+.cleanup-depart .cleanup-windows i { background-image: repeating-linear-gradient(125deg,#83aca5 0 22px,#547f6b 22px 35px,#83aca5 35px 58px); }
+.cleanup-bins { display: flex; justify-content: space-evenly; gap: 5px; padding: 8px; background: #c6ad7d; border-bottom: 3px solid #806343; }
+.cleanup-bins button { min-height: 56px; min-width: 70px; padding: 4px; background: #24463a; color: #fff2cd; border: 2px solid #e6c987; border-radius: 7px; cursor: pointer; font: 800 12px 'DM Sans',sans-serif; }
+.cleanup-bins span { display: block; font-size: 23px; }
+.cleanup-floor { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); grid-template-rows: repeat(3,55px); gap: 4px; padding: 8px; background: repeating-linear-gradient(0deg,#d7bd89 0 28px,#ba9b6d 28px 30px); }
+.cleanup-piece { position: relative; grid-column: var(--col); grid-row: var(--row); place-self: center; z-index: 2; width: 48px; height: 46px; background: #fff1c9; border: 2px solid #8a7044; border-radius: 10px; cursor: grab; font-size: 24px; touch-action: none; }
+.cleanup-tray { width: 62px; height: 52px; z-index: 1; padding: 0; font-size: 27px; background: #dbdac6; }
+.cleanup-spill { display: flex; grid-column: 2 / 5; grid-row: 3; justify-content: center; align-items: center; }
+.cleanup-patch { width: clamp(44px,13vw,53px); height: 43px; border-radius: 48% 54% 40% 51%; margin-inline: -1px; border: 2px solid #295b66; background: #73b3bf; box-shadow: inset 0 4px 0 #bde1d3; cursor: pointer; }
+.cleanup-patch:nth-child(2) { transform: translateY(5px); }
+.cleanup-patch:nth-child(3) { transform: translateY(-4px); }
+.cleanup-patch.is-wiped { background: transparent; box-shadow: none; border-color: transparent; cursor: default; }
+.cleanup-tools { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; padding: 7px 10px 4px; font-size: 14px; }
+.cleanup-sponge { position: relative; min-height: 45px; background: #f4d788; border: 2px solid #8c6e41; border-radius: 7px; color: #273a2b; cursor: grab; font: 800 14px 'DM Sans', sans-serif; touch-action: none; }
+.cleanup-piece[aria-pressed="true"],.cleanup-sponge[aria-pressed="true"] { outline: 3px solid #146451; outline-offset: 2px; }
+.cleanup-piece.being-dragged,.cleanup-sponge.being-dragged { z-index: 8; }
+.cleanup-bump { animation: play-success .4s ease-out; }
+.arcade-stage:has(.cleanup-car) { overflow: visible; }
+@media(prefers-reduced-motion:reduce) { .cleanup-depart .cleanup-windows i,.cleanup-bump { animation: none; } }
