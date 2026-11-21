@@ -50,22 +50,13 @@ function passportCount() {
   return arcadeCatalog().filter(game => passportStamps.has(game.id)).length;
 }
 
-function gameHomeMarkup() {
-  return `<section class="arcade-callout" aria-labelledby="arcade-callout-title">
-    <span class="terminal-clock" aria-hidden="true"></span>
-    <div><h2 id="arcade-callout-title">Station Games</h2><p>Play and collect passport stamps.</p></div>
-    <a class="arcade-button" href="#games">Pick a game <span aria-hidden="true">→</span></a>
-  </section>`;
-}
-
 function arcadeArt(index) {
   return `assets/games/${sceneAssets[index] || 'dispatcher'}.webp`;
 }
 
 function showGameMenu() {
   main.innerHTML = `<section class="arcade arcade-menu">
-    <div class="arcade-nav"><a href="#">← Station home</a><span>⭐ ${passportCount()} of 12 stamps</span></div>
-    <div class="terminal-game-title"><span class="terminal-clock" aria-hidden="true"></span><h1>Station Games</h1></div>
+    <div class="terminal-game-title menu-title"><h1>Station Games</h1><span class="passport-total">${passportCount()} of 12 stamps</span></div>
     <div class="arcade-grid">${arcadeCatalog().map((game, i) => `
       <a class="arcade-card" href="${i === 11 ? '#game/stations' : '#play/' + (i + 1)}">
         <span class="arcade-card-art" aria-hidden="true" style="--scene:url('${arcadeArt(i)}')"></span>

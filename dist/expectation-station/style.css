@@ -40,3 +40,51 @@ h1,h2,h3{font-family:'Terminal Roman',Georgia,serif;font-weight:400;letter-spaci
   border: 0;
   overflow: auto;
 }
+
+/* The platform and its timetable are the two parts of the station entrance. */
+.station-platform { margin: 16px auto 20px; }
+.station-platform .station-roof {
+  margin: 0; text-align: center; padding: 12px;
+  font: 400 clamp(22px, 4vw, 39px)/1.2 'Terminal Roman', Georgia, serif;
+  letter-spacing: 1px;
+}
+.station-platform .station-sky { height: clamp(84px, 13vw, 132px); }
+.platform-conductor {
+  position: absolute; width: clamp(62px, 9vw, 102px); height: auto; aspect-ratio: 1;
+  left: clamp(9px, 4vw, 55px); bottom: 6px; object-fit: cover;
+  border: 3px double #a58b54; border-radius: 46% 46% 3px 3px;
+}
+.school-timetable {
+  background: #25352e; color: #f8edd1; border: 6px double #c0a363; border-radius: 8px;
+  padding: clamp(9px, 2vw, 20px); margin: 0 auto 28px;
+}
+.timetable-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 9px; }
+.timetable-heading h2 { color: #fff0c9; margin: 0; font-size: clamp(23px, 4vw, 38px); }
+.timetable-games {
+  background: #f1d591; color: #25342b; padding: 8px 12px; min-height: 44px; display: inline-flex;
+  align-items: center; gap: 8px; border-radius: 4px; font: 800 15px 'DM Sans', sans-serif; text-decoration: none;
+}
+.timetable-labels {
+  display: grid; grid-template-columns: 78px 1fr; gap: 10px; margin-top: 8px; padding: 8px 10px 4px;
+  color: #e1c989; text-transform: uppercase; letter-spacing: 1.2px; font-size: 11px; font-weight: 800;
+}
+.timetable-rows { list-style: none; padding: 0; margin: 0; }
+.timetable-rows li { border-top: 1px solid #8b805a; }
+.timetable-row {
+  display: grid; grid-template-columns: 78px minmax(0,1fr) 20px; gap: 10px; align-items: center;
+  width: 100%; min-height: 50px; padding: 8px 10px; border: 0; background: transparent; color: #fff2d0;
+  font: 800 clamp(13px, 2vw, 19px)/1.25 'DM Sans', sans-serif; text-align: left; cursor: pointer;
+}
+.timetable-row:hover { background: #405547; }
+.timetable-row:focus-visible, .timetable-games:focus-visible { outline: 3px solid #ffe292; outline-offset: -3px; }
+.timetable-platform {
+  width: 37px; padding: 4px; background: #f1d591; color: #29362e; border-radius: 4px;
+  text-align: center; font-family: 'Terminal Roman', Georgia, serif;
+}
+.timetable-arrow { color: #ead397; text-align: right; }
+@media(max-width: 520px) {
+  .station-platform { margin-top: 10px; }
+  .station-platform .hanging-sign { left: auto; right: 12px; transform: none; padding: 7px 8px; font-size: 15px; }
+  .station-platform .station-lights { display: none; }
+  .timetable-labels, .timetable-row { grid-template-columns: 67px minmax(0,1fr) auto; gap: 9px; padding-inline: 5px; }
+}

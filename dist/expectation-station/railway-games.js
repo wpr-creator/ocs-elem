@@ -175,8 +175,7 @@ class RailwayGame {
     this.root.innerHTML = `<div class="arcade-win"><span aria-hidden="true">✦</span>
       <h2 tabindex="-1">You earned a stamp!</h2>
       <p>${passportCount()} of 12 passport stamps</p>
-      <div class="arcade-win-actions"><a class="arcade-button" href="#games">Pick another game</a>
-      <button class="arcade-listen replay" type="button">Play again</button></div>
+      <div class="arcade-win-actions"><button class="arcade-listen replay" type="button">Play again</button></div>
     </div>`;
     this.root.querySelector('.replay').onclick = () => this.start();
     this.focus();

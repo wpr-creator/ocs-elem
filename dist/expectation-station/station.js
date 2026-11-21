@@ -10,5 +10,13 @@ async function unlockSound(){if(audioContext?.state==='running')return;try{const
 document.addEventListener('pointerdown',unlockSound,{capture:true});document.addEventListener('keydown',unlockSound,{capture:true});
 document.addEventListener('visibilitychange',()=>{if(audioContext){if(document.hidden)audioContext.suspend();else if(stationSound)audioContext.resume().catch(()=>{})}});
 function trainArt(){return `<div class="train-art" aria-hidden="true"><div class="steam"><i></i><i></i><i></i></div><div class="engine"><div class="chimney"></div><div class="cab"><span>✦</span><div class="cab-window"></div></div><div class="boiler"><span>FALCON EXPRESS</span></div><div class="headlamp"></div><div class="cowcatcher"></div><div class="train-wheels"><i></i><i></i><i></i></div><div class="connecting-rod"></div></div>${[0,1].map(()=>`<div class="carriage"><span>THE FALCON WAY</span><div class="windows"><i></i><i></i><i></i></div><div class="carriage-wheels"><i></i><i></i></div></div>`).join('')}</div>`}
-function stationPlatform(){return `<section class="station-platform" aria-label="The Falcon Express arriving at the station"><div class="station-roof"><span>✦ FALCON CENTRAL ✦</span></div><div class="station-sky"><div class="station-clock"><span class="hour-hand"></span><span class="minute-hand"></span><b>✦</b></div><div class="hanging-sign">THE FALCON EXPRESS<br><small>CHOOSE A SCHOOL STOP</small></div><div class="station-lights"><i></i><i></i><i></i></div></div><div class="platform-train">${trainArt()}</div><div class="rails"></div><div class="platform-edge"></div><div class="platform-bottom"><span class="arrival-dot"></span><span id="arrival-status">The Falcon Express is pulling in!</span><button id="call-train">Call the train</button></div></section>`}
-function arrival(){const train=document.querySelector('.platform-train');if(!train)return;train.classList.remove('arriving');void train.offsetWidth;train.classList.add('arriving');whistle();const status=document.querySelector('#arrival-status');status.textContent='The Falcon Express is pulling in!';setTimeout(()=>{if(status.isConnected)status.textContent='All aboard! Choose a destination below.';stationBell()},reduced?0:4200)}
+function stationPlatform() {
+  return `<section class="station-platform" aria-label="The Falcon Express">
+    <h1 class="station-roof">Expectation Station</h1>
+    <div class="station-sky"><div class="hanging-sign">Falcon Central</div><img class="platform-conductor" src="assets/conductor.webp" width="362" height="362" alt=""><div class="station-lights"><i></i><i></i><i></i></div></div>
+    <div class="platform-train">${trainArt()}</div><div class="rails"></div><div class="platform-edge"></div>
+  </section>`;
+}
+function arrival() {
+  document.querySelector('.platform-train')?.classList.add('arriving');
+}

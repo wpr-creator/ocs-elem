@@ -1,25 +1,8 @@
 /* Limestone, brass and enamel carry the concourse through the game platforms. */
-.arcade-callout, .arcade {
+.arcade {
   --arcade-ink: #1d322d;
-  --arcade-enamel: #2c4940;
-  --arcade-brass: #f2d790;
   --arcade-stone: #f4e9cd;
   font-family: 'DM Sans', system-ui, sans-serif;
-}
-.arcade-callout {
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  padding: 18px 24px; margin: 22px 0; border: 5px ridge #c4ac78; border-radius: 23px 23px 4px 4px;
-  background: var(--arcade-enamel); color: white;
-}
-.arcade-callout > span { font-size: 32px; }
-.arcade-callout h2, .arcade-callout p { margin: 0; color: white; }
-.arcade-callout h2 { font: 900 24px/1.2 'DM Sans', system-ui, sans-serif; }
-.arcade-callout p { font-size: 15px; margin-top: 4px; }
-.arcade-callout a { margin-left: auto; }
-.arcade-button {
-  display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px;
-  background: var(--arcade-brass); color: #232d24; border-radius: 12px; padding: 10px 17px;
-  font-weight: 800; text-decoration: none; box-shadow: 0 4px 0 #82632f;
 }
 .arcade {
   --game-accent: #bf9c5e;
@@ -28,7 +11,7 @@
   color: white; border: 7px ridge #c4ac78; border-radius: 52px 52px 4px 4px; box-shadow: 0 8px 0 #c5b99e;
 }
 .arcade [tabindex="-1"]:focus { outline: none; }
-.arcade :is(a, button):focus-visible, .arcade-callout a:focus-visible {
+.arcade :is(a, button):focus-visible {
   outline: 3px solid #00948a; outline-offset: 4px;
 }
 .arcade-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 15px; }
@@ -72,9 +55,6 @@
 .arcade-win > span { font-size: 64px; display: block; }
 .arcade-win-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 @media (max-width: 600px) {
-  header nav a[href="#games"] { display: inline-flex; min-height: 44px; align-items: center; }
-  .arcade-callout { padding: 14px; gap: 9px; }
-  .arcade-callout a { margin-left: 0; width: 100%; }
   .arcade-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .arcade-card-art { min-height: 74px; }
   .arcade-stage { border-width: 2px; }
@@ -190,3 +170,7 @@
 @keyframes reward-signal { 0%, 100% { opacity: 0; } 26%, 74% { opacity: 1; filter: drop-shadow(0 0 14px #ffdc75); } }
 @keyframes reward-swing { 0% { transform: rotate(-18deg); opacity: 0; } 30% { transform: rotate(12deg); opacity: 1; } 60% { transform: rotate(-8deg); opacity: 1; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .railway-effect { animation: none; } }
+
+.menu-title { flex-wrap: wrap; justify-content: space-between; }
+.passport-total { color: #ffedbf; font-size: 14px; font-weight: 800; }
+.stop-nav { justify-content: flex-end; }
