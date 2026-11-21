@@ -2,74 +2,107 @@
 'use strict';
 const values=['FOCUS','ATTITUDE','LEADERSHIP','CITIZENSHIP','ORGANIZATION','NON-VIOLENCE'];
 
-// A scene pairs a short playable action with its exact matrix row.
 function buildGames(stops) {
-  const spot = (label, icon) => ({label, icon});
-  const move = (category, cue, label, icon, target, decoy) =>
-    ({mode:'move', category, cue, piece:spot(label, icon), spots:[target, decoy]});
-  const order = (category, cue, ...spots) => ({mode:'order', category, cue, spots});
-  const signal = (category, cue, ready, label, icon) =>
-    ({mode:'signal', category, cue, ready, spots:[spot(label, icon)]});
+  const prop = (label, icon) => ({label, icon});
+  const route = (category, cue, ...spots) => ({mode:'order', category, cue, spots});
+  const load = (category, cue, spots, ...items) => ({
+    mode:'move', category, cue,
+    spots:spots.map(([label,icon])=>prop(label,icon)),
+    cargo:items.map(([label,icon,to])=>({...prop(label,icon),to}))
+  });
+  const signals = (category, cue, spots, ...steps) => ({
+    mode:'signal', category, cue, spots:spots.map(([label,icon])=>prop(label,icon)),
+    signals:steps.map(([label,to])=>({label,to}))
+  });
   const scenes = [
     [
-      signal(0, 'Listen for “Go!”', 'Go!', 'Punch ticket', '🎟️'),
-      move(1, 'Cheer on your classmate.', 'You can do it!', '💬', spot('Classmate', '🐥'), spot('Empty desk', '🪑')),
-      move(4, 'Put the pencil away.', 'Pencil', '✏️', spot('Pencil cup', '✏️'), spot('Floor', '⬜'))
+      route(0,'Remember the teacher’s order.',prop('Pencil','✏️'),prop('Book','📘')),
+      route(0,'Next train, three supplies.',prop('Ruler','📏'),prop('Folder','📁'),prop('Crayons','🖍️')),
+      load(4,'Put the supplies away.',[['Pencil cup','🫙'],['Book shelf','📚'],['Art bin','🎨']],
+        ['Pencil','✏️',0],['Storybook','📘',1],['Crayons','🖍️',2],['Marker','🖊️',2])
     ],
     [
-      order(0, 'Follow the line. Start at 1.', spot('1', '🐥'), spot('2', '🐥'), spot('3', '🐥')),
-      move(4, 'Close the gap in line.', 'Falcon', '🐥', spot('Gap', '⬚'), spot('Beside the line', '↗️')),
-      move(5, 'Keep your hands to yourself.', 'Falcon', '🐥', spot('My space', '⭕'), spot('Their space', '🐤'))
+      route(0,'Remember who goes first.',prop('Falcon','🐦'),prop('Owl','🦉'),prop('Duck','🦆')),
+      load(4,'Fill the gaps in line.',[['A line','Ⓐ'],['B line','Ⓑ'],['C line','Ⓒ']],
+        ['Duck · B','🦆',1],['Falcon · A','🐦',0],['Owl · C','🦉',2]),
+      signals(5,'Keep space as the line moves.',[['Step','👟'],['Hold','✋']],
+        ['Line stopped',1],['Space ahead',0],['Space ahead',0],['Line stopped',1])
     ],
     [
-      order(4, 'Flush, wash, then toss.', spot('Flush', '🚽'), spot('Wash', '🧼'), spot('Toss towel', '🗑️')),
-      move(3, 'Pick up the dropped towel.', 'Towel', '🧻', spot('Trash can', '🗑️'), spot('Sink', '🚰')),
-      move(2, 'Tell an adult about the spill.', 'Tell an adult', '💬', spot('Staff member', '🧑'), spot('Empty stall', '🚪'))
+      route(4,'Remember the bathroom routine.',prop('Flush','🚽'),prop('Wash','🧼'),prop('Dry','🧻'),prop('Toss towel','🗑️')),
+      load(3,'Leave the bathroom clean.',[['Trash','🗑️'],['Sink','🚰'],['Hook','🪝']],
+        ['Used towel','🧻',0],['Soapy hands','🫧',1],['Backpack','🎒',2]),
+      load(2,'Which problems need an adult?', [['Tell staff','🧑'],['Tidy it myself','🧽']],
+        ['Water flooding the floor','💦',0],['My towel fell','🧻',1],['Broken sink','🚰',0])
     ],
     [
-      signal(0, 'Wait for the whistle.', 'Whistle!', 'Freeze', '✋'),
-      move(1, 'Invite the new player.', 'Ball', '⚽', spot('New player', '🐥'), spot('Ball bin', '🧺')),
-      move(3, 'Give the next player a turn.', 'Ball', '🏀', spot('Next player', '🐤'), spot('My spot', '⭕'))
+      signals(0,'Play until the whistle.',[['Play','⚽'],['Freeze','✋']],
+        ['No whistle',0],['Whistle!',1],['Play again',0],['Whistle!',1]),
+      load(1,'Give everyone a turn.',[['Falcon · played','🐦'],['Duck · waiting','🦆'],['Owl · waiting','🦉']],
+        ['Soccer ball','⚽',[1,2]],['Basketball','🏀',[1,2]]),
+      route(3,'Remember the turn order.',prop('Duck','🦆'),prop('Owl','🦉'),prop('Falcon','🐦'))
     ],
     [
-      move(3, 'Clear the lunch table.', 'Wrapper', '📦', spot('Trash can', '🗑️'), spot('Seat', '🪑')),
-      order(4, 'Sort your tray. Stack it last.', spot('Scrape scraps', '🍎'), spot('Stack tray', '🍽️')),
-      move(5, 'Keep your food on your tray.', 'Lunch', '🥪', spot('My tray', '🍽️'), spot('Their tray', '🍴'))
+      load(3,'Clear the lunch table.',[['Scraps','🍎'],['Trash','🗑️'],['Tray stack','🍽️']],
+        ['Banana peel','🍌',0],['Wrapper','📦',1],['Empty tray','🍽️',2],['Apple core','🍏',0]),
+      route(4,'Remember the lunch cleanup.',prop('Scrape scraps','🍎'),prop('Stack tray','🍽️'),prop('Wipe spot','🧽')),
+      load(5,'Match each lunch to its owner.',[['Falcon tray','🐦'],['Duck tray','🦆'],['Owl tray','🦉']],
+        ['Owl’s sandwich','🥪',2],['Falcon’s apple','🍎',0],['Duck’s carrots','🥕',1])
     ],
     [
-      signal(0, 'Watch for the curtain.', 'Curtain up!', 'Listen', '👂'),
-      signal(1, 'Clap after the show.', 'Show is over!', 'Clap', '👏'),
-      move(3, 'Welcome someone new.', 'Welcome!', '💬', spot('New guest', '🐥'), spot('Empty row', '🪑'))
+      signals(0,'Watch what’s happening on stage.',[['Listen','👂'],['Applaud','👏']],
+        ['Speaker is talking',0],['Song is playing',0],['Show ends',1]),
+      signals(1,'Clap at the right time.',[['Wait','✋'],['Clap','👏']],
+        ['Dancer starts',0],['Music pauses',0],['Dancer takes a bow',1]),
+      load(3,'Find the guests their seats.',[['Row A','Ⓐ'],['Row B','Ⓑ'],['Row C','Ⓒ']],
+        ['Duck · B','🦆',1],['Owl · C','🦉',2],['Falcon · A','🐦',0])
     ],
     [
-      move(4, 'Return the book.', 'Book', '📘', spot('Book cart', '🛒'), spot('Floor', '⬜')),
-      order(5, 'Carry the book gently.', spot('Hold with two hands', '🙌'), spot('Walk to the shelf', '🚶')),
-      signal(1, 'Try your library voice.', 'Reader is ready.', 'Read quietly', '📖')
+      load(4,'Sort the library returns.',[['Animal books','🐾'],['Space books','🪐'],['Art books','🎨']],
+        ['Dinosaur book','🦕',0],['Moon book','🌙',1],['Painting book','🖼️',2],['Bird book','🐦',0]),
+      route(5,'Remember how to carry a book.',prop('Use both hands','🙌'),prop('Walk to shelf','🚶'),prop('Set it down gently','📘')),
+      signals(1,'Choose when to use your voice.',[['Quiet voice','💬'],['Read quietly','📖']],
+        ['Reading alone',1],['Ask the librarian',0],['Friends are reading',1])
     ],
     [
-      move(2, 'Cheer on another artist.', 'Nice work!', '💬', spot('Artist', '🧑‍🎨'), spot('Supply bin', '🧺')),
-      order(4, 'Rinse, then put the brush away.', spot('Rinse brush', '💧'), spot('Put away', '🖌️')),
-      move(5, 'Carry tools safely.', 'Scissors', '✂️', spot('Closed tool tray', '🧰'), spot('Edge of table', '↘️'))
+      load(2,'Help each artist keep going.',[['Painter','🖌️'],['Drawer','✏️'],['Sculptor','🏺']],
+        ['Paper','📄',1],['Paint','🎨',0],['Clay','🟤',2]),
+      route(4,'Remember brush cleanup.',prop('Wipe paint','🎨'),prop('Rinse brush','💧'),prop('Put away','🖌️')),
+      load(5,'Put tools in safe spots.',[['Closed tool tray','🧰'],['Drying rack','🗄️'],['Craft bin','🧺']],
+        ['Scissors','✂️',0],['Wet painting','🖼️',1],['Yarn','🧶',2])
     ],
     [
-      signal(0, 'Wait for the coach’s signal.', 'Go!', 'Start moving', '👟'),
-      move(3, 'Pass to someone left out.', 'Ball', '🏀', spot('New teammate', '🐥'), spot('Ball rack', '🧺')),
-      move(4, 'Put the ball back.', 'Ball', '🏀', spot('Ball rack', '🧺'), spot('Middle of court', '⭕'))
+      signals(0,'Follow the coach’s calls.',[['Move','👟'],['Stop','✋']],
+        ['Go!',0],['Stop!',1],['Go!',0],['Stop!',1]),
+      load(3,'Pass to everyone who hasn’t played.',[['Falcon · played','🐦'],['Duck · waiting','🦆'],['Owl · waiting','🦉']],
+        ['Basketball','🏀',[1,2]],['Soccer ball','⚽',[1,2]]),
+      load(4,'Return the equipment.',[['Ball rack','🧺'],['Cone stack','🚧'],['Rope hooks','🪝']],
+        ['Jump rope','🪢',2],['Basketball','🏀',0],['Cone','🔶',1])
     ],
     [
-      order(1, 'The bridge broke. Try again!', spot('Check the gap', '🔍'), spot('Fit a new piece', '🛠️')),
-      move(2, 'Share your idea with the team.', 'Idea', '💡', spot('Team table', '🐥'), spot('Toolbox', '🧰')),
-      move(4, 'Put the tool away.', 'Wrench', '🔧', spot('Toolbox', '🧰'), spot('Floor', '⬜'))
+      {mode:'track',category:1,cue:'Turn the tracks to fix the bridge.',spots:[],track:[
+        null, {ports:[1,2],turn:2}, {ports:[1,3],turn:1},
+        {ports:[1,3],turn:1}, {ports:[0,3],turn:1}, null
+      ]},
+      load(2,'Find a teammate for each job.',[['Builder','🔧'],['Designer','📐'],['Tester','🔍']],
+        ['Draw a track plan','🗺️',1],['Build the bridge','🌉',0],['Check the train fits','🚂',2]),
+      load(4,'Reset the workshop.',[['Toolbox','🧰'],['Parts bin','🧺'],['Plans folder','📁']],
+        ['Wrench','🔧',0],['Track pieces','🛤️',1],['Sketch','📐',2])
     ],
     [
-      order(0, 'Make a clip. Film, then play.', spot('Film scene', '🎥'), spot('Play clip', '▶️')),
-      move(1, 'Give a partner a turn.', 'Camera', '📷', spot('Partner', '🐥'), spot('My spot', '⭕')),
-      move(4, 'Save the clip in its folder.', 'Clip', '🎞️', spot('Project folder', '📁'), spot('Trash', '🗑️'))
+      route(0,'Remember the filming plan.',prop('Set the scene','🎭'),prop('Take pictures','📷'),prop('Play the clip','▶️')),
+      signals(1,'Share camera time.',[['Film','🎥'],['Hand over','🤝']],
+        ['Your turn',0],['Partner is ready',1],['Your turn again',0]),
+      load(4,'File the movie parts.',[['Pictures','🖼️'],['Sounds','🎵'],['Finished clips','🎞️']],
+        ['Photo','📷',0],['Train whistle audio','🔊',1],['Final movie','🎬',2])
     ],
     [
-      {...move(4, 'Send “wash hands” to its stop.', 'Wash hands', '🧼', spot('Bathroom', '🚰'), spot('Classroom', '🪑')), source:2},
-      {...move(0, 'Send “freeze at the whistle” to its stop.', 'Freeze', '✋', spot('Playground', '🛝'), spot('Library', '📚')), source:3},
-      {...move(2, 'Send “share ideas” to its stop.', 'Share ideas', '💡', spot('STEAM', '🛠️'), spot('Cafeteria', '🍽️')), source:9}
+      {...load(4,'Dispatch the school tickets.',[['Bathroom','🚰'],['Cafeteria','🍽️'],['Library','📚']],
+        ['Wash hands','🧼',0],['Stack a lunch tray','🍽️',1],['Shelve a book','📘',2]),source:2},
+      {...load(0,'Dispatch another train.',[['Playground','🛝'],['Classroom','🪑'],['Auditorium','🎭']],
+        ['Freeze at the whistle','✋',0],['Follow teacher directions','👂',1],['Listen to the performance','🎵',2]),source:3},
+      {...load(2,'Send the last three tickets.',[['STEAM','🛠️'],['PE','🏀'],['VAPA','🎨']],
+        ['Share a bridge idea','💡',0],['Cheer on a teammate','📣',1],['Encourage an artist','🖌️',2]),source:9}
     ]
   ];
   const games = scenes.map((rounds, i) => ({

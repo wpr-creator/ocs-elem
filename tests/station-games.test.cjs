@@ -15,11 +15,17 @@ test('every stop has three short playable scenes linked to exact FALCON matrix r
    assert.equal(scene.expectation,stops[scene.source??index].expectations[scene.category]);
    assert.ok(scene.cue.split(/\s+/).length<=10,scene.cue);
    if(scene.mode==='move'){
-    assert.equal(scene.spots.length,2);
-    assert.ok(scene.piece.label);
+    assert.ok(scene.spots.length>=2);
+    assert.ok(scene.cargo.length>=2);
+    for(const cargo of scene.cargo){
+     for(const destination of [cargo.to].flat()) assert.ok(scene.spots[destination]);
+    }
    }else if(scene.mode==='signal'){
-    assert.equal(scene.spots.length,1);
-    assert.ok(scene.ready);
+    assert.ok(scene.spots.length>=2);
+    assert.ok(scene.signals.length>=3);
+    for(const signal of scene.signals) assert.ok(scene.spots[signal.to]);
+   }else if(scene.mode==='track'){
+    assert.equal(scene.track.length,6);
    }else{
     assert.equal(scene.mode,'order');
     assert.ok(scene.spots.length>=2);

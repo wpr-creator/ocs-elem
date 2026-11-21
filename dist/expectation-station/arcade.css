@@ -174,3 +174,35 @@
 .menu-title { flex-wrap: wrap; justify-content: space-between; }
 .passport-total { color: #ffedbf; font-size: 14px; font-weight: 800; }
 .stop-nav { justify-content: flex-end; }
+
+.round-steps { display: flex; gap: 5px; padding: 5px 8px; border-radius: 6px; background: #26382f; }
+.round-steps span { width: 14px; height: 9px; border: 1px solid #ecd28e; border-radius: 2px; }
+.round-steps .filled { background: #ecd28e; }
+.play-waybill { width: min(100%, 540px); padding: 10px; border: 3px double #9e8149; border-radius: 6px; color: #25342b; background: #fff0c9; }
+.play-waybill ol { display: flex; justify-content: center; flex-wrap: wrap; gap: 7px 23px; margin: 0; padding-left: 19px; }
+.play-waybill li { padding: 3px; font-size: 14px; font-weight: 800; }
+.waybill-toggle { min-height: 44px; padding: 8px 12px; border: 2px solid #b29556; border-radius: 6px; background: #f2d790; color: #26382f; font: 800 14px 'DM Sans', sans-serif; cursor: pointer; }
+.loaded-tokens { max-width: 100%; overflow-wrap: anywhere; color: #f2d790; font-size: 14px; }
+.play-target.on-hit { animation: play-success .38s ease-out; }
+@media (prefers-reduced-motion: reduce) { .play-target.on-hit { animation: none; } }
+.round-steps.is-departing { animation: train-forward .85s ease-out; }
+@keyframes train-forward { 50% { transform: translateX(26px); } }
+.track-layout { position: relative; width: min(100%, 300px); padding: 18px 18px 21px; color: #fff0c9; background: #243d37; border-radius: 8px; }
+.track-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 2px; }
+.track-tile, .track-water { aspect-ratio: 1.3; min-height: 44px; border-radius: 4px; position: relative; }
+.track-tile { cursor: pointer; background: #41564b; border: 1px solid #b5ab82; padding: 0; }
+.track-tile.on-track { background: #287a55; }
+.track-water { display: grid; place-items: center; color: #d3eee8; background: #2e555d; }
+.track-arm { position: absolute; left: 50%; top: 50%; background: #f2d790; width: 44%; height: 10px; transform-origin: left center; margin-top: -5px; }
+.track-arm-0 { transform: rotate(-90deg); width: 35%; }
+.track-arm-1 { transform: rotate(0); }
+.track-arm-2 { transform: rotate(90deg); width: 35%; }
+.track-arm-3 { transform: rotate(180deg); }
+.track-depart,.track-arrive { position: absolute; font-size: 12px; font-weight: 800; }
+.track-depart { left: 6px; bottom: 4px; }
+.track-arrive { right: 6px; top: 1px; }
+@media (prefers-reduced-motion: reduce) { .round-steps.is-departing { animation: none; } }
+.round-steps { align-items: end; padding-block: 5px 8px; border-bottom: 3px double #cbb483; }
+.round-steps b { font-size: 18px; line-height: 1; }
+.round-steps span { position: relative; width: 22px; height: 17px; text-align: center; font-size: 12px; line-height: 15px; }
+.round-steps span::after { content: '••'; position: absolute; left: 2px; right: 2px; bottom: -8px; color: #e5c888; line-height: 10px; letter-spacing: 3px; }
