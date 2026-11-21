@@ -67,10 +67,67 @@ journey.addEventListener('cancel', event => {
   event.preventDefault();
   skipRide.click();
 });
-function stop(i){const s=stops[i];main.innerHTML=`<a class="back" href="#destinations">← School stops</a><section class="stop-hero"><div><span class="eyebrow">PLATFORM ${String(i+1).padStart(2,'0')} · THE FALCON WAY</span><h1 tabindex="-1">${s.name}</h1><div class="stop-actions"><a class="primary" href="#play/${i+1}">Play game</a><button class="secondary" id="read">Read aloud</button><button class="secondary" id="stop-reading" hidden>Stop reading</button></div></div>${scene(i,'scene stop-picture')}</section><section class="expectations" aria-label="FALCON expectations">${s.expectations.map((e,j)=>`<article class="expectation"><span class="letter" aria-hidden="true">${labels[j][0]}</span><div><h2>${labels[j]}</h2><p>${e}</p></div></article>`).join('')}</section><div class="stop-nav"><button class="primary" id="next">Next stop: ${stops[(i+1)%stops.length].name}</button></div>`;
- document.querySelector('#next').onclick=()=>board((i+1)%stops.length);
- const read=document.querySelector('#read'),cancel=document.querySelector('#stop-reading');if(!('speechSynthesis'in window)){read.hidden=true}else{read.onclick=()=>{speechSynthesis.cancel();stationNarrating=true;const u=new SpeechSynthesisUtterance(`${s.name}. I can show the FALCON way every day! ${s.expectations.map((e,j)=>`${labels[j]}. ${e}`).join(' ')}`);u.rate=.8;u.onend=u.onerror=()=>{stationNarrating=false;cancel.hidden=true;read.textContent='Read aloud'};speechSynthesis.speak(u);cancel.hidden=false;read.textContent='Read again'};cancel.onclick=()=>{speechSynthesis.cancel();stationNarrating=false;cancel.hidden=true;read.textContent='Read aloud'}}
+function stop(i) {
+  const school = stops[i];
+  const game = arcadeCatalog()[i];
+  const practiced = new Set(game.rounds.map(round => round.category));
+  const gameName = combinedGame(i)?.name || railwayStops[i].name;
+  const row = (expectation, category) => `<article class="behavior-row">
+    <span class="behavior-letter" aria-hidden="true">${labels[category][0]}</span>
+    <div><h3>${labels[category]}</h3><p>${escapeGame(expectation)}</p></div>
+  </article>`;
+  const behaviors = school.expectations.map(row);
+  main.innerHTML = `<a class="back" href="#destinations">← School stops</a>
+    <div class="behavior-header">
+      <div><span class="eyebrow">Platform ${String(i+1).padStart(2, '0')}</span>
+      <h1 tabindex="-1">${escapeGame(school.name)}</h1></div>
+      <button class="secondary" id="read">Read aloud</button>
+    </div>
+    <section class="behavior-ticket" aria-labelledby="practice-title">
+      <div class="behavior-ticket-content"><h2 id="practice-title">What you’ll practice</h2>
+        ${behaviors.filter((_, category) => practiced.has(category)).join('')}
+        <a class="primary" href="#play/${i+1}">Play ${escapeGame(gameName)} <span aria-hidden="true">→</span></a>
+      </div>
+      ${scene(i, 'scene behavior-picture')}
+    </section>
+    <section class="behavior-more" aria-labelledby="more-title">
+      <h2 id="more-title">More ways to show FALCON</h2>
+      <div class="behavior-grid">${behaviors.filter((_, category) => !practiced.has(category)).join('')}</div>
+    </section>
+    <div class="stop-nav"><button class="secondary" id="next">Next stop: ${escapeGame(stops[(i+1)%stops.length].name)}</button></div>`;
+
+  document.querySelector('#next').onclick = () => board((i+1)%stops.length);
+  const read = document.querySelector('#read');
+  if (!('speechSynthesis' in window)) {
+    read.hidden = true;
+    return;
+  }
+  let narration;
+  const reset = () => {
+    narration = null;
+    stationNarrating = false;
+    read.textContent = 'Read aloud';
+  };
+  read.onclick = () => {
+    if (narration) {
+      speechSynthesis.cancel();
+      reset();
+      return;
+    }
+    const categories = labels.map((_, j) => j);
+    const order = [...practiced].sort((a, b) => a-b).concat(categories.filter(j => !practiced.has(j)));
+    narration = new SpeechSynthesisUtterance(`${school.name}. ${order.map(j => `${labels[j]}. ${school.expectations[j]}`).join(' ')}`);
+    narration.rate = .8;
+    const current = narration;
+    current.onend = current.onerror = () => {
+      if (narration === current && read.isConnected) reset();
+    };
+    stationNarrating = true;
+    read.textContent = 'Stop reading';
+    speechSynthesis.speak(current);
+  };
 }
+
 function focusHeading(selector, scroll = false) {
   const heading = main.querySelector(selector);
   heading.tabIndex = -1;

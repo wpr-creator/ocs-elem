@@ -88,3 +88,47 @@ h1,h2,h3{font-family:'Terminal Roman',Georgia,serif;font-weight:400;letter-spaci
   .station-platform .station-lights { display: none; }
   .timetable-labels, .timetable-row { grid-template-columns: 67px minmax(0,1fr) auto; gap: 9px; padding-inline: 5px; }
 }
+
+/* Put the school behavior and its practice game on the same ticket. */
+.behavior-header {
+  display: flex; justify-content: space-between; align-items: end; gap: 12px;
+  margin: 10px 0 14px;
+}
+.behavior-header .eyebrow { color: #554522; }
+.behavior-header h1 { margin: 3px 0 0; color: #293e33; font-size: clamp(25px,4vw,47px); line-height: 1.12; }
+.behavior-header button { flex: none; min-height: 44px; }
+.behavior-ticket {
+  position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center;
+  gap: 14px; padding: clamp(14px,2.6vw,28px);
+  background: #f6edd6; border: 5px double #9b814b; border-radius: 10px; box-shadow: 0 4px 0 #c7b591;
+}
+.behavior-ticket h2,.behavior-more h2 {
+  margin: 0 0 9px; font: 400 clamp(20px,3vw,29px)/1.2 'Terminal Roman', Georgia, serif;
+  color: #293e33; text-transform: none;
+}
+.behavior-picture {
+  width: clamp(74px,12vw,136px); aspect-ratio: 1; height: auto; background-position: center; background-size: cover;
+  border: 4px double #a58b54; border-radius: 48% 48% 4px 4px;
+}
+.behavior-ticket a { margin-top: 11px; min-height: 44px; }
+.behavior-row {
+  display: flex; align-items: start; gap: 10px; padding: 8px 0; min-width: 0;
+}
+.behavior-row h3 {
+  margin: 0 0 2px; color: #554522; font: 800 12px/1.3 'DM Sans', sans-serif; letter-spacing: 1px;
+}
+.behavior-row p { margin: 0; color: #29382e; font-size: clamp(16px,2vw,21px); line-height: 1.35; }
+.behavior-letter {
+  flex: none; width: 32px; height: 34px; display: grid; place-items: center;
+  color: #f9e5b3; background: #344738; border: 3px double #bc9d60; border-radius: 3px;
+  font: 400 19px/1 'Terminal Roman', Georgia, serif;
+}
+.behavior-more { margin: 20px 0; }
+.behavior-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 20px; }
+.behavior-grid .behavior-row { border-top: 1px solid #b8a47c; }
+@media(max-width: 580px) {
+  .behavior-header { flex-wrap: wrap; align-items: center; }
+  .behavior-ticket { display: block; }
+  .behavior-picture { display: none; }
+  .behavior-grid { grid-template-columns: 1fr; }
+}
