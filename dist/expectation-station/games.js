@@ -1,63 +1,73 @@
 'use strict';
-const passportStamps=new Set();
-try{const saved=JSON.parse(localStorage.getItem('falcon_station_passport_v1')||'[]');if(Array.isArray(saved))saved.filter(id=>typeof id==='string').forEach(id=>passportStamps.add(id))}catch{}
-const gameColors=['#3f789a','#ac7436','#608556','#a56383','#8775ad','#b15c43'];
-function escapeGame(text){return String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function shuffleGame(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function gameCatalog(){return FalconGames.buildGames(stops)}
-function earnStamp(id){passportStamps.add(id);try{localStorage.setItem('falcon_station_passport_v1',JSON.stringify([...passportStamps]))}catch{}}
-function passportCount(){const {games,match}=gameCatalog();return [...games,match].filter(g=>passportStamps.has(g.id)).length}
-function gameHomeMarkup(){return `<section class="game-invitation"><div class="game-invite-icon" aria-hidden="true">🎟️</div><div><span class="eyebrow">YOUR FALCON GAME PASSPORT</span><h2>Station games</h2><p>Play a game at each stop to collect stamps.</p><p class="passport-count">${passportCount()} of 12 stamps collected</p></div><a class="primary" href="#game/stations">Play Station Dispatcher</a></section>`}
-function gameStopMarkup(i){const game=gameCatalog().games[i];return `<section class="station-game" id="game-zone" aria-label="${game.title}"></section>`}
-function mountStationGame(i){const root=document.querySelector('#game-zone');if(root)new RailwayGame(root,gameCatalog().games[i],i).intro()}
-function showStationMatch(){clearInterval(timer);main.innerHTML='<button class="back" id="match-back">Back to the station</button><section class="station-game" id="game-zone"></section>';document.querySelector('#match-back').onclick=()=>location.hash='destinations';new RailwayGame(document.querySelector('#game-zone'),gameCatalog().match,-1).intro();window.scrollTo(0,0)}
-class StationGame{
- constructor(root,config,index){this.root=root;this.config=config;this.index=index;this.round=0;this.matched=new Set();this.selected=null;this.team=new Set();this.feedback='';this.success=false;this.cue=false;this.order=[];this.options=[];this.rightOrder=[];this.leftOrder=[];this.begun=false;this.flipped=[];this.memoryBusy=false;this.memoryTimer=null;this.bubblePopped=new Set()}
- total(){return this.config.rounds?.length||this.config.items.length}
- heading(){return `<div class="game-topline"><span class="eyebrow">${this.index<0?'ALL-STATION CHALLENGE':'PLAY AT THIS STOP'}</span><span class="game-stamp-small">${passportStamps.has(this.config.id)?'✦ Stamp earned':'Collect a passport stamp'}</span></div><h2 class="game-title"><span aria-hidden="true">${this.config.icon}</span> ${this.config.title}</h2>`}
- intro(){this.root.innerHTML=this.heading()+`<p class="game-intro">${escapeGame(this.config.intro)}</p><div class="game-start-row"><button class="primary game-start">${passportStamps.has(this.config.id)?'Play again':'Let’s play!'}</button></div>`;this.root.querySelector('.game-start').onclick=()=>this.start()}
- start(){clearTimeout(this.memoryTimer);this.flipped=[];this.memoryBusy=false;this.bubblePopped.clear();this.deck=shuffleGame(Array.from({length:12},(_,i)=>({pair:i%6,word:i<6})));this.begun=true;this.round=0;this.matched.clear();this.selected=null;this.success=false;this.feedback='';this.cue=false;this.order=shuffleGame(this.config.items?.map((_,i)=>i)||[]);this.leftOrder=shuffleGame([0,1,2,3,4,5]);this.rightOrder=shuffleGame([0,1,2,3,4,5]);this.prepare();this.draw();this.focusPrompt()}
- prepare(){this.bubblePopped.clear();if(this.config.type==='bubbles'){const category=labels[this.round],unique=[...new Map(this.config.pool.map(x=>[x.text,x])).values()];this.bubbleOptions=shuffleGame([...shuffleGame(unique.filter(x=>x.answer===category)).slice(0,3),...shuffleGame(unique.filter(x=>x.answer!==category)).slice(0,3)])}this.team.clear();this.options=shuffleGame(this.config.rounds?.[this.round]?.options||[])}
- progress(){const count=this.config.type==='pairs'?this.matched.size:this.round+(this.success?1:0);return `<div class="game-progress"><span>${this.config.type==='pairs'?'Pairs matched':'Challenges completed'}: ${count} of ${this.total()}</span><progress value="${count}" max="${this.total()}" aria-label="Game progress"></progress></div>`}
- art(){const n=this.round+(this.success?1:0);switch(this.config.type){case'line':return `<div class="line-game-art" aria-hidden="true">🚂 ${Array.from({length:3},(_,i)=>`<span class="${i<n?'arrived':''}">🐦</span>`).join('')}</div>`;case'bridge':return `<div class="bridge-art" aria-hidden="true"><span>🏝️</span>${[0,1,2].map(i=>`<i class="${i<n?'built':''}"></i>`).join('')}<span>🏫</span></div>`;case'palette':return `<div class="palette-art" aria-label="${n} of 6 colors painted">${gameColors.map((c,i)=>`<span style="--paint:${c}" class="${i<n?'painted':''}" aria-hidden="true">${'FALCON'[i]}</span>`).join('')}</div>`;case'sequence':return `<div class="filmstrip" aria-label="FALCON storyboard frames">${[... 'FALCON'].map((c,i)=>`<span class="${i<n?'filled':''}">${c}<small>${i<n?'✓':'·'}</small></span>`).join('')}</div>`;case'spotlight':return `<div class="audience-stage ${this.cue?'lit':''}" aria-hidden="true">🎭 <span>${['🎤','👏','👋'][this.round]}</span> 🎭</div>`;case'whistle':return `<div class="whistle-art" aria-hidden="true">${this.cue?'🏁':'🛝'} <span>${this.cue?'FREEZE & THINK':'READY TO PLAY'}</span></div>`;default:return''}}
- feedbackMarkup(){return `<p class="game-feedback ${this.success?'game-correct':''}" role="status" aria-live="polite" aria-atomic="true">${escapeGame(this.feedback)}</p>`}
- controls(){return `<div class="game-tools"><button class="secondary game-listen">Read game aloud</button><button class="game-reset">Start over</button></div>`}
- draw(){if(this.config.type==='bubbles'){this.drawBubbles();return}if(this.config.type==='pairs'){this.drawPairs();return}const c=this.config;let prompt='',answers='';const disabled=this.success?'disabled':'';
- if(c.rounds){const r=c.rounds[this.round];prompt=r.prompt;
- if((c.type==='whistle'||c.type==='spotlight')&&!this.cue){answers=`<button class="primary game-cue">${c.type==='whistle'?'Blow the whistle':'Light the stage'}</button>`}
- else if(c.type==='destinations'){answers=`<div class="game-station-choices">${this.options.map(i=>`<button class="game-answer destination-answer" data-answer="${i}" ${disabled}>${scene(i)}<span>${escapeGame(stops[i].name)}</span></button>`).join('')}</div>`}
- else{answers=`<div class="game-answer-list ${c.type==='team'?'team-answers':''}">${this.options.map((text,i)=>`<button class="game-answer ${this.team.has(text)?'chosen':''}" data-answer="${i}" ${c.type==='team'?`aria-pressed="${this.team.has(text)}"`:''} ${disabled}>${c.type==='team'?'<span class="team-check" aria-hidden="true">'+(this.team.has(text)?'✓':'○')+'</span>':''}${escapeGame(text)}</button>`).join('')}</div>`;if(c.type==='team'&&!this.success)answers+=`<button class="primary game-check" ${this.team.size!==2?'disabled':''}>Check answers (${this.team.size}/2)</button>`}
- }else{const item=c.items[this.order[this.round]];
- if(c.type==='sequence'){const target=c.items[this.round];prompt=`Frame ${this.round+1}: ${target.answer}. Which expectation belongs here?`;answers=`<div class="game-answer-list">${this.order.filter(i=>!this.matched.has(i)).map(i=>`<button class="game-answer" data-frame="${i}" ${disabled}>${escapeGame(c.items[i].text)}</button>`).join('')}</div>`}
- else{prompt=item.text;
- if(c.type==='sort-station'){answers=`<div class="lunch-trays"><button class="game-answer" data-tray="yes" ${disabled}><span aria-hidden="true">🍽️</span> CAFETERIA & LUNCH COURT</button><button class="game-answer" data-tray="no" ${disabled}><span aria-hidden="true">🚉</span> Another station</button></div>`}
- else{answers=`<div class="badge-choices ${c.type==='palette'?'paint-choices':''}">${labels.map((v,j)=>`<button class="game-answer badge-answer" data-badge="${j}" style="--paint:${gameColors[j]}" ${disabled}><span aria-hidden="true">${v[0]}</span>${v}</button>`).join('')}</div>`}}
- }
- this.root.innerHTML=this.heading()+this.progress()+this.art()+`<h3 class="game-prompt" tabindex="-1">${escapeGame(prompt)}</h3>${c.type==='destinations'?'<p class="game-hint">Which station does this expectation come from?</p>':''}${c.type==='team'?'<p class="game-hint">Choose two sentences.</p>':''}${answers}${this.feedbackMarkup()}${this.success?`<button class="primary game-next">${this.round+1===this.total()?'Collect my stamp':'Next question'}</button>`:''}${this.controls()}`;
- this.bindTools(prompt);this.root.querySelector('.game-cue')?.addEventListener('click',()=>{this.cue=true;if(c.type==='whistle')whistle();else stationBell();this.draw();this.focusPrompt()});
- this.root.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{const value=c.type==='destinations'?+b.dataset.answer:this.options[+b.dataset.answer];if(c.type==='team'){this.team.has(value)?this.team.delete(value):this.team.size<2&&this.team.add(value);this.feedback='';this.draw();this.root.querySelector(`[data-answer="${b.dataset.answer}"]`)?.focus()}else this.check(value===c.rounds[this.round].answer)});
- this.root.querySelector('.game-check')?.addEventListener('click',()=>this.check(c.rounds[this.round].answers.every(a=>this.team.has(a))&&this.team.size===2));
- this.root.querySelectorAll('[data-badge]').forEach(b=>b.onclick=()=>this.check(labels[+b.dataset.badge]===c.items[this.order[this.round]].answer));
- this.root.querySelectorAll('[data-tray]').forEach(b=>b.onclick=()=>{const item=c.items[this.order[this.round]];const correct=(b.dataset.tray==='yes')===item.answer;this.check(correct,correct&&!item.answer?`This sentence comes from ${item.station}.`:'')});
- this.root.querySelectorAll('[data-frame]').forEach(b=>b.onclick=()=>{const selected=+b.dataset.frame;if(selected===this.round){this.matched.add(selected);this.check(true)}else this.check(false)});
- this.root.querySelector('.game-next')?.addEventListener('click',()=>{this.round++;if(this.round===this.total()){this.complete();return}this.success=false;this.feedback='';this.cue=false;this.prepare();this.draw();this.focusPrompt()});
- }
- check(correct,extra=''){if(this.success)return;this.success=correct;this.feedback=correct?`Correct! ${extra}`:(this.index<0?'Try another station.':'Try again. You can read the expectations below for help.');if(correct){stationBell();this.draw();this.root.querySelector('.game-next')?.focus()}else{const el=this.root.querySelector('.game-feedback');el.textContent=this.feedback;el.classList.remove('game-correct')}}
- drawPairs(){const c=this.config;
- this.root.innerHTML=this.heading()+this.progress()+`<h3 class="game-prompt" tabindex="-1">Find the lost ticket pairs.</h3><p class="game-hint">Match a FALCON word ticket with its library expectation ticket. Turn over two tickets.</p><div class="memory-grid">${this.deck.map((card,i)=>{const won=this.matched.has(card.pair),open=won||this.flipped.includes(i),text=card.word?c.items[card.pair].answer:c.items[card.pair].text;return `<button class="memory-card ${open?'is-open':''} ${won?'is-won':''}" data-memory="${i}" aria-label="${open?escapeGame(text):'Face-down ticket '+(i+1)}" ${won?'disabled':''}><span class="memory-back" aria-hidden="true">✦<small>FALCON RAILWAY</small><small>LOST &amp; FOUND</small></span><span class="memory-front" aria-hidden="true">${escapeGame(text)}${won?'<b>✓</b>':''}</span></button>`}).join('')}</div>${this.feedbackMarkup()}${this.matched.size===6?'<button class="primary memory-collect">Collect my stamp</button>':''}${this.controls()}`;
- this.bindTools('Find the lost ticket pairs. Match a FALCON word with its expectation.');
- this.root.querySelectorAll('[data-memory]').forEach(b=>b.onclick=()=>this.flipMemory(+b.dataset.memory));
- this.root.querySelector('.memory-collect')?.addEventListener('click',()=>this.complete());
- }
- flipMemory(i){if(this.memoryBusy||this.flipped.includes(i)||this.matched.has(this.deck[i].pair))return;
- this.flipped.push(i);this.feedback='';if(this.flipped.length===2){const [a,b]=this.flipped.map(n=>this.deck[n]);if(a.pair===b.pair){this.matched.add(a.pair);this.flipped=[];this.feedback=this.matched.size===6?'You found every pair!':'A match! These two cards are yours.';stationBell()}else{this.memoryBusy=true;this.feedback='Not a pair. Take another look.';this.memoryTimer=setTimeout(()=>{if(!this.root.isConnected)return;this.flipped=[];this.memoryBusy=false;this.feedback='Try two more cards.';this.drawPairs();this.root.querySelector(`[data-memory="${i}"]`)?.focus({preventScroll:true})},1800)}}this.drawPairs();this.root.querySelector(this.matched.size===6?'.memory-collect':this.matched.has(this.deck[i].pair)?'.memory-card:not(:disabled)':`[data-memory="${i}"]`)?.focus({preventScroll:true});
- }
- drawBubbles(){const category=labels[this.round],count=this.bubbleOptions.filter((x,i)=>x.answer===category&&this.bubblePopped.has(i)).length;
- this.root.innerHTML=this.heading()+this.progress()+`<h3 class="game-prompt" tabindex="-1">Pop the ${category} steam clouds!</h3><p class="game-hint">Find all 3. Let the other clouds float.</p><p class="bubble-count">${count} of 3 found</p><div class="steam-yard"><div class="bubble-field">${this.bubbleOptions.map((item,i)=>`<button class="expectation-bubble bubble-${i%3} ${this.bubblePopped.has(i)?'popped':''}" data-bubble="${i}" style="--bob-delay:-${i*.7}s" ${this.bubblePopped.has(i)?'disabled aria-label="Popped expectation"':''}>${this.bubblePopped.has(i)?'<span aria-hidden="true">✦</span>':escapeGame(item.text)}</button>`).join('')}</div><div class="steam-engine-scene" aria-hidden="true"><div class="engine-smoke"><i></i><i></i><i></i></div><div class="steam-engine"><span class="engine-stack"></span><span class="engine-boiler">FALCON EXPRESS</span><span class="engine-cab">✦</span><span class="engine-wheels">● ● ●</span></div><div class="engine-rails"></div></div></div>${this.feedbackMarkup()}${this.success?`<button class="primary bubble-next">${this.round===5?'Collect my stamp':'Next category'}</button>`:''}${this.controls()}`;
- this.bindTools('Pop the '+category+' expectations. Find all three.');this.root.querySelectorAll('[data-bubble]').forEach(b=>b.onclick=()=>{if(this.success)return;const i=+b.dataset.bubble;if(this.bubbleOptions[i].answer===category){this.bubblePopped.add(i);this.success=this.bubblePopped.size===3;this.feedback=this.success?'You popped all three!':'Pop! Keep looking.';stationBell();this.drawBubbles();this.root.querySelector(this.success?'.bubble-next':'.expectation-bubble:not(:disabled)')?.focus({preventScroll:true})}else{b.classList.remove('bubble-wobble');void b.offsetWidth;b.classList.add('bubble-wobble');this.root.querySelector('.game-feedback').textContent='That one belongs to '+this.bubbleOptions[i].answer+'. Keep it floating.'}});
- this.root.querySelector('.bubble-next')?.addEventListener('click',()=>{this.round++;if(this.round===6){this.complete();return}this.success=false;this.feedback='';this.prepare();this.drawBubbles();this.focusPrompt()});
- }
- bindTools(prompt){this.root.querySelector('.game-reset').onclick=()=>{window.speechSynthesis?.cancel();stationNarrating=false;this.start()};const listen=this.root.querySelector('.game-listen');if(!('speechSynthesis'in window)){listen.hidden=true;return}listen.onclick=()=>{speechSynthesis.cancel();const texts=this.root.querySelectorAll('.game-answer:not(:disabled),.memory-card.is-open:not(:disabled),.expectation-bubble:not(:disabled),.paint-tin,[data-slot]:not(:disabled),.carriage-window p');const u=new SpeechSynthesisUtterance(prompt+'. '+Array.from(texts,b=>b.getAttribute('aria-label')||b.textContent).join('. '));u.rate=.8;stationNarrating=true;u.onend=u.onerror=()=>{stationNarrating=false};speechSynthesis.speak(u)}}
- focusPrompt(){this.root.querySelector('.game-prompt')?.focus({preventScroll:true})}
- complete(){earnStamp(this.config.id);stationBell();this.root.innerHTML=this.heading()+`<div class="game-finish"><div class="big-stamp" aria-hidden="true">✦</div><span class="eyebrow">PASSPORT STAMP EARNED</span><h3 tabindex="-1">You earned a stamp!</h3><p>${escapeGame(this.config.title)} complete. Your passport has ${passportCount()} of 12 stamps.</p><p>You can play again or visit another station.</p><div class="finish-actions"><button class="primary game-replay">Play again</button><a class="secondary" href="#destinations">Choose another station</a>${this.index<0?'':'<a class="secondary" href="#game/stations">Try Station Dispatcher</a>'}</div></div>`;this.root.querySelector('.game-replay').onclick=()=>this.start();this.root.querySelector('h3').focus({preventScroll:true})}
+
+const passportStamps = new Set();
+const stampKey = 'falcon_station_passport_v1';
+try {
+  const saved = JSON.parse(localStorage.getItem(stampKey) || '[]');
+  if (Array.isArray(saved)) saved.forEach(id => passportStamps.add(id));
+} catch {}
+
+const gameIcons = ['🎟️', '🚃', '🫧', '🚦', '🧳', '🔔', '📚', '🎨', '🚂', '🛠️', '🎬', '🗺️'];
+const gameNames = ['Punch a Ticket', 'Load the Train', 'Pop the Clouds', 'Stop the Train', 'Sort the Suitcases', 'Ring the Bell', 'Find Ticket Pairs', 'Paint the Mural', 'Build Team Tracks', 'Fix the Bridge', 'Make a Movie', 'Station Dispatcher'];
+
+function escapeGame(text) {
+  return String(text).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+}
+
+function shuffleGame(items) {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function arcadeCatalog() {
+  const {games, match} = FalconGames.buildGames(stops);
+  return [...games, match];
+}
+
+function earnStamp(id) {
+  passportStamps.add(id);
+  try { localStorage.setItem(stampKey, JSON.stringify([...passportStamps])); } catch {}
+}
+
+function passportCount() {
+  return arcadeCatalog().filter(game => passportStamps.has(game.id)).length;
+}
+
+function gameHomeMarkup() {
+  return `<section class="arcade-callout" aria-labelledby="arcade-callout-title">
+    <span aria-hidden="true">🎮</span>
+    <div><h2 id="arcade-callout-title">Station Games</h2><p>Play and collect passport stamps.</p></div>
+    <a class="arcade-button" href="#games">Pick a game <span aria-hidden="true">→</span></a>
+  </section>`;
+}
+
+function arcadeArt(index) {
+  return `assets/games/${sceneAssets[index] || 'dispatcher'}.webp`;
+}
+
+function showGameMenu() {
+  main.innerHTML = `<section class="arcade arcade-menu">
+    <div class="arcade-nav"><a href="#">← Station home</a><span>⭐ ${passportCount()} of 12 stamps</span></div>
+    <h1>Station Games</h1>
+    <div class="arcade-grid">${arcadeCatalog().map((game, i) => `
+      <a class="arcade-card" href="${i === 11 ? '#game/stations' : '#play/' + (i + 1)}">
+        <span class="arcade-card-art" aria-hidden="true" style="--scene:url('${arcadeArt(i)}')"></span>
+        <strong>${gameNames[i]}</strong>
+        <span>${escapeGame(stops[i]?.name || 'All stations')}${passportStamps.has(game.id) ? ' · ⭐ Stamp earned' : ''}</span>
+      </a>`).join('')}</div>
+  </section>`;
+}
+
+function showArcadeGame(index) {
+  const game = arcadeCatalog()[index];
+  main.innerHTML = `<section class="arcade arcade-play" data-game="${game.type}">
+    <div class="arcade-nav"><a href="#games">← All games</a>${index < stops.length ? `<a href="#stop/${index + 1}">Read expectations</a>` : ''}</div>
+    <h1><span aria-hidden="true">${gameIcons[index]}</span> ${gameNames[index]}</h1>
+    <div class="arcade-stage" id="game-zone"></div>
+  </section>`;
+  new RailwayGame(main.querySelector('#game-zone'), game, index).start();
 }

@@ -1,27 +1,224 @@
 'use strict';
-// Shared placement works with drag-and-drop, taps, or keyboard buttons.
-class RailwayGame extends StationGame {
- start(){clearTimeout(this.signalTimer);this.departing=false;this.placed=new Set();this.queueOrder=null;this.pick=null;this.phase='ready';super.start()}
- prepare(){super.prepare();clearTimeout(this.signalTimer);this.pick=null;this.phase='ready';this.revealed=new Set();this.routeOrder=shuffleGame(stops.map((_,i)=>i))}
- redraw(focus){this.draw();if(focus)this.root.querySelector(focus)?.focus({preventScroll:true})}
- shell(prompt,body,done=false){this.prompt=prompt;this.root.innerHTML=this.heading()+this.progress()+`<div class="rail-game-board"><div class="rail-board-label">FALCON RAILWAY · ${escapeGame(this.config.title)}</div><h3 class="game-prompt" tabindex="-1">${escapeGame(prompt)}</h3>${body}</div>${this.feedbackMarkup()}${done?`<button class="primary rail-next">${this.round+1===this.total()?'Collect my stamp':'Continue'}</button>`:''}${this.controls()}`;this.bindTools(prompt);this.root.querySelector('.rail-next')?.addEventListener('click',()=>this.advance())}
- advance(){this.round++;if(this.round===this.total()){this.complete();return}this.success=false;this.feedback='';this.prepare();this.redraw('.game-prompt')}
- say(text){this.feedback=text;const el=this.root.querySelector('.game-feedback');if(el)el.textContent=text}
- win(text){this.success=true;this.feedback=text;stationBell();this.redraw('.rail-next')}
- piece(id,text,extra=''){return `<button class="game-answer rail-piece ${this.pick===id?'chosen':''}" data-piece="${id}" draggable="true" aria-pressed="${this.pick===id}" ${this.success?'disabled':''}>${extra}${escapeGame(text)}</button>`}
- bindPlacement(place){this.root.querySelectorAll('[data-piece]').forEach(b=>{b.onclick=()=>{if(this.success)return;this.pick=+b.dataset.piece;this.redraw(`[data-piece="${this.pick}"]`)};b.ondragstart=e=>{if(this.success){e.preventDefault();return}this.pick=+b.dataset.piece;e.dataTransfer.setData('text/plain',String(this.pick));e.dataTransfer.effectAllowed='move';this.root.classList.add('rail-dragging')};b.ondragend=()=>this.root.classList.remove('rail-dragging')});this.root.querySelectorAll('[data-slot]').forEach(b=>{const drop=()=>{if(this.success||b.disabled)return;if(this.pick===null){this.say('Choose a ticket or piece first.');return}place(this.pick,b.dataset.slot)};b.onclick=drop;b.ondragover=e=>{if(!this.success){e.preventDefault();e.dataTransfer.dropEffect='move'}};b.ondrop=e=>{e.preventDefault();this.root.classList.remove('rail-dragging');drop()}})}
- draw(){switch(this.config.type){case'quiz':this.ticket();break;case'line':this.lineup();break;case'sort-station':this.luggage();break;case'whistle':this.signal();break;case'spotlight':this.windows();break;case'palette':this.mural();break;case'team':this.switchyard();break;case'bridge':this.track();break;case'sequence':this.storyboard();break;case'destinations':this.dispatch();break;default:super.draw()}}
- ticket(){const r=this.config.rounds[this.round];this.shell(r.prompt,`<p class="game-hint">Choose a ticket. Then punch it in the conductor’s machine.</p><div class="rail-tickets">${this.options.map((t,i)=>this.piece(i,t,'<span class="ticket-edge" aria-hidden="true">FALCON EXPRESS</span>')).join('')}</div><button class="ticket-punch ${this.success?'punched':''}" data-slot="punch" ${this.success?'disabled':''}><span aria-hidden="true">${this.success?'✦':'◉'}</span>${this.success?'TICKET PUNCHED':'PUNCH MY TICKET'}<small>${this.pick===null?'Choose your ticket above':escapeGame(this.options[this.pick])}</small></button>`,this.success);this.bindPlacement(i=>{if(this.options[i]===r.answer)this.win('Ticket punched. All aboard!');else this.say('That ticket does not fit this situation. Choose another.')})}
- lineup(){const prompts=this.config.rounds;if(!this.queueOrder)this.queueOrder=shuffleGame([0,1,2]);const placed=this.placed;this.round=placed.size;this.shell('Help the Falcons board in the right order.',`<p class="game-hint">Choose a ticket, then its matching car. You can also drag tickets.</p><div class="rail-lineup"><span class="rail-small-engine" aria-hidden="true">FALCON<br>EXPRESS</span>${prompts.map((r,i)=>`<button class="rail-car ${placed.has(i)?'loaded':''}" data-slot="${i}" ${placed.has(i)?'disabled':''}><b>CAR ${i+1}</b><span>${placed.has(i)?escapeGame(r.answer):escapeGame(r.prompt)}</span><i aria-hidden="true">●&nbsp;&nbsp;●</i></button>`).join('')}</div><div class="rail-tickets">${this.queueOrder.filter(i=>!placed.has(i)).map(i=>this.piece(i,prompts[i].answer)).join('')}</div>${placed.size===3?'<button class="primary rail-depart">Send the train!</button>':''}`);this.bindPlacement((i,slot)=>{if(i===+slot){placed.add(i);this.pick=null;stationBell();this.feedback='Car loaded!';this.redraw(placed.size===3?'.rail-depart':'.rail-piece')}else this.say('Try another car. Read its clue.')});this.root.querySelector('.rail-depart')?.addEventListener('click',()=>this.depart())}
- depart(){if(this.departing)return;this.departing=true;this.root.querySelector('.rail-game-board')?.classList.add('departing');const button=this.root.querySelector('.rail-depart');if(button)button.disabled=true;whistle();this.signalTimer=setTimeout(()=>{if(this.root.isConnected)this.complete()},900)}
- luggage(){const item=this.config.items[this.order[this.round]];this.shell('Load the luggage onto the right cart.',`<p class="game-hint">Choose the suitcase, then load it onto the lunch cart or the other-stations cart.</p><div class="luggage-belt">${this.success?'<div class="luggage-loaded">✓ LUGGAGE LOADED</div>':this.piece(0,item.text,'<span class="suitcase-handle" aria-hidden="true"></span>')}</div><div class="rail-carts">${['CAFETERIA & LUNCH COURT','OTHER STATIONS'].map((s,i)=>`<button class="rail-cart" data-slot="${i}" ${this.success?'disabled':''}><span aria-hidden="true">▥</span><b>${s}</b><i aria-hidden="true">●&nbsp;&nbsp;&nbsp;●</i></button>`).join('')}</div>`,this.success);this.bindPlacement((_,slot)=>{if((+slot===0)===item.answer)this.win(item.answer?'Lunch luggage loaded!':`Loaded for ${item.station}.`);else this.say('Check the expectation and try the other cart.')})}
- signal(){const r=this.config.rounds[this.round],phase=this.phase;this.shell(phase==='ready'?'Send the train. Watch for the red signal.':phase==='moving'?'The train is moving. Watch the signal.':phase==='stop'?'RED SIGNAL! Stop the train.':r.prompt,`<div class="signal-yard ${phase==='moving'?'train-moving':''}"><div class="rail-signal" aria-label="${phase==='stop'||phase==='frozen'?'Red signal':phase==='moving'?'Green signal':'Signal off'}"><i class="${phase==='stop'||phase==='frozen'?'red-on':''}"></i><i class="${phase==='moving'?'green-on':''}"></i></div><div class="signal-train" aria-hidden="true">FALCON EXPRESS <span>●&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;●</span></div></div>${phase==='ready'?'<button class="primary signal-go">Send the train</button>':phase==='moving'||phase==='stop'?'<button class="primary signal-stop">Stop the train</button>':`<p class="game-hint">Signal obeyed! Choose the expectation for the playground.</p><div class="game-answer-list">${this.options.map((t,i)=>`<button class="game-answer" data-signal-answer="${i}" ${this.success?'disabled':''}>${escapeGame(t)}</button>`).join('')}</div>`}`,this.success);
- this.root.querySelector('.signal-go')?.addEventListener('click',()=>{this.phase='moving';this.redraw('.signal-stop');this.signalTimer=setTimeout(()=>{if(!this.root.isConnected||this.phase!=='moving')return;this.phase='stop';whistle();this.redraw('.signal-stop')},1800)});this.root.querySelector('.signal-stop')?.addEventListener('click',()=>{if(this.phase==='moving'){this.say('The signal is still green. Wait for red.');return}this.phase='frozen';stationBell();this.redraw('.game-prompt')});this.root.querySelectorAll('[data-signal-answer]').forEach(b=>b.onclick=()=>{if(this.success)return;if(this.options[+b.dataset.signalAnswer]===r.answer)this.win('Safe stop!');else this.say('Try another expectation.')})}
- windows(){const r=this.config.rounds[this.round];this.shell(r.prompt,`<p class="game-hint">Open the carriage windows. Find the matching expectation, then ring its bell.</p><div class="carriage-windows">${this.options.map((t,i)=>`<div class="carriage-window ${this.revealed.has(i)?'window-open':''}">${this.revealed.has(i)?`<p>${escapeGame(t)}</p><button class="secondary" data-ring="${i}" ${this.success?'disabled':''}>Ring this bell</button>`:`<button class="window-shutter" data-window="${i}"><span aria-hidden="true">✦</span>Open window ${i+1}</button>`}</div>`).join('')}</div>`,this.success);this.root.querySelectorAll('[data-window]').forEach(b=>b.onclick=()=>{this.revealed.add(+b.dataset.window);boardClack();this.redraw(`[data-ring="${b.dataset.window}"]`)});this.root.querySelectorAll('[data-ring]').forEach(b=>b.onclick=()=>{if(this.options[+b.dataset.ring]===r.answer)this.win('The arrival bell is ringing!');else this.say('Open another window and try its expectation.')})}
- mural(){const c=this.config;this.round=this.placed.size;this.shell('Restore the Falcon Express mural.',`<p class="game-hint">Choose a FALCON paint tin. Then paint the matching expectation panel.</p><div class="rail-paints">${labels.map((s,i)=>`<button class="paint-tin ${this.pick===i?'chosen':''}" data-piece="${i}" draggable="true" aria-pressed="${this.pick===i}" style="--paint:${gameColors[i]}"><b>${s[0]}</b>${s}</button>`).join('')}</div><div class="rail-mural">${scene(7,'rail-mural-art')}<div class="mural-panels">${this.order.map(i=>`<button data-slot="${i}" class="mural-panel ${this.placed.has(i)?'restored':''}" ${this.placed.has(i)?'disabled':''}><span>${this.placed.has(i)?'✓ '+c.items[i].answer:escapeGame(c.items[i].text)}</span></button>`).join('')}</div></div>${this.placed.size===6?'<button class="primary mural-finish">Unveil the mural</button>':''}`);this.bindPlacement((i,slot)=>{if(i===+slot){this.placed.add(i);this.feedback='A panel restored!';stationBell();this.redraw(this.placed.size===6?'.mural-finish':`[data-piece="${i}"]`)}else this.say('That paint belongs on another expectation panel.')});this.root.querySelector('.mural-finish')?.addEventListener('click',()=>this.complete())}
- switchyard(){const r=this.config.rounds[this.round];this.shell(r.prompt,`<p class="game-hint">Set two track switches to choose the team’s expectations. Then send the team train.</p><div class="switchyard"><div class="team-depot"><span aria-hidden="true">✦ FALCON TEAM EXPRESS ✦</span><b>${this.team.size} of 2 tracks connected</b></div>${this.options.map((t,i)=>`<button class="track-switch game-answer ${this.team.has(t)?'connected':''}" data-switch="${i}" aria-pressed="${this.team.has(t)}" ${this.success?'disabled':''}><span class="switch-lever" aria-hidden="true">${this.team.has(t)?'╱':'│'}</span>${escapeGame(t)}<small>${this.team.has(t)?'TRACK CONNECTED':'CONNECT TRACK'}</small></button>`).join('')}</div><button class="primary send-team" ${this.team.size!==2||this.success?'disabled':''}>Send the team train</button>`,this.success);this.root.querySelectorAll('[data-switch]').forEach(b=>b.onclick=()=>{const t=this.options[+b.dataset.switch];if(this.team.has(t))this.team.delete(t);else if(this.team.size<2)this.team.add(t);else{this.say('Disconnect a track before choosing another.');return}boardClack();this.redraw(`[data-switch="${b.dataset.switch}"]`)});this.root.querySelector('.send-team')?.addEventListener('click',()=>{if(r.answers.every(a=>this.team.has(a))&&this.team.size===2){whistle();this.win('Both tracks are ready. Team train departing!')}else this.say('One or both tracks need changing. Try again.')})}
- track(){const r=this.config.rounds[this.round];this.shell(r.prompt,`<p class="game-hint">Choose the track piece that fits the situation. Place it in the gap.</p><div class="track-bridge"><span class="bridge-bank">FALCON<br>WORKSHOP</span>${[0,1,2].map(i=>i===this.round&&!this.success?'<button class="track-gap" data-slot="track">Place track here</button>':`<span class="track-piece ${i<this.round||i===this.round&&this.success?'built':''}" aria-label="${i<this.round||i===this.round&&this.success?'Built track':'Missing track'}">═╪═</span>`).join('')}<span class="bridge-bank">STATION</span></div><div class="rail-planks">${this.options.map((t,i)=>this.piece(i,t)).join('')}</div>`,this.success);this.bindPlacement(i=>{if(this.options[i]===r.answer)this.win('Track secured!');else this.say('That piece does not fit this situation. Try another.')})}
- storyboard(){const c=this.config;this.round=this.placed.size;this.shell('Build a FALCON railway film.',`<p class="game-hint">Choose a scene ticket. Place it in the matching FALCON film frame.</p><div class="rail-film">${c.items.map((item,i)=>`<button class="film-frame ${this.placed.has(i)?'filled':''}" data-slot="${i}" ${this.placed.has(i)?'disabled':''}><b>${item.answer}</b><span>${this.placed.has(i)?escapeGame(item.text):'Place scene here'}</span></button>`).join('')}</div><div class="rail-tickets">${this.order.filter(i=>!this.placed.has(i)).map(i=>this.piece(i,c.items[i].text)).join('')}</div>${this.placed.size===6?'<button class="primary film-play">Play my film</button>':''}`);this.bindPlacement((i,slot)=>{if(i===+slot){this.placed.add(i);this.pick=null;boardClack();this.feedback='Scene added!';this.redraw(this.placed.size===6?'.film-play':'.rail-piece')}else this.say('That scene belongs in another frame.')});this.root.querySelector('.film-play')?.addEventListener('click',()=>this.playFilm())}
- playFilm(){this.filmIndex=0;const show=()=>{const item=this.config.items[this.filmIndex];this.root.innerHTML=this.heading()+`<div class="rail-film-screen"><span class="eyebrow">FALCON RAILWAY PICTURES</span>${scene(10,'film-scene-art')}<h3 tabindex="-1">${item.answer}</h3><p>${escapeGame(item.text)}</p><button class="primary film-step">${this.filmIndex===5?'Collect my stamp':'Next scene'}</button></div>${this.controls()}`;this.bindTools(item.answer+'. '+item.text);this.root.querySelector('.film-step').onclick=()=>{if(++this.filmIndex===6)this.complete();else show()};this.root.querySelector('h3').focus({preventScroll:true})};show()}
- dispatch(){const r=this.config.rounds[this.round];this.shell('Dispatch this ticket to its station.',`<p class="game-hint">Choose the ticket, then send it to the matching platform.</p><div class="dispatch-ticket">${this.piece(0,r.prompt,'<span class="ticket-edge">DESTINATION NEEDED</span>')}</div><div class="dispatch-board">${this.routeOrder.map(i=>`<button data-slot="${i}" ${this.success?'disabled':''}><b>${String(i+1).padStart(2,'0')}</b><span>${escapeGame(stops[i].name)}</span><i aria-hidden="true">${this.success&&i===r.answer?'✦':'·'}</i></button>`).join('')}</div>`,this.success);this.bindPlacement((_,slot)=>{if(+slot===r.answer){whistle();this.win('Dispatched to '+stops[r.answer].name+'!')}else this.say('Try another platform. Where would you use this expectation?')})}
+
+class RailwayGame {
+  constructor(root, config, index) {
+    this.root = root;
+    this.config = config;
+    this.index = index;
+  }
+
+  start() {
+    clearTimeout(this.timer);
+    this.round = 0;
+    this.locked = false;
+    this.chosen = new Set();
+    this.matched = new Set();
+    this.flipped = [];
+    const {type, rounds, items, pool} = this.config;
+    if (type === 'pairs') {
+      this.deck = shuffleGame(shuffleGame(items).slice(0, 3).flatMap((item, pair) => [
+        {pair, text: item.answer}, {pair, text: item.text}
+      ]));
+      this.memory();
+      return;
+    }
+
+    if (rounds) {
+      this.rounds = (type === 'destinations' ? shuffleGame(rounds).slice(0, 3) : rounds)
+        .map(round => ({
+          prompt: type === 'destinations' ? 'Where does this ticket go?' : round.prompt,
+          detail: type === 'destinations' ? round.prompt : '',
+          answers: round.answers || [round.answer],
+          options: shuffleGame(round.options)
+        }));
+    } else {
+      this.rounds = shuffleGame(items).slice(0, 3).map(item => this.itemRound(item, type, pool));
+    }
+    this.draw();
+  }
+
+  itemRound(item, type, pool) {
+    if (type === 'bubbles') {
+      const targets = new Set(pool.filter(entry => entry.answer === item.answer).map(entry => entry.text));
+      const other = [...new Set(pool.map(entry => entry.text).filter(text => !targets.has(text)))];
+      return {
+        prompt: `Pop a ${item.answer.toLowerCase()} cloud!`,
+        answers: [item.text],
+        options: shuffleGame([item.text, ...shuffleGame(other).slice(0, 2)])
+      };
+    }
+    if (type === 'sort-station') {
+      return {
+        prompt: 'Which cart gets this suitcase?',
+        detail: item.text,
+        answers: [item.answer ? 'Lunch cart' : 'Other stops'],
+        options: ['Lunch cart', 'Other stops']
+      };
+    }
+    return {
+      prompt: type === 'palette' ? 'Pick a color to paint the panel.' : 'Pick the matching film frame.',
+      detail: item.text,
+      answers: [item.answer],
+      options: shuffleGame([item.answer, ...shuffleGame(labels.filter(label => label !== item.answer)).slice(0, 2)])
+    };
+  }
+
+  status(count, total) {
+    return `<div class="arcade-meter" role="img" aria-label="${count} of ${total} complete">${Array.from({length: total}, (_, i) =>
+      `<span aria-hidden="true" class="${i < count ? 'filled' : ''}">${i < count ? '★' : '☆'}</span>`).join('')}</div>`;
+  }
+
+  stage(prompt, detail, count, total, board) {
+    return `<div class="arcade-scene" style="--scene:url('${arcadeArt(this.index)}')">
+      ${this.status(count, total)}
+      <span class="arcade-piece" aria-hidden="true">${gameIcons[this.index]}</span>
+    </div>
+    <div class="arcade-console">
+      <h2 tabindex="-1">${escapeGame(prompt)}</h2>
+      ${detail ? `<p class="arcade-ticket">${escapeGame(detail)}</p>` : ''}
+      ${board}
+      <div class="arcade-tools"><p class="arcade-feedback" role="status"></p><button class="arcade-listen" type="button">🔊 Read aloud</button></div>
+    </div>`;
+  }
+
+  draw() {
+    const current = this.rounds[this.round];
+    const choices = current.options.map(option => typeof option === 'number' ? stops[option].name : option);
+    this.root.innerHTML = this.stage(current.prompt, current.detail, this.round, this.rounds.length,
+      `<div class="arcade-choices">${choices.map((choice, i) => `<button type="button" class="arcade-choice" data-choice="${i}">
+        <span aria-hidden="true">${current.options[i] === 'Other stops' ? '🚉' : gameIcons[this.index]}</span>
+        ${escapeGame(choice)}
+      </button>`).join('')}</div>`);
+    this.root.querySelectorAll('[data-choice]').forEach(button => {
+      button.onclick = () => this.pick(button, current);
+    });
+    this.listen([current.prompt, current.detail, ...choices]);
+    this.focus();
+  }
+
+  pick(button, current) {
+    const option = current.options[Number(button.dataset.choice)];
+    if (this.locked || this.chosen.has(option)) return;
+    if (!current.answers.includes(option)) {
+      button.classList.add('try-again');
+      this.feedback('Try another one!');
+      return;
+    }
+    this.chosen.add(option);
+    button.classList.add('is-right');
+    button.setAttribute('aria-disabled', 'true');
+    stationBell();
+    if (this.chosen.size < current.answers.length) {
+      this.feedback('Nice! Find one more.');
+      return;
+    }
+
+    this.locked = true;
+    this.root.querySelector('.arcade-meter').outerHTML = this.status(this.round + 1, this.rounds.length);
+    const piece = this.root.querySelector('.arcade-piece');
+    const rewards = ['✓', '🚂', '💥', '🛑', '🛒', '🎵', '⭐', '🖼️', '🛤️', '🌉', '🎞️', '🚉'];
+    const messages = ['Ticket punched!', 'Car loaded!', 'Pop!', 'Safe stop!', 'Suitcase loaded!', 'Bell rung!', 'A pair!', 'Panel painted!', 'Tracks connected!', 'Bridge fixed!', 'Frame filled!', 'Ticket delivered!'];
+    piece.textContent = rewards[this.index];
+    piece.classList.add('arcade-pop');
+    this.feedback('★ ' + messages[this.index]);
+    this.wait(() => {
+      this.round++;
+      if (this.round === this.rounds.length) {
+        this.finish();
+        return;
+      }
+      this.chosen.clear();
+      this.draw();
+    });
+  }
+
+  memory() {
+    this.root.innerHTML = this.stage('Flip two tickets to find a pair.', 'Match a FALCON word to what it looks like in the library.', this.matched.size, 3,
+      `<div class="arcade-memory">${this.deck.map((card, i) => {
+        const matched = this.matched.has(card.pair);
+        const open = matched || this.flipped.includes(i);
+        return `<button type="button" class="arcade-choice memory-tile ${open ? 'is-open' : ''} ${matched ? 'is-right' : ''}" data-card="${i}" ${matched ? 'disabled' : ''}
+          aria-label="${open ? escapeGame(card.text) : 'Flip ticket ' + (i + 1)}">
+          ${open ? escapeGame(card.text) : '<span aria-hidden="true">🎟️</span>'}
+        </button>`;
+      }).join('')}</div>`);
+    this.root.querySelectorAll('[data-card]').forEach(button => {
+      button.onclick = () => this.flip(Number(button.dataset.card));
+    });
+    this.listen(['Flip two tickets to find a pair. Match a FALCON word to a library expectation.',
+      ...this.deck.filter((_, i) => this.flipped.includes(i)).map(card => card.text)]);
+    if (!this.flipped.length && !this.matched.size) this.focus();
+  }
+
+  flip(index) {
+    if (this.locked || this.flipped.includes(index) || this.matched.has(this.deck[index].pair)) return;
+    this.flipped.push(index);
+    this.memory();
+    this.root.querySelector(`[data-card="${index}"]`).focus({preventScroll:true});
+    if (this.flipped.length < 2) return;
+
+    this.locked = true;
+    const [first, second] = this.flipped.map(i => this.deck[i]);
+    const match = first.pair === second.pair;
+    this.feedback(match ? '★ A pair!' : 'Try two more.');
+    if (match) stationBell();
+    this.wait(() => {
+      if (match) this.matched.add(first.pair);
+      if (this.matched.size === 3) {
+        this.finish();
+        return;
+      }
+      this.flipped = [];
+      this.memory();
+      this.root.querySelector('[data-card]:not(:disabled)').focus({preventScroll:true});
+    });
+  }
+
+  wait(action) {
+    this.timer = setTimeout(() => {
+      if (!this.root.isConnected) return;
+      this.locked = false;
+      window.speechSynthesis?.cancel();
+      stationNarrating = false;
+      action();
+    }, 1250);
+  }
+
+  feedback(text) {
+    this.root.querySelector('.arcade-feedback').textContent = text;
+  }
+
+  focus() {
+    const heading = this.root.querySelector('h2');
+    heading.focus({preventScroll:true});
+    if (heading.getBoundingClientRect().top < 0) heading.scrollIntoView({block:'start'});
+  }
+
+  listen(lines) {
+    const button = this.root.querySelector('.arcade-listen');
+    if (!('speechSynthesis' in window)) {
+      button.hidden = true;
+      return;
+    }
+    button.onclick = () => {
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(lines.filter(Boolean).join('. '));
+      utterance.rate = .8;
+      stationNarrating = true;
+      utterance.onend = utterance.onerror = () => { stationNarrating = false; };
+      speechSynthesis.speak(utterance);
+    };
+  }
+
+  finish() {
+    earnStamp(this.config.id);
+    this.root.innerHTML = `<div class="arcade-win"><span aria-hidden="true">🏆</span>
+      <h2 tabindex="-1">You earned a stamp!</h2>
+      <p>${passportCount()} of 12 passport stamps</p>
+      <div class="arcade-win-actions"><a class="arcade-button" href="#games">Pick another game</a>
+      <button class="arcade-listen replay" type="button">Play again</button></div>
+    </div>`;
+    this.root.querySelector('.replay').onclick = () => this.start();
+    this.focus();
+  }
 }

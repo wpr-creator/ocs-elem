@@ -43,11 +43,11 @@ Student activities omit resource-hub navigation. Source commit IDs are recorded 
 
 ## Expectation Station games
 
-The 11 stations each have a themed activity, plus the school-wide Match the Station matching game. Game sentences are read from the unchanged PDF matrix in `dist/expectation-station/data.json`. New instructions and questions are interface copy; expectation statements stay verbatim. Completed games earn one of 12 passport stamps, stored only in this browser without student names. Games use buttons and support keyboard input, read-aloud, retrying, replay, and reduced motion.
+Open [Station Games](https://wpr-creator.github.io/ocs-elem/expectation-station/#games) from the resource homepage or Expectation Station. Pick any of the 11 themed stop games or Station Dispatcher to start playing immediately. Each game has its own arcade artwork. Correct answers advance automatically, and each game has three rounds or three ticket pairs. Game sentences are read from the unchanged PDF matrix in `dist/expectation-station/data.json`. New instructions and questions are interface copy; expectation statements stay verbatim. Completed games earn one of 12 passport stamps, stored only in this browser without student names. Games use buttons and support keyboard input, read-aloud, retrying, replay, and reduced motion.
 
 Station sound defaults to on. Browser audio unlocks on the first click, tap, or keyboard interaction; students can mute their device. Audio pauses with a hidden tab and quiets during read-aloud. No audio files, AI calls, accounts, or services are needed.
 
-Run `node --test tests/station-games.test.cjs` to check the game content and unambiguous station matching.
+Run `node --test tests/station-games.test.cjs tests/railway-games.test.cjs` to check game content, station matching, and automatic round progression.
 
 ## Homepage visibility
 
@@ -56,26 +56,3 @@ The homepage currently shows Expectation Station, Career Explorer, and the AVID 
 ## Activity refinement audit
 
 See [AUDIT.md](AUDIT.md) for scoring, interaction, and verification details. Student activity pages omit grade switching, teacher notes, PDF links, printing controls, and sound/motion toggles. Grade selection is available at the Career Explorer entry page.
-
-Library Book Pairs now uses 12 shuffled face-down cards, two-card reveals, automatic mismatch resets, and retained matching pairs. Bathroom Bubble Pop presents six FALCON-category rounds with three targets and three distractors per round, sampled from the exact school matrix. Correct pops stay collected; incorrect bubbles remain available. Both support keyboard use and read-aloud without timers or lost lives.
-
-## Falcon Central concourse and railway games
-
-The station uses a celestial green concourse, brass clock, limestone colors, arched boards, and local Barlow Condensed lettering rather than editorial serif headlines. All 11 stops and the school-wide dispatcher use the same railway design. The PDF matrix data is unchanged.
-
-| Stop | Railway interaction |
-| --- | --- |
-| Classroom | Select and punch a conductor’s ticket |
-| Hallway | Match tickets to three cars, then send the train |
-| Bathroom | Pop matching steam clouds above the locomotive |
-| Playground | Watch the green/red signal and stop the train |
-| Cafeteria | Load expectation suitcases onto the correct luggage cart |
-| Auditorium | Open carriage windows and ring the matching arrival bell |
-| Library | Recover six pairs of face-down lost-and-found tickets |
-| VAPA | Match paint tins to panels and uncover a railway mural |
-| PE | Connect two track switches and dispatch the team train |
-| STEAM | Fit expectation track pieces into a railway bridge |
-| Animation | Assemble six FALCON film frames and play the picture show |
-| All stations | Dispatch expectation tickets to the correct platform |
-
-Placement games support dragging, selecting with a tap, and keyboard buttons. No timed scoring or lost lives. System reduced motion is respected automatically. Railway-specific behavior tests: `node --test tests/railway-games.test.cjs`.
