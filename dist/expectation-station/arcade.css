@@ -288,3 +288,7 @@
 .cleanup-bump { animation: play-success .4s ease-out; }
 .arcade-stage:has(.cleanup-car) { overflow: visible; }
 @media(prefers-reduced-motion:reduce) { .cleanup-depart .cleanup-windows i,.cleanup-bump { animation: none; } }
+
+.arcade-feedback.action-reminder {
+  padding: 4px 12px; min-height: 30px; margin: 0; background: #efe6c9; color: #254637;
+}

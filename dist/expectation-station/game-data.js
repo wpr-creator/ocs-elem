@@ -103,11 +103,26 @@ function buildGames(stops) {
         ['Share a bridge idea','💡',0],['Cheer on a teammate','📣',1],['Encourage an artist','🖌️',2]),source:9}
     ]
   ];
+  const reminders = [
+    ['You followed the teacher’s order.', 'You followed each direction.', 'You put supplies where they belong.'],
+    ['You followed the line.', 'You closed the gaps.', 'You gave others space.'],
+    ['You helped keep the bathroom clean.'],
+    ['You froze at the whistle.'],
+    ['You helped keep the lunch area clean.'],
+    ['You listened during the show.', 'You clapped at the right time.', 'You helped guests feel welcome.'],
+    ['You put books where they belong.', 'You handled the book gently.', 'You used a quiet library voice.'],
+    ['You helped other artists keep going.', 'You cleaned and put away supplies.', 'You put tools away safely.'],
+    ['You followed the coach’s signal.'],
+    ['You tried again when it didn’t work.', 'You helped your team.', 'You put the tools away.'],
+    ['You followed the filming plan.', 'You took turns with your partner.', 'You kept your project organized.'],
+    ['You matched each cleanup to its stop.', 'You found where to follow each signal.', 'You matched ways to help others.']
+  ];
   const games = scenes.map((rounds, i) => ({
     id: ['classroom','hallway','bathroom','playground','cafeteria','auditorium','library','vapa','pe','steam','animation','station-match'][i],
-    rounds: rounds.map(round => ({
+    rounds: rounds.map((round, j) => ({
       ...round,
       value: values[round.category],
+      reminder: reminders[i][j],
       expectation: stops[round.source ?? i].expectations[round.category]
     }))
   }));

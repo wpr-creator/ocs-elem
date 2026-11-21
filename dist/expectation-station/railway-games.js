@@ -33,6 +33,7 @@ class RailwayGame {
     const waybill = this.orderOpen ? `<div class="play-waybill"><ol>${this.sequence.map(i => `<li><span aria-hidden="true">${scene.spots[i].icon}</span> ${escapeGame(scene.spots[i].label)}</li>`).join('')}</ol></div>` : '';
     this.root.innerHTML = `<div class="play-instruction"><h2 tabindex="-1">${escapeGame(scene.cue)}</h2>
       ${scene.mode === 'move' ? '<p>Drag it or tap where it goes.</p>' : ''}</div>
+    <p class="arcade-feedback action-reminder" role="status"></p>
     <div class="arcade-scene playfield playfield-${scene.mode}" style="--scene:url('${arcadeArt(this.index)}')">
       ${this.meter(this.round)}
       <div class="falcon-value"><b aria-hidden="true">${scene.value[0]}</b> ${scene.value}</div>
@@ -56,7 +57,7 @@ class RailwayGame {
       </div>
     </div>
     <div class="arcade-console play-console">
-      <div class="arcade-tools"><p class="arcade-feedback" role="status"></p>
+      <div class="arcade-tools">
         <div class="railway-audio"><button class="arcade-listen" type="button">Read aloud</button>
         <button class="arcade-listen railway-sound" type="button" aria-pressed="${stationSound}">Sound</button></div></div>
     </div>`;
@@ -237,10 +238,9 @@ class RailwayGame {
     this.finished = true;
     this.root.querySelector('.round-steps').classList.add('is-departing');
     this.root.querySelector('.arcade-meter').outerHTML = this.meter(this.round + 1);
-    const lesson = this.scene.mode === 'track' ? ' · You tried again' : '';
-    this.feedback(`★ ${this.scene.value}${lesson}`);
+    this.feedback(this.scene.reminder);
     this.reward();
-    this.after(1300, () => {
+    this.after(2200, () => {
       window.speechSynthesis?.cancel();
       stationNarrating = false;
       this.round++;

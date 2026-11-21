@@ -12,6 +12,8 @@ test('every stop has three short playable scenes linked to exact FALCON matrix r
   assert.equal(game.rounds.length,[2,3,4,8].includes(index)?1:3);
   for(const scene of game.rounds){
    assert.equal(scene.value,values[scene.category]);
+   assert.match(scene.reminder,/^You /);
+   assert.ok(scene.reminder.split(/\s+/).length<=8);
    assert.equal(scene.expectation,stops[scene.source??index].expectations[scene.category]);
    assert.ok(scene.cue.split(/\s+/).length<=10,scene.cue);
    if(scene.mode==='cleanup'){

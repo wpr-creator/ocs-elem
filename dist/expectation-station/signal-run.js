@@ -16,8 +16,9 @@ class SignalRun extends RailwayGame {
     this.clear = false;
     this.cued = false;
     this.done = false;
-    const {gates, expectation} = arcadeCatalog()[stop].rounds[0];
+    const {gates, expectation, reminder} = arcadeCatalog()[stop].rounds[0];
     this.gates = gates;
+    this.reminder = reminder;
     this.root.innerHTML = `<div class="yard-heading">
       <div><span class="yard-value">F · FOCUS</span><h2>${stop === 3 ? 'Playground' : 'PE'} run</h2></div>
       <span class="yard-shift">${this.round+1} / 2</span>
@@ -105,7 +106,7 @@ class SignalRun extends RailwayGame {
     if (gate !== undefined && this.cued && !this.clear && !this.power && this.speed === 0) {
       this.clear = true;
       this.posts[this.gate].classList.add('cleared');
-      this.status.textContent = playground ? 'Clear. Walk to line.' : 'Coach says go!';
+      this.status.textContent = `${this.reminder} ${playground ? 'Go to the line.' : 'Coach says go!'}`;
       this.counter.textContent = `${this.gate+1} / 2 stops`;
       stationBell();
     }
@@ -113,10 +114,10 @@ class SignalRun extends RailwayGame {
       this.position = 96;
       this.done = true;
       this.power = false;
-      this.status.textContent = 'Focus · You followed the signals!';
+      this.status.textContent = this.reminder;
       earnStamp(playground ? 'playground' : 'pe');
       railwayStops[this.routes[this.round]].sound();
-      this.after(1200, () => {
+      this.after(2200, () => {
         this.round++;
         if (this.round === this.routes.length) this.finish('Both runs complete!');
         else this.openRun();

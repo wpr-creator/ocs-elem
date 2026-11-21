@@ -24,6 +24,7 @@ class CleanupRun extends RailwayGame {
     this.done = false;
     this.bins = [...new Set(this.scene.pieces.map(piece => piece.bin))];
     this.root.innerHTML = `<div class="yard-heading"><div><span class="yard-value">C · CITIZENSHIP</span><h2>${escapeGame(this.scene.cue)}</h2></div><span class="yard-shift">${this.round+1} / 2</span></div>
+    <p class="arcade-feedback action-reminder" role="status">Drag a piece, or tap it and its bin.</p>
     <div class="cleanup-car">
       <div class="cleanup-windows" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="cleanup-bins">${this.bins.map(id => `<button type="button" data-bin="${id}"><span aria-hidden="true">${cleanupBins[id].icon}</span>${cleanupBins[id].label}</button>`).join('')}</div>
@@ -37,7 +38,6 @@ class CleanupRun extends RailwayGame {
       <span class="cleanup-count"></span>
       <button class="arcade-listen railway-sound" type="button" aria-pressed="${stationSound}">Sound</button>
     </div>
-    <div class="signal-footer"><p class="arcade-feedback" role="status">Drag a piece, or pick it and tap where it goes.</p></div>
     <div class="signal-footer"><details><summary>School expectation</summary><p>${escapeGame(this.scene.expectation)}</p></details></div>`;
 
     this.root.querySelectorAll('[data-piece]').forEach(button => {
@@ -126,7 +126,7 @@ class CleanupRun extends RailwayGame {
       target.classList.add('is-wiped');
       target.setAttribute('aria-disabled','true');
       hiss(.12,.04);
-      this.feedback('Spot wiped!');
+      this.feedback('You wiped the spill.');
     } else {
       const piece = this.scene.pieces.find(item => item.id === id);
       if (!piece || piece.bin !== bin) {
@@ -141,17 +141,18 @@ class CleanupRun extends RailwayGame {
       void target.offsetWidth;
       target.classList.add('cleanup-bump');
       boardClack();
-      this.feedback(piece.label + ' put away!');
+      const reminders = {trash:'You kept trash off the floor.', scraps:'You cleared the leftover food.', stack:'You cleaned and stacked the tray.'};
+      this.feedback(reminders[bin]);
     }
 
     this.progress();
     if (this.cleaned.size !== this.scene.pieces.length + 3) return;
     this.done = true;
     this.root.querySelector('.cleanup-car').classList.add('cleanup-depart');
-    this.feedback('Citizenship · Clean car ready to go!');
+    this.feedback(this.scene.reminder);
     earnStamp(this.stamp);
     railwayStops[this.stop].sound();
-    this.after(1250, () => {
+    this.after(2200, () => {
       this.round++;
       if (this.round === this.routes.length) this.finish('Both cars clean!');
       else this.openCar();

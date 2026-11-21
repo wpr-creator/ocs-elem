@@ -61,6 +61,7 @@ class ClassroomYard extends RailwayGame {
       <button type="button" class="yard-order" ${shift.sorting ? 'hidden' : ''}>Hide directions</button>
       <span class="yard-inventory" aria-live="polite"></span>
     </div>
+    <p class="arcade-feedback action-reminder" role="status"></p>
     <div class="yard-surface">
       <div class="yard-grid" tabindex="0" role="group" aria-label="Classroom railway. Use arrow keys to drive." aria-describedby="yard-controls">
         ${shift.map.join('').split('').map((tile, i) => this.tile(tile, i)).join('')}
@@ -69,7 +70,6 @@ class ClassroomYard extends RailwayGame {
     </div>
     <div class="yard-footer">
       <p id="yard-controls">Tap the next rail or use arrow keys.</p>
-      <p class="arcade-feedback" role="status"></p>
       <button type="button" class="arcade-listen railway-sound" aria-pressed="${stationSound}">Sound</button>
     </div>`;
     this.root.querySelector('.yard-order').onclick = () => this.toggleDirections();
@@ -136,6 +136,7 @@ class ClassroomYard extends RailwayGame {
     const state = this.state;
     if (state.complete) return;
     const previous = state.position;
+    const loaded = state.loaded.size;
     const message = driveClassroom(state, next);
     if (previous !== state.position && !state.shift.sorting && !this.root.querySelector('.yard-directions').hidden) {
       if (previous === state.shift.start) this.toggleDirections();
@@ -146,12 +147,14 @@ class ClassroomYard extends RailwayGame {
       tone(180, .06, 'triangle', .018);
       this.paint();
     }
-    if (message) this.feedback(message);
+    if (state.loaded.size > loaded) {
+      this.feedback(state.shift.sorting ? message + ' Supplies belong in their places.' : message + ' You followed the order.');
+    } else if (message) this.feedback(message);
     if (!state.complete) return;
     this.root.querySelector('.yard-engine').classList.add('yard-arrived');
-    this.feedback(state.shift.sorting ? 'Organization · All supplies put away!' : 'Focus · Directions followed!');
+    this.feedback(state.shift.reminder);
     railwayStops[0].sound();
-    this.after(1100, () => {
+    this.after(2200, () => {
       this.round++;
       if (this.round === this.config.rounds.length) this.finish();
       else this.openShift();
